@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+
+<!-- Include libraries  -->
+<script src="../js/angular.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/angular-resource.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/angular-route.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
+
+<!-- Include Custom styles  -->
+<link rel="stylesheet" href="../css/styles.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Include Modules -->
+<script src="../js/modules.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Include Controllers -->
+<script src="../js/controllers.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Include Services -->
+<script src="../js/services.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="../js/utilities.js" type="text/javascript" charset="utf-8"></script>
+
+<title>SolveIT WS Monitoring</title>
+</head>
+<body>
+	
+	<div class="container">
+	
+		<div ng-include="'includes/header.html'" class="page-header"></div>
+		
+		<div ng-view></div>
+		
+		<footer ng-include="'includes/footer.html'" class=""></footer>
+	
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,25 @@
+.formError {
+	color: red;
+}
+
+.formButton  {
+	cursor: pointer;
+	background-color: cyan;
+}
+.leftHalf {
+	float: left;
+	width: 50%;
+}
+.rightHalf {
+	float: right;
+	width: 50%;
+}
+
+.green {
+	background-color: #2EFEC8;
+	
+}
+
+.red {
+	background-color: #F7819F;
+}
