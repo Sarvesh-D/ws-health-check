@@ -57,7 +57,7 @@ public class WSHealthReportGenerator {
 	@Scheduled(cron = "0 0/1 * * * ?") // ping each minute and build report
 	public void buildWSHealthReport() {
 		Set<ServiceDetail> serviceHealthDetails = wSHealthUtils.getServiceHealthDetails();
-		generateReport(serviceHealthDetails);
+		buildReport(serviceHealthDetails);
 	}
 	
 	@Scheduled(cron = "45 0/15 * * * ?") // save report file every 15 mins
@@ -73,7 +73,7 @@ public class WSHealthReportGenerator {
 		fileCounter++; // to create unique filename for testing under small intervals
 	}
 	
-	private void generateReport(Set<ServiceDetail> serviceHealthDetails) {
+	private void buildReport(Set<ServiceDetail> serviceHealthDetails) {
 		if(rowNum == 0)
 			insertHeader(sheet);
 
