@@ -1,5 +1,7 @@
 package com.barclays.solveit.ws.health.model;
 
+import java.util.Comparator;
+
 /**
  * @author Sarvesh
  *
@@ -14,7 +16,7 @@ public class ServiceDetail {
 	
 	private final String uri;
 	
-	private boolean status;
+	private String status;
 
 	public ServiceDetail(String environment, String provider, String description, String uri) {
 		this.environment = environment;
@@ -48,14 +50,6 @@ public class ServiceDetail {
 		return true;
 	}
 
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
 	public final String getEnvironment() {
 		return environment;
 	}
@@ -71,11 +65,28 @@ public class ServiceDetail {
 	public String getUri() {
 		return uri;
 	}
+	
+	public final String getStatus() {
+		return status;
+	}
+
+	public final void setStatus(String status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
 		return "ServiceDetail [environment=" + environment + ", provider=" + provider + ", description=" + description
 				+ ", uri=" + uri + ", status=" + status + "]";
+	}
+	
+	public static class ServiceDetailEnvComaparator implements Comparator<ServiceDetail> {
+
+		@Override
+		public int compare(ServiceDetail o1, ServiceDetail o2) {
+			return o1.getEnvironment().compareTo(o2.getEnvironment());
+		}
+		
 	}
 	
 }

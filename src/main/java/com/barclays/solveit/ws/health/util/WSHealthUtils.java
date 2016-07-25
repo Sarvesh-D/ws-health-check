@@ -27,7 +27,8 @@ public class WSHealthUtils {
 	public Set<ServiceDetail> getServiceHealthDetails() {
 		Set<ServiceDetail> serviceDetails = serviceLoader.getServiceDetails();
 		for (ServiceDetail serviceDetail : serviceDetails) {
-			boolean serviceStatus = pingURL(serviceDetail.getUri(), coreConstants.connectionTimeoutInMillis);
+			String serviceStatus = pingURL(serviceDetail.getUri(), coreConstants.connectionTimeoutInMillis)
+					? coreConstants.serviceStatusPassed : coreConstants.serviceStatusFailed;
 			serviceDetail.setStatus(serviceStatus);
 		}
 		return Collections.unmodifiableSet(serviceDetails);

@@ -54,23 +54,26 @@ public class WSHealthReportGenerator {
 		Assert.isTrue(reportHeaders.length == 6, "only 6 report headers are supported");
 	}
 	
-	@Scheduled(cron = "* 0/5 * * * ?")
+	@Scheduled(cron = "0 0/1 * * * ?") // ping each minute and build report
+	public void buildWSHealthReport() {
+		Set<ServiceDetail> serviceHealthDetails = wSHealthUtils.getServiceHealthDetails();
+		generateReport(serviceHealthDetails);
+	}
+	
+	@Scheduled(cron = "45 0/15 * * * ?") // save report file every 15 mins
 	public void createReportFile() {
+		saveReport(report);
+		resetReportFile(); // reset report file to start writing data in new file
+	}
+	
+	private void resetReportFile() {
 		rowNum = 0; // reset the sheet row number counter
 		report = new HSSFWorkbook(); // reset the workbook
 		sheet = report.createSheet("report"); //reset the sheet
-		fileCounter++;
-		new File(getReportFileName()); // create new xls file
-	}
-
-	@Scheduled(cron = "0 0/1 * * * ?")
-	public void generateWSHealthReport() {
-		Set<ServiceDetail> serviceHealthDetails = wSHealthUtils.getServiceHealthDetails();
-		HSSFWorkbook serviceHealthReport = generateReport(serviceHealthDetails);
-		saveReport(serviceHealthReport);
+		fileCounter++; // to create unique filename for testing under small intervals
 	}
 	
-	private HSSFWorkbook generateReport(Set<ServiceDetail> serviceHealthDetails) {
+	private void generateReport(Set<ServiceDetail> serviceHealthDetails) {
 		if(rowNum == 0)
 			insertHeader(sheet);
 
@@ -82,10 +85,9 @@ public class WSHealthReportGenerator {
 			row.createCell(cellNum++).setCellValue(serviceDetail.getProvider());
 			row.createCell(cellNum++).setCellValue(serviceDetail.getDescription());
 			row.createCell(cellNum++).setCellValue(serviceDetail.getUri());
-			row.createCell(cellNum++).setCellValue(serviceDetail.isStatus());
+			row.createCell(cellNum++).setCellValue(serviceDetail.getStatus());
 		}
 		
-		return report;
 	}
 	
 	private void insertHeader(HSSFSheet sheet) {

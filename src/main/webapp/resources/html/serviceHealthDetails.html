@@ -14,7 +14,7 @@
 					</tr>
 				</thead>
 				<tr ng-repeat="service in servicesHealthDetailsView"
-					ng-class="{true:'success',false:'danger'}[service.status]">
+					ng-class="{true:'success',false:'danger'}[service.status == 'PASSED']">
 					<td>{{$index+1}}</td>
 					<td>{{service.environment}}</td>
 					<td>{{service.provider}}</td>
