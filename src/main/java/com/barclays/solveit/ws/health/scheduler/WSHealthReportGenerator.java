@@ -52,6 +52,8 @@ public class WSHealthReportGenerator {
 		reportFilePath = reportProperties.getProperty("report.file.path");
 		reportHeaders = StringUtils.split(reportProperties.getProperty("report.headers"), ",");
 		Assert.isTrue(reportHeaders.length == 6, "only 6 report headers are supported");
+		report = new HSSFWorkbook();
+		sheet = report.createSheet();
 	}
 	
 	@Scheduled(cron = "0 0/1 * * * ?") // ping each minute and build report
@@ -60,7 +62,7 @@ public class WSHealthReportGenerator {
 		buildReport(serviceHealthDetails);
 	}
 	
-	@Scheduled(cron = "45 0/15 * * * ?") // save report file every 15 mins
+	@Scheduled(cron = "45 0/5 * * * ?") // save report file every 5 mins
 	public void createReportFile() {
 		saveReport(report);
 		resetReportFile(); // reset report file to start writing data in new file

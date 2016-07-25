@@ -2,8 +2,10 @@
  * JS for controllers 
  */
 
-appModule.controller('serviceHealthDetailsController' , function($scope,solveItWSHealthCheckService) {
-	
+appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckService) {
+
+	var page_refresh_interval = 30000 // 30 seconds
+
 	/**
 	 * ANGULAR RESTFUL CALLS
 	 * 
@@ -18,7 +20,14 @@ appModule.controller('serviceHealthDetailsController' , function($scope,solveItW
 			});
 
 		});
-	};
-	
 		
+		// auto refresh
+		$timeout(function() {
+			$scope.getServiceHealthDetails();
+		}, page_refresh_interval);
+		
+		$scope.last_updated = new Date();
+	};
+
+
 });
