@@ -11,10 +11,10 @@ import javax.net.ssl.X509TrustManager;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomTrustManager {
+public class CustomTrustStoreManager {
 
 	@PostConstruct
-	private void registerCustomTrustManager() {
+	private void registerCustomTrustStoreManager() {
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[]{
 				new X509TrustManager() {
