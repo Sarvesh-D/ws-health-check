@@ -3,8 +3,9 @@ package com.barclays.solveit.ws.health.util;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,14 +25,15 @@ public class WSHealthUtils {
 	@Autowired
 	private CoreConstants coreConstants;
 	
-	public Set<ServiceDetail> getServiceHealthDetails() {
-		Set<ServiceDetail> serviceDetails = serviceLoader.getServiceDetails();
+	public List<ServiceDetail> getServiceHealthDetails() {
+		List<ServiceDetail> serviceDetails = new ArrayList<>(serviceLoader.getServiceDetails());
 		for (ServiceDetail serviceDetail : serviceDetails) {
 			String serviceStatus = pingURL(serviceDetail.getUri(), coreConstants.connectionTimeoutInMillis)
 					? coreConstants.serviceStatusPassed : coreConstants.serviceStatusFailed;
 			serviceDetail.setStatus(serviceStatus);
 		}
-		return Collections.unmodifiableSet(serviceDetails);
+		Collections.sort(serviceDetails, new ServiceDetail.ServiceDetailEnvComaparator());
+		return Collections.unmodifiableList(serviceDetails);
 	}
 	
 	/**
@@ -58,7 +60,5 @@ public class WSHealthUtils {
 	        return false;
 	    }
 	}
-	
-	
 	
 }
