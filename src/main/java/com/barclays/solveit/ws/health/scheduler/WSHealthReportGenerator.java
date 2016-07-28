@@ -87,7 +87,6 @@ public class WSHealthReportGenerator {
 				row.createCell(cellNum++).setCellValue(serviceDetail.getEnvironment());
 				row.createCell(cellNum++).setCellValue(serviceDetail.getProvider());
 				row.createCell(cellNum++).setCellValue(serviceDetail.getDescription());
-				//row.createCell(cellNum++).setCellValue(serviceDetail.getUri());
 				workbookUtils.createHyperlinkCell(row.createCell(cellNum++), serviceDetail.getUri());
 				row.createCell(cellNum).setCellValue(serviceDetail.getStatus());
 			}
@@ -104,7 +103,7 @@ public class WSHealthReportGenerator {
 
 		private void saveReport() {
 			try(FileOutputStream out = new FileOutputStream(getReportFileName())) {
-				workbookUtils.formatAsTable(rowNum,reportHeaders.length);
+				workbookUtils.formatAsTable(0,rowNum,0,reportHeaders.length-1);
 				workbookUtils.autoAdjustColumnWidth(0, reportHeaders.length-1);
 				report.write(out);
 				fileCounter++; // to create unique filename for testing under small intervals
@@ -116,8 +115,9 @@ public class WSHealthReportGenerator {
 		private void initReportFile() {
 			rowNum = 0; // reset the sheet row number counter
 			workbookUtils.loadWorkbook(); // reset the workbook
-			report = (XSSFWorkbook) workbookUtils.getWorkbook(); 
-			sheet = report.createSheet("report"); //reset the sheet
+			report = (XSSFWorkbook) workbookUtils.getWorkbook();
+			workbookUtils.loadWorksheet("report"); //reset the sheet
+			sheet = workbookUtils.getWorksheet(); 
 		}
 
 		private String getReportFileName() {
