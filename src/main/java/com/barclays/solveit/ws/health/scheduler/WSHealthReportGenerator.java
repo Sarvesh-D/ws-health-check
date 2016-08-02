@@ -32,16 +32,13 @@ public class WSHealthReportGenerator {
 	@Autowired
 	private WSHealthReportGeneratorUtils wsHealthReportGeneratorUtils;
 
-	@Autowired
-	private SchedulerConstants schedulerConstants;
-
-	@Scheduled(cron = "0 0/1 * * * ?") // ping each minute and build report
+	@Scheduled(cron = "${ping.interval}") // ping each minute and build report
 	public void buildWSHealthReport() {
 		List<ServiceDetail> serviceHealthDetails = wSHealthUtils.getServiceHealthDetails();
 		wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
 	}
 
-	@Scheduled(cron = "45 0/2 * * * ?") // save report file every 5 mins
+	@Scheduled(cron = "${file.rollover.interval}") // save report file every 5 mins
 	public void createReportFile() {
 		wsHealthReportGeneratorUtils.saveReport();
 		wsHealthReportGeneratorUtils.initReportFile(); // reset report file to start writing data in new file

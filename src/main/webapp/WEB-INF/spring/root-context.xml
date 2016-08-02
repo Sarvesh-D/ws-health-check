@@ -21,6 +21,8 @@
 	<util:properties id="reportProperties" location="classpath:report.properties"/>
 	<util:properties id="schedulerProperties" location="classpath:scheduler.properties"/>
 	
+	<context:property-placeholder properties-ref="schedulerProperties"/>
+	
 	<context:component-scan
 	base-package="com.barclays.solveit.ws.health.common,
 				  com.barclays.solveit.ws.health.core,

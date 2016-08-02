@@ -1,13 +1,18 @@
 package com.barclays.solveit.ws.health.util;
 
+import org.apache.poi.hssf.record.CFRuleBase.ComparisonOperator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ConditionalFormattingRule;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.AreaReference;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
@@ -53,7 +58,7 @@ public class WorkbookUtils {
 		Assert.notNull(workbook, "Workbook has not been loaded, load the workbook using loadWorkbook().");
 		return this.workbook;
 	}
-	
+
 	public Sheet getWorksheet() {
 		Assert.notNull(workbook, "Worksheet has not been loaded, load the worksheet using loadWorksheet().");
 		return this.worksheet;
@@ -86,7 +91,7 @@ public class WorkbookUtils {
 	public void formatAsTable(int rowStartIndex, int rowEndIndex, int colStartIndex, int colEndIndex) {
 		Assert.isTrue(rowEndIndex > rowStartIndex, "rowEndIndex must be greater than rowStartIndex");
 		Assert.isTrue(colEndIndex > colStartIndex, "colEndIndex must be greater than colStartIndex");
-		
+
 		/* Create an object of type XSSFTable */
 		XSSFTable my_table = ((XSSFSheet) getWorksheet()).createTable();
 
@@ -120,12 +125,32 @@ public class WorkbookUtils {
 		}
 
 	}
-	
+
+	public void createConditionalFormattingRule() {
+		SheetConditionalFormatting sheetCF = getWorksheet().getSheetConditionalFormatting();
+		ConditionalFormattingRule successRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL,"PASSED");
+		ConditionalFormattingRule failureRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL,"FAILED");
+
+		PatternFormatting patternFmtSuccess = successRule.createPatternFormatting();
+		patternFmtSuccess.setFillBackgroundColor(IndexedColors.GREEN.index);
+
+		PatternFormatting patternFmtFailure = failureRule.createPatternFormatting();
+		patternFmtFailure.setFillBackgroundColor(IndexedColors.RED.index);
+
+		ConditionalFormattingRule [] cfRules = {successRule, failureRule};
+
+		CellRangeAddress[] regions = {CellRangeAddress.valueOf("F2")};
+		
+		sheetCF.addConditionalFormatting(regions, cfRules);
+
+	}
+
 	public void autoAdjustColumnWidth(int colNum) {
 		getWorksheet().autoSizeColumn(colNum);
 	}
 
 	public void autoAdjustColumnWidth(int colStartIndex, int colEndIndex) {
+		Assert.isTrue(colEndIndex > colStartIndex, "colEndIndex must be greater than colStartIndex");
 		for (int i = colStartIndex; i <= colEndIndex; i++) {
 			autoAdjustColumnWidth(i);
 		}
