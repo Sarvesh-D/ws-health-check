@@ -102,6 +102,7 @@ public class WSHealthReportGenerator {
 			try(FileOutputStream out = new FileOutputStream(getReportFileName())) {
 				workbookUtils.formatAsTable(0,rowNum,0,reportHeaders.length-1);
 				workbookUtils.autoAdjustColumnWidth(0, reportHeaders.length-1);
+				workbookUtils.createConditionalFormattingRule();
 				report.write(out);
 				fileCounter++; // to create unique filename for testing under small intervals
 			} catch (IOException e) {

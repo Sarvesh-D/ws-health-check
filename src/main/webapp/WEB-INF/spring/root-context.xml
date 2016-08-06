@@ -6,7 +6,9 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
@@ -14,6 +16,7 @@
 
 	<aop:aspectj-autoproxy />
 	<task:annotation-driven />
+	<cache:annotation-driven />
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<util:properties id="coreProperties" location="classpath:core.properties"/>
@@ -28,5 +31,14 @@
 				  com.barclays.solveit.ws.health.core,
 				  com.barclays.solveit.ws.health.scheduler,
 				  com.barclays.solveit.ws.health.util" />
+				  
+	<!-- Cache Configuration -->
+	<cache:annotation-driven />
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+		p:cache-manager-ref="ehcache" />
+	<!-- Ehcache library setup -->
+	<bean id="ehcache"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+		p:config-location="classpath:ehcache.xml" p:cacheManagerName="springCache" />
 	
 </beans>
