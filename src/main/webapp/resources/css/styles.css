@@ -1,25 +1,22 @@
-.formError {
-	color: red;
+.content-area {
+  border: 1px solid black;
+  margin-top: 10px;
+  padding: 10px;
 }
 
-.formButton  {
-	cursor: pointer;
-	background-color: cyan;
+.sample-show-hide {
+  transition: all linear 0.5s;
 }
-.leftHalf {
-	float: left;
-	width: 50%;
-}
-.rightHalf {
-	float: right;
-	width: 50%;
+.sample-show-hide.ng-hide {
+  opacity: 0;
 }
 
-.green {
-	background-color: #2EFEC8;
-	
+
+
+.danger {
+	background-color: red;
 }
 
-.red {
-	background-color: #F7819F;
+.custom-success {
+	background-color: green;
 }

@@ -1,0 +1,28 @@
+<div class="container" ng-init="getEnvHealthDetails()">
+	<h5>Env Health Details : Last updated on {{last_updated | date:'mediumTime'}}</h5>
+	<div class="row">
+		<div ng-repeat="envHealthDetail in envHealthDetailsView" class="col-md-4 repeated-item">
+			<h3 align="center">{{envHealthDetail.name}}</h3>
+			<div ng-repeat="component in envHealthDetail.components" class="row">
+				<div class="row">
+					<div class="col-md-5">
+						<h4>{{component.name}}</h4>
+					</div>
+					<div class="col-md-5">
+						<div id="comp" ng-class="{true:'custom-success',false:'danger'}[component.status == 'UP']"><h4>{{component.status}}</h4></div>
+					</div>
+				</div>
+				<div class="row" ng-show="component.status == 'DOWN'">
+				<div class="col-md-5"></div>
+					<div class="col-md-5">
+						<h5 style="color: red">Services Down : {{component.downServices}}</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="alert alert-danger" ng-show="noEnvs">
+		<h5 align="center">No Env Configured</h5>
+	</div>
+
+</div>

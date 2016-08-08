@@ -4,7 +4,7 @@
 
 appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckService,NgTableParams) {
 
-	var page_refresh_interval = 30000 // 30 seconds
+	var page_refresh_interval = 900000 // 15 minutes
 
 	$scope.getServiceHealthDetails = function() {
 		solveItWSHealthCheckService.query(function(servicesHealthDetails) {
@@ -32,11 +32,11 @@ appModule.controller('serviceHealthDetailsController' , function($scope,$timeout
 
 	function configTableOptions() {
 		var initialParams = {
-				count: 2 // initial page size
+				count: 5 // initial page size
 		};
 		var initialSettings = {
 				// page size buttons
-				counts: [5,10],
+				counts: [5,10,15,20],
 				// determines the pager buttons
 				paginationMaxBlocks: 10,
 				paginationMinBlocks: 2,
@@ -46,3 +46,27 @@ appModule.controller('serviceHealthDetailsController' , function($scope,$timeout
 	}
 
 });
+
+
+appModule.controller('envHealthDetailsController' , function($scope,$timeout,solveItEnvHealthCheckService,NgTableParams) {
+
+	var page_refresh_interval = 900000 // 15 minutes
+
+	$scope.getEnvHealthDetails = function() {
+		solveItEnvHealthCheckService.query(function(envHealthDetails) {
+			if(envHealthDetails.length == 0)
+				$scope.noEnvs = true;
+			else {
+				$scope.envHealthDetailsView = configEnvHealthDetailsView(envHealthDetails);
+			}
+		}).$promise.then(function() {
+			// auto refresh table data
+			$timeout(function() {
+				$scope.getEnvHealthDetails();
+			}, page_refresh_interval);
+
+			$scope.last_updated = new Date(); // set last updated/refreshed time
+		});
+	};
+});
+
