@@ -2,12 +2,12 @@
  * JS for controllers 
  */
 
-appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckService,NgTableParams) {
+appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckFactory,NgTableParams) {
 
 	var page_refresh_interval = 900000 // 15 minutes
 
 	$scope.getServiceHealthDetails = function() {
-		solveItWSHealthCheckService.query(function(servicesHealthDetails) {
+		solveItWSHealthCheckFactory.query(function(servicesHealthDetails) {
 			if(servicesHealthDetails.length == 0)
 				$scope.noServices = true;
 			else {
@@ -26,7 +26,7 @@ appModule.controller('serviceHealthDetailsController' , function($scope,$timeout
 				$scope.getServiceHealthDetails();
 			}, page_refresh_interval);
 
-			$scope.last_updated = new Date(); // set last updated/refreshed time
+			$scope.lastUpdated = new Date(); // set last updated/refreshed time
 		});
 	};
 
@@ -48,16 +48,17 @@ appModule.controller('serviceHealthDetailsController' , function($scope,$timeout
 });
 
 
-appModule.controller('envHealthDetailsController' , function($scope,$timeout,solveItEnvHealthCheckService,NgTableParams) {
+appModule.controller('envHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckFactory,envHealthDetailsService) {
 
 	var page_refresh_interval = 900000 // 15 minutes
 
 	$scope.getEnvHealthDetails = function() {
-		solveItEnvHealthCheckService.query(function(envHealthDetails) {
+		solveItWSHealthCheckFactory.query(function(envHealthDetails) {
 			if(envHealthDetails.length == 0)
 				$scope.noEnvs = true;
 			else {
 				$scope.envHealthDetailsView = configEnvHealthDetailsView(envHealthDetails);
+				envHealthDetailsService.setEnvHealthDetails($scope.envHealthDetailsView);
 			}
 		}).$promise.then(function() {
 			// auto refresh table data
@@ -65,8 +66,28 @@ appModule.controller('envHealthDetailsController' , function($scope,$timeout,sol
 				$scope.getEnvHealthDetails();
 			}, page_refresh_interval);
 
-			$scope.last_updated = new Date(); // set last updated/refreshed time
+			$scope.lastUpdated = new Date(); // set last updated/refreshed time
+			envHealthDetailsService.setLastUpdated($scope.lastUpdated);
 		});
 	};
 });
 
+appModule.controller('componentHealthDetailsController' , function($scope,$routeParams,envHealthDetailsService) {
+	$scope.componentServiceDetails = [];
+	$scope.lastUpdated = envHealthDetailsService.getLastUpdated();
+	$scope.env = $routeParams.env;
+	$scope.component = $routeParams.component;
+	
+	var envHealthDetails = envHealthDetailsService.getEnvHealthDetails();
+	angular.forEach(envHealthDetails,function(envHealthDetail) {
+		if(envHealthDetail.name == $routeParams.env) {
+			angular.forEach(envHealthDetail.components,function(component) {
+				if(component.name == $routeParams.component) {
+					angular.forEach(component.services,function(service) {
+						$scope.componentServiceDetails.push(service);
+					});
+				}
+			});
+		}
+	});
+});

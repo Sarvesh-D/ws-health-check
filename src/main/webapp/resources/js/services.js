@@ -1,12 +1,25 @@
 /**
  * 
  */
-var solveItWSHealthCheckService = angular.module('appModule');
-
-solveItWSHealthCheckService.factory('solveItWSHealthCheckService' , function($resource) {
-	return $resource('http://localhost:8080/ws-health-check/service/health');
-});
-
-solveItWSHealthCheckService.factory('solveItEnvHealthCheckService' , function($resource) {
-	return $resource('http://localhost:8080/ws-health-check/env/health');
+appModule.service('envHealthDetailsService', function() {
+	
+	this.envHealthDetails = '';
+	this.lastUpdated = '';
+	
+	this.getEnvHealthDetails = function() {
+		return this.envHealthDetails;
+	};
+	
+	this.setEnvHealthDetails = function(envHealthDetails) {
+		this.envHealthDetails = envHealthDetails;
+	};
+	
+	this.getLastUpdated = function() {
+		return this.lastUpdated;
+	}
+	
+	this.setLastUpdated = function(lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+	
 });

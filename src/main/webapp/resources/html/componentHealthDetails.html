@@ -1,0 +1,39 @@
+<div class="container">
+	<h4>Environment : {{env}} | Component : {{component}}</h4><br>
+	<h5>Component Health Details : Last updated on {{lastUpdated | date:'mediumTime'}}</h5><br>
+	
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>Description</th>
+				<th>URI</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="serviceHealthDetail in componentServiceDetails">
+				<td>{{serviceHealthDetail.description}}</td>
+				<td><a href="{{serviceHealthDetail.uri}}?wsdl" target="_blank">{{serviceHealthDetail.uri}}</a></td>
+				<td>
+					<svg width="100" height="12" style="margin-top: 8px">
+						<circle cx="30" cy="6" r="6" fill="{{serviceHealthDetail.status == 'DOWN' ? 'red' : 'green'}}"/>
+					</svg>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- <div class="row" style="font-weight: bold;text-decoration: underline">
+		<div class="col-md-3" style="font-weight: bold;text-decoration: underline">Description</div>
+		<div class="col-md-7">URI</div>
+		<div class="col-md-2">Status</div>
+	</div><br>
+	<div class="row" ng-repeat="serviceHealthDetail in componentServiceDetails">
+		<div class="col-md-3">{{serviceHealthDetail.description}}</div>
+		<div class="col-md-7">{{serviceHealthDetail.uri}}</div>
+		<div class="col-md-2">
+			<svg width="100" height="12" style="margin-top: 8px">
+				<circle cx="30" cy="6" r="6" fill="{{serviceHealthDetail.status == 'DOWN' ? 'red' : 'green'}}"/>
+			</svg>
+		</div>
+	</div> -->
+</div>
