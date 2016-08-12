@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.model;
+package com.ds.ws.health.model;
 
 public class ComponentKey {
 	

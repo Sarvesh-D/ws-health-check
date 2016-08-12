@@ -27,13 +27,12 @@
 	<context:property-placeholder properties-ref="schedulerProperties"/>
 	
 	<context:component-scan
-	base-package="com.barclays.solveit.ws.health.common,
-				  com.barclays.solveit.ws.health.core,
-				  com.barclays.solveit.ws.health.scheduler,
-				  com.barclays.solveit.ws.health.util" />
+	base-package="com.ds.ws.health.common,
+				  com.ds.ws.health.core,
+				  com.ds.ws.health.scheduler,
+				  com.ds.ws.health.util" />
 				  
 	<!-- Cache Configuration -->
-	<cache:annotation-driven />
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
 		p:cache-manager-ref="ehcache" />
 	<!-- Ehcache library setup -->

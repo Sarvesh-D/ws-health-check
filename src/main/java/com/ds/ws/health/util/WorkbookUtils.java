@@ -1,5 +1,8 @@
 package com.ds.ws.health.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.poi.hssf.record.CFRuleBase.ComparisonOperator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -8,6 +11,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PatternFormatting;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -34,24 +38,27 @@ public class WorkbookUtils {
 
 	private Sheet worksheet;
 
-	public void loadWorkbook() {
+	public Workbook loadWorkbook() {
 		loadWorkbook(new XSSFWorkbook());
+		return getWorkbook();
 	}
 
-	public void loadWorkbook(Workbook workbook) {
+	public Workbook loadWorkbook(Workbook workbook) {
 		this.workbook = workbook;
+		return getWorkbook();
 	}
 
-	public void loadWorksheet() {
-		loadWorksheet("sheet_0");
+	public Sheet loadWorksheet() {
+		return loadWorksheet("sheet_0");
 	}
 
-	public void loadWorksheet(String sheetName) {
-		loadWorksheet(getWorkbook().createSheet(sheetName));
+	public Sheet loadWorksheet(String sheetName) {
+		return loadWorksheet(getWorkbook().createSheet(sheetName));
 	}
 
-	public void loadWorksheet(Sheet sheet) {
+	public Sheet loadWorksheet(Sheet sheet) {
 		this.worksheet = sheet;
+		return getWorksheet();
 	}
 
 	public Workbook getWorkbook() {
@@ -145,8 +152,8 @@ public class WorkbookUtils {
 
 	}
 
-	public void autoAdjustColumnWidth(int colNum) {
-		getWorksheet().autoSizeColumn(colNum);
+	public void autoAdjustColumnWidth(int colIndex) {
+		getWorksheet().autoSizeColumn(colIndex);
 	}
 
 	public void autoAdjustColumnWidth(int colStartIndex, int colEndIndex) {
@@ -154,6 +161,18 @@ public class WorkbookUtils {
 		for (int i = colStartIndex; i <= colEndIndex; i++) {
 			autoAdjustColumnWidth(i);
 		}
+	}
+	
+	public Row getRowData(int rowIndex) {
+		return getWorksheet().getRow(rowIndex);
+	}
+	
+	public List<Row> getRowData(int rowStartIndex, int rowEndIndex) {
+		List<Row> rows = new ArrayList<>();
+		for (int i = rowStartIndex; i <= rowEndIndex; i++) {
+			rows.add(getRowData(i));
+		}
+		return rows;
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.ds.ws.health.model;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.util.Assert;
 
 public class Environment {
 	
@@ -10,12 +13,15 @@ public class Environment {
 
 	private Set<Component> components;
 	
+	public static final EnvirnomentDetailsNameComaparator ENVIRONMENT_NAME_COMPARATOR = new EnvirnomentDetailsNameComaparator(); 
+	
 	public Environment(String name) {
+		Assert.isTrue(StringUtils.isNotBlank(name), "Environment name cannot be null or blank");
 		this.name = name;
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -23,7 +29,7 @@ public class Environment {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -39,17 +45,17 @@ public class Environment {
 		return true;
 	}
 
-	public final Set<Component> getComponents() {
+	public Set<Component> getComponents() {
 		if(null == components)
-			components = new HashSet<>();
+			components = new TreeSet<>(Component.COMPONENT_NAME_COMPARATOR);
 		return components;
 	}
 
-	public final void setComponents(Set<Component> components) {
+	public void setComponents(Set<Component> components) {
 		this.components = components;
 	}
 
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -58,14 +64,13 @@ public class Environment {
 		return "Environment [name=" + name + ", components=" + components + "]";
 	}
 	
-	public static class EnvironmentDetailNameComparator implements Comparator<Environment> {
+	private static class EnvirnomentDetailsNameComaparator implements Comparator<Environment> {
 
 		@Override
 		public int compare(Environment o1, Environment o2) {
 			return o1.getName().compareTo(o2.getName());
 		}
 		
-	}
-	
+	}	
 	
 }

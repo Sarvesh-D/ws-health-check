@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.scheduler;
+package com.ds.ws.health.scheduler;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.barclays.solveit.ws.health.model.ServiceDetail;
-import com.barclays.solveit.ws.health.util.WorkbookUtils;
+import com.ds.ws.health.model.ServiceDetail;
+import com.ds.ws.health.util.WorkbookUtils;
 
 @Component 
 public class WSHealthReportGeneratorUtils {

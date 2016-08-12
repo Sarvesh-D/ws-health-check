@@ -11,7 +11,7 @@ import javax.net.ssl.X509TrustManager;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomTrustStoreManager {
+final class CustomTrustStoreManager {
 
 	@PostConstruct
 	private void registerCustomTrustStoreManager() {

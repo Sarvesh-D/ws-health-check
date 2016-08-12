@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Logging Aspect for logging
- * @author Sarvesh.Dubey@hotmail.com
  */
 @Component
 @Aspect
-public class LoggingAspect {
+final class LoggingAspect {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
 
@@ -37,7 +36,7 @@ public class LoggingAspect {
 	private void allMethods() {}
 
 	@Around("allMethodsExceptRequests()")
-	public Object logMethodsExceptRequestsEntry(ProceedingJoinPoint pjp) throws Throwable {
+	private Object logMethodsExceptRequests(ProceedingJoinPoint pjp) throws Throwable {
 		putUuid();
 		Object retval = null;
 		logger.trace("Entering method : {}", pjp.getSignature());
@@ -46,7 +45,7 @@ public class LoggingAspect {
 	}
 	
 	@Around("allRequests(requestMapping)")
-	public Object logRequestsEntry(ProceedingJoinPoint pjp, RequestMapping requestMapping) throws Throwable {
+	private Object logRequests(ProceedingJoinPoint pjp, RequestMapping requestMapping) throws Throwable {
 		putUuid();
 		Object retval = null;
 		logger.trace("Entering method : {}", pjp.getSignature());
@@ -56,13 +55,13 @@ public class LoggingAspect {
 	}
 	
 	@AfterThrowing(pointcut="allMethods()", throwing="error")
-	public void logException(JoinPoint jp , Throwable error) {
+	private void logException(JoinPoint jp , Throwable error) {
 		logger.error("Exception occured in method : {}", jp.getSignature());
 		logger.error("Exception : {}", error.getMessage());
 	}
 	
 	@AfterReturning(pointcut="allMethods()", returning="retval")
-	public void logSuccessfulExit(JoinPoint jp, Object retval) {
+	private void logSuccessfulExit(JoinPoint jp, Object retval) {
 		logger.trace("Successfully Exiting method : {}", jp.getSignature());
 	}
 	
@@ -82,7 +81,7 @@ public class LoggingAspect {
 	}
 	
 	private void putUuid() {
-		if(StringUtils.isEmpty(MDC.get("uuid"))) {
+		if(StringUtils.isBlank(MDC.get("uuid"))) {
 			String uuid = UUID.randomUUID().toString().replaceAll("-", "")
 					.toUpperCase();
 			MDC.put("uuid", uuid);

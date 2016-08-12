@@ -7,23 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ds.ws.health.model.Environment;
-import com.ds.ws.health.model.ServiceDetail;
 import com.ds.ws.health.util.WSHealthUtils;
 
 @RestController
-public class WSHealthController {
+final class WSHealthController {
 	
 	@Autowired
-	private WSHealthUtils wSHealthUtils;
-	
-	@RequestMapping("service/health")
-	public List<ServiceDetail> getServiceHealthDetails() {
-		return wSHealthUtils.getServiceHealthDetails();
-	}
+	private WSHealthUtils wsHealthUtils;
 	
 	@RequestMapping("env/health")
-	public List<Environment> getEnvHealthDetails() {
-		return wSHealthUtils.getEnvHealthDetails();
+	private List<Environment> getServiceHealthDetails() {
+		return wsHealthUtils.getEnvHealthDetailsFromReport();
 	}
-
+	
 }

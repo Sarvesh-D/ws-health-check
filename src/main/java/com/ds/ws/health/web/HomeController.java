@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HomeController {
+final class HomeController {
 	
 	@RequestMapping("/")
-	public String redirectHome() {
+	private String redirectHome() {
 		return "redirect:html/index.html";
 	}
 
