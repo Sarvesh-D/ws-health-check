@@ -77,6 +77,7 @@ appModule.controller('componentHealthDetailsController' , function($scope,$route
 	$scope.lastUpdated = envHealthDetailsService.getLastUpdated();
 	$scope.env = $routeParams.env;
 	$scope.component = $routeParams.component;
+	$scope.version = $routeParams.version;
 	
 	var envHealthDetails = envHealthDetailsService.getEnvHealthDetails();
 	angular.forEach(envHealthDetails,function(envHealthDetail) {

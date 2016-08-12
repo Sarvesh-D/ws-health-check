@@ -20,6 +20,8 @@ function configEnvHealthDetailsView(envHealthDetails) {
 		angular.forEach(envHealthDetail.components,function(component) {
 			var componentDetailView = {
 					name : component.name,
+					version : component.version,
+					env: component.environment,
 					services : component.services,
 					status : 'UP',
 					downServices : 0
