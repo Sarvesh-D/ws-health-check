@@ -11,14 +11,14 @@ import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.service.WSHealthService;
 
 @RestController
-final class WSHealthController {
+class WSHealthController {
 	
 	@Autowired
 	@Qualifier("wSHealthServiceImpl")
 	private WSHealthService wsHealthService;
 	
 	@RequestMapping("env/health")
-	private List<Environment> getServiceHealthDetails() {
+	public List<Environment> getServiceHealthDetails() {
 		return wsHealthService.getEnvHealthDetailsFromReport();
 	}
 	

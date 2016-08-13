@@ -3,6 +3,8 @@ package com.ds.ws.health.common;
 import java.util.Arrays;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,6 +16,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 final class LoggingAspect {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
+	
+	@Autowired
+	private HttpServletRequest request;
 
 	@Pointcut("execution(* com.ds.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	private void allMethodsExceptRequests() {}
@@ -77,6 +83,9 @@ final class LoggingAspect {
 		requestInfo.append(Arrays.toString(requestMapping.params()));
 		requestInfo.append("\nRequest path(s) = ");
 		requestInfo.append(Arrays.toString(requestMapping.path()));
+		requestInfo.append("\nUser Principal = "+request.getUserPrincipal());
+		requestInfo.append("\nRequest IP = "+request.getRemoteAddr());
+		requestInfo.append("\nServer IP = "+request.getServerName());
 		return requestInfo;
 	}
 	
