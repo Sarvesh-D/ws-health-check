@@ -16,7 +16,7 @@
 
 	<task:annotation-driven />
 	<aop:aspectj-autoproxy />
-	<cache:annotation-driven />
+	<cache:annotation-driven key-generator="customCacheKeyGenerator" />
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<util:properties id="coreProperties" location="classpath:core.properties"/>
@@ -29,6 +29,7 @@
 	<context:component-scan
 	base-package="com.ds.ws.health.common,
 				  com.ds.ws.health.core,
+				  com.ds.ws.health.service,
 				  com.ds.ws.health.scheduler,
 				  com.ds.ws.health.util" />
 				  
@@ -39,5 +40,6 @@
 	<bean id="ehcache"
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
 		p:config-location="classpath:ehcache.xml" p:cacheManagerName="springCache" />
+	<bean id="customCacheKeyGenerator" class="com.ds.ws.health.common.CustomCacheKeyGenerator" />
 	
 </beans>

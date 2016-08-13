@@ -6,17 +6,19 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.ds.ws.health.model.ServiceDetail;
-import com.ds.ws.health.util.WSHealthUtils;
+import com.ds.ws.health.service.WSHealthService;
 
 @Component
 class WSHealthReportGenerator {
 
 	@Autowired
-	private WSHealthUtils wsHealthUtils;
+	@Qualifier("wSHealthServiceImpl")
+	private WSHealthService wsHealthService;
 
 	@Autowired
 	private WSHealthReportGeneratorUtils wsHealthReportGeneratorUtils;
@@ -33,7 +35,7 @@ class WSHealthReportGenerator {
 
 	@Scheduled(cron = "${ping.interval}")
 	void buildWSHealthReport() {
-		List<ServiceDetail> serviceHealthDetails = wsHealthUtils.getServiceHealthDetails();
+		List<ServiceDetail> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
 		wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
 	}
 
