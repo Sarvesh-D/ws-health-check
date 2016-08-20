@@ -29,8 +29,8 @@ public class WSHealthReportMailSender {
 		final String subject = mailProperties.getProperty("report.mail.subject");
 		final String body = mailProperties.getProperty("report.mail.body");
 		
-		mailServiceFactory.getInstance(MailServiceProvider.DEFAULT_MAIL_SERVICE_PROVIDER).sendMail(from, to, subject,
-				body);
+		mailServiceFactory.getInstance(MailServiceProvider.DEFAULT_MAIL_SERVICE_PROVIDER).
+		sendMimeMail(from, to, subject, body, new String[] {reportUtils.getReportFileName()});
 		
 	}
 
