@@ -16,7 +16,7 @@ import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Component;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.ServiceDetail;
-import com.ds.ws.health.scheduler.WSHealthReportGeneratorUtils;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 import com.ds.ws.health.util.WorkbookUtils;
 

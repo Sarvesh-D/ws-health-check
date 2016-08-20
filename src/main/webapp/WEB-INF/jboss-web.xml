@@ -1,0 +1,3 @@
+<jboss-web>
+	<context-root>ws-health-check</context-root>
+</jboss-web>

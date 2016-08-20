@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.ds.ws.health.model.ServiceDetail;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.service.WSHealthService;
 
 @Component
@@ -42,6 +43,13 @@ class WSHealthReportGenerator {
 	@Scheduled(cron = "${file.rollover.interval}")
 	void createReportFile() {
 		wsHealthReportGeneratorUtils.saveReport();
+		/*
+		 * After creating report file, the new report file will be empty.
+		 * To support com.ds.ws.health.service.WSHealthService.getEnvHealthDetailsFromReport() service,
+		 * the report file must contain some data, hence calling buildWSHealthReport()
+		 * explicitly instead of waiting till ping.interval 
+		 */
+		buildWSHealthReport();
 	}
 
 }

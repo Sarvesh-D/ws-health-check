@@ -1,4 +1,4 @@
-package com.ds.ws.health.scheduler;
+package com.ds.ws.health.report;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class WSHealthReportGeneratorUtils {
 		initReportFile();
 	}
 	
-	void buildReport(List<ServiceDetail> serviceHealthDetails) {
+	public void buildReport(List<ServiceDetail> serviceHealthDetails) {
 		if(rowNum == 0)
 			insertHeader();
 		
@@ -73,7 +73,7 @@ public class WSHealthReportGeneratorUtils {
 		}
 	}
 
-	void saveReport() {
+	public void saveReport() {
 		try(FileOutputStream out = new FileOutputStream(getReportFileName())) {
 			workbookUtils.formatAsTable(0,rowNum,0,reportHeaders.length-1);
 			workbookUtils.autoAdjustColumnWidth(0, reportHeaders.length-1);
@@ -93,7 +93,7 @@ public class WSHealthReportGeneratorUtils {
 		sheet = workbookUtils.loadWorksheet("report"); //reset the sheet 
 	}
 
-	String getReportFileName() {
+	public String getReportFileName() {
 		return reportFilePath+System.getProperty("file.separator")+"report_"+LocalDate.now()+".xlsx";
 	}
 
