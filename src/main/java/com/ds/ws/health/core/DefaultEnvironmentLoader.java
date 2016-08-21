@@ -1,8 +1,10 @@
 package com.ds.ws.health.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -16,6 +18,7 @@ import org.springframework.util.Assert;
 
 import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.ComponentKey;
+import com.ds.ws.health.model.EnvironmentDetail;
 import com.ds.ws.health.model.ServiceDetail;
 
 @Service
@@ -31,46 +34,68 @@ final class DefaultEnvironmentLoader implements EnvironmentLoader {
 
 	@PostConstruct
 	private final void loadEnvironments() {
-		final String services = environmentProperties.getProperty(coreConstants.environmentsKey);
-		Assert.notNull(services, "no property with key ["+coreConstants.environmentsKey+"] found in service.properties");
-		if(StringUtils.isNotBlank(services)) {
-			String[] serviceArr = StringUtils.split(services, coreConstants.environmentsSeparatorKey);
-			for (String service : serviceArr) {
-				String[] serviceDetailsArr = StringUtils.split(StringUtils.trimToEmpty(service),
-						coreConstants.environmentDetailsSeparatorKey);
+		List<EnvironmentDetail> environmentDetails = getEnvironmentsViaProperties();
 
-				Assert.isTrue(serviceDetailsArr.length == 5,
-						"environment details currently supports only 5 properties viz [enviornment,provider,provider_version,description,uri]");
+		for (EnvironmentDetail environmentDetail : environmentDetails) {
+			final String env = environmentDetail.getEnvName();
+			final String provider = environmentDetail.getCompName();
+			final String providerVersion = environmentDetail.getCompVer();
+			final String desc = environmentDetail.getServiceDesc();
+			final String uri = environmentDetail.getServiceUri();
 
-				final String env = serviceDetailsArr[0];
-				final String provider = serviceDetailsArr[1];
-				final String providerVersion = serviceDetailsArr[2];
-				final String desc = serviceDetailsArr[3];
-				final String uri = serviceDetailsArr[4];
-				
-				final ComponentKey key = new ComponentKey(provider, providerVersion, env);
+			final ComponentKey key = new ComponentKey(provider, providerVersion, env);
 
-				final ServiceDetail serviceDetail = new ServiceDetail(env, provider, desc, uri);
+			final ServiceDetail serviceDetail = new ServiceDetail(env, provider, desc, uri);
 
-				if(environments.containsKey(env)) {
-					Map<ComponentKey,Set<ServiceDetail>> envComponents = environments.get(env);
-					if(envComponents.containsKey(key)) {
-						envComponents.get(key).add(serviceDetail);
-					} else {
-						Set<ServiceDetail> serviceDetails = new HashSet<>();
-						serviceDetails.add(serviceDetail);
-						envComponents.put(key, serviceDetails);
-					}
+			if(environments.containsKey(env)) {
+				Map<ComponentKey,Set<ServiceDetail>> envComponents = environments.get(env);
+				if(envComponents.containsKey(key)) {
+					envComponents.get(key).add(serviceDetail);
 				} else {
-					Map<ComponentKey,Set<ServiceDetail>> envComponents = new HashMap<>();
 					Set<ServiceDetail> serviceDetails = new HashSet<>();
 					serviceDetails.add(serviceDetail);
 					envComponents.put(key, serviceDetails);
-					environments.put(env, envComponents);
 				}
+			} else {
+				Map<ComponentKey,Set<ServiceDetail>> envComponents = new HashMap<>();
+				Set<ServiceDetail> serviceDetails = new HashSet<>();
+				serviceDetails.add(serviceDetail);
+				envComponents.put(key, serviceDetails);
+				environments.put(env, envComponents);
+			}
 
+		}
+	}
+
+	private List<EnvironmentDetail> getEnvironmentsViaProperties() {
+		List<EnvironmentDetail> environmentDetails = new ArrayList<>();
+		final String envsAsString = environmentProperties.getProperty(coreConstants.environmentsKey);
+		Assert.notNull(envsAsString, "no property with key ["+coreConstants.environmentsKey+"] found in environment.properties");
+		if(StringUtils.isNotBlank(envsAsString)) {
+			String[] envs = StringUtils.split(envsAsString, coreConstants.environmentsSeparatorKey);
+			for (String env : envs) {
+				String[] envDetails = StringUtils.split(StringUtils.trimToEmpty(env),
+						coreConstants.environmentDetailsSeparatorKey);
+
+				Assert.isTrue(envDetails.length == 5,
+						"environment details currently supports only 5 properties viz [enviornment,provider,provider_version,description,uri]");
+
+				final String envName = envDetails[0];
+				final String provider = envDetails[1];
+				final String providerVersion = envDetails[2];
+				final String desc = envDetails[3];
+				final String uri = envDetails[4];
+
+				EnvironmentDetail envDetail = new EnvironmentDetail.Builder(envName, provider, uri)
+						.compVer(providerVersion).serviceDesc(desc).build();
+				environmentDetails.add(envDetail);
 			}
 		}
+		return environmentDetails;
+	}
+
+	private List<EnvironmentDetail> getEnvironmentsViaService() {
+		return null;
 	}
 
 	private DefaultEnvironmentLoader() {}

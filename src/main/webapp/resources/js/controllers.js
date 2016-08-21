@@ -2,12 +2,12 @@
  * JS for controllers 
  */
 
-appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckFactory,NgTableParams) {
+appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,wSHealthCheckFactory,NgTableParams) {
 
 	var page_refresh_interval = 900000 // 15 minutes
 
 	$scope.getServiceHealthDetails = function() {
-		solveItWSHealthCheckFactory.query(function(servicesHealthDetails) {
+		wSHealthCheckFactory.query(function(servicesHealthDetails) {
 			if(servicesHealthDetails.length == 0)
 				$scope.noServices = true;
 			else {
@@ -48,16 +48,16 @@ appModule.controller('serviceHealthDetailsController' , function($scope,$timeout
 });
 
 
-appModule.controller('envHealthDetailsController' , function($scope,$timeout,solveItWSHealthCheckFactory,envHealthDetailsService) {
+appModule.controller('envHealthDetailsController' , function($scope,$timeout,wSHealthCheckFactory,envHealthDetailsService) {
 
 	var page_refresh_interval = 900000 // 15 minutes
 
 	$scope.getEnvHealthDetails = function() {
-		solveItWSHealthCheckFactory.query(function(envHealthDetails) {
-			if(envHealthDetails.length == 0)
+		wSHealthCheckFactory.get(function(response) {
+			if(response.environments.length == 0)
 				$scope.noEnvs = true;
 			else {
-				$scope.envHealthDetailsView = configEnvHealthDetailsView(envHealthDetails);
+				$scope.envHealthDetailsView = configEnvHealthDetailsView(response.environments);
 				envHealthDetailsService.setEnvHealthDetails($scope.envHealthDetailsView);
 			}
 		}).$promise.then(function() {

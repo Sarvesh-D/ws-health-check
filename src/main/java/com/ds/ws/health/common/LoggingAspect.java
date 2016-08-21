@@ -28,16 +28,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 final class LoggingAspect {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
-	
-	@Autowired
+
+	@Autowired(required=false)
 	private HttpServletRequest request;
 
 	@Pointcut("execution(* com.ds.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	private void allMethodsExceptRequests() {}
-	
+
 	@Pointcut("execution(* com.ds.ws.health.web..*(..)) && @annotation(requestMapping)")
 	private void allRequests(RequestMapping requestMapping) {}
-	
+
 	@Pointcut("execution(* com.ds.ws.health..*(..))")
 	private void allMethods() {}
 
@@ -49,7 +49,7 @@ final class LoggingAspect {
 		retval = pjp.proceed();
 		return retval;
 	}
-	
+
 	@Around("allRequests(requestMapping)")
 	private Object logRequests(ProceedingJoinPoint pjp, RequestMapping requestMapping) throws Throwable {
 		putUuid();
@@ -59,18 +59,18 @@ final class LoggingAspect {
 		retval = pjp.proceed();
 		return retval;
 	}
-	
+
 	@AfterThrowing(pointcut="allMethods()", throwing="error")
 	private void logException(JoinPoint jp , Throwable error) {
 		logger.error("Exception occured in method : {}", jp.getSignature());
 		logger.error("Exception : {}", error.getMessage());
 	}
-	
+
 	@AfterReturning(pointcut="allMethods()", returning="retval")
 	private void logSuccessfulExit(JoinPoint jp, Object retval) {
 		logger.trace("Successfully Exiting method : {}", jp.getSignature());
 	}
-	
+
 	private StringBuilder getRequestInfo(RequestMapping requestMapping) {
 		StringBuilder requestInfo = new StringBuilder();
 		requestInfo.append("\nRequest header(s) = ");
@@ -83,12 +83,14 @@ final class LoggingAspect {
 		requestInfo.append(Arrays.toString(requestMapping.params()));
 		requestInfo.append("\nRequest path(s) = ");
 		requestInfo.append(Arrays.toString(requestMapping.path()));
-		requestInfo.append("\nUser Principal = "+request.getUserPrincipal());
-		requestInfo.append("\nRequest IP = "+request.getRemoteAddr());
-		requestInfo.append("\nServer IP = "+request.getServerName());
+		if (null != request) {
+			requestInfo.append("\nUser Principal = " + request.getUserPrincipal());
+			requestInfo.append("\nRequest IP = " + request.getRemoteAddr());
+			requestInfo.append("\nServer IP = " + request.getServerName());
+		}
 		return requestInfo;
 	}
-	
+
 	private void putUuid() {
 		if(StringUtils.isBlank(MDC.get("uuid"))) {
 			String uuid = UUID.randomUUID().toString().replaceAll("-", "")
@@ -96,5 +98,5 @@ final class LoggingAspect {
 			MDC.put("uuid", uuid);
 		}
 	}
-	
+
 }
