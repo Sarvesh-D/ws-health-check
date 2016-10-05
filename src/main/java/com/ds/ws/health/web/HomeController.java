@@ -1,8 +1,14 @@
-package com.ds.ws.health.web;
+package com.barclays.solveit.ws.health.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Home Controller.
+ * @author G09633463
+ * @since 29/08/2016
+ * @version 1.0
+ */
 @Controller
 final class HomeController {
 	

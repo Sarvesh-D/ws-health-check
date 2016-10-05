@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title></title>
+<style>
+body {
+	font-family: tahoma;
+	font-size: x-small;
+}
+
+.mail_body {
+	color: #3377FF;
+}
+
+.mail_signature {
+	color: black;
+}
+table {
+    border-collapse: collapse;
+    width: auto;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: gray;
+    color: white;
+}
+</style>
+</head>
+<body>
+
+	<p class="mail_body">Greetings!!!</p>
+	#if($attachment)
+		<p class="mail_body">
+			Please find the attached web services health report for <b>$reportDate</b>.
+		</p>
+	#end
+	
+	<p class="mail_body">Environment health details snapshot for <b>$reportDate</b> is as follows:</p>
+		
+		<table>
+			<thead>
+				<tr>
+					<th>Environment</th>
+					<th>Component</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				#foreach($environment in $environments)
+					#set($envColAdded = false)
+					#foreach($component in $environment.components)
+						#if($component.status == "RED")
+							#set($color = "RED")
+						#elseif($component.status == "AMBER")
+							#set($color = "ORANGE")
+						#elseif($component.status == "GREEN")
+							#set($color = "GREEN")
+						#end
+						<tr>
+							#if(!$envColAdded)
+								<td rowspan="$environment.components.size()" style="background-color: #B8B8B8">$component.environment</td>
+								#set($envColAdded = true)
+							#end
+							<td style="background-color: #C8C8C8">$component.name</td>
+							<td style="background-color: $color">$component.status</td>
+						</tr>
+					#end
+					<tr>
+						<td colspan="3" style="background-color: gray"></td>
+					</tr>
+				#end
+			</tbody>
+		</table>
+	
+	<p class="mail_body">
+		For latest service health details visit :&nbsp;<a href="$dashboardLink"><b>Dashboard</b></a>
+	</p>
+	<p class="mail_body">P.S : Dashboard currently supports only chrome browser.</p>
+	<p class="mail_signature">
+		CONFIDENTIALITY NOTICE:<br />The contents of this email message and
+		any attachments are intended solely for the addressee(s)<br />and may
+		contain confidential and/or privileged information and may be legally
+		protected from<br />disclosure. If you are not the intended recipient
+		of this message or their agent, or if this message<br />has been
+		addressed to you in error, please immediately <br />delete this
+		message and any attachments. If you are not the intended recipient,
+		you are hereby<br />notified that any use, dissemination, copying, or
+		storage of this message or its attachments is<br />strictly
+		prohibited <br> <b>This is an automated email - please do not
+			reply.</b>
+	</p>
+
+</body>
+</html>

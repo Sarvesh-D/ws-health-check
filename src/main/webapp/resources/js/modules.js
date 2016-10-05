@@ -1,7 +1,7 @@
 /**
  * JS for modules 
  */
-var appModule = angular.module('appModule',['ngRoute','ngResource','ngTable']);
+var appModule = angular.module('appModule',['ngRoute','ngResource','ngTable','ng-fusioncharts']);
 
 appModule.config(function($routeProvider) {
 	$routeProvider.
@@ -12,5 +12,9 @@ appModule.config(function($routeProvider) {
 	when('/component/details/:env/:component/:version', {
 		templateUrl: "componentHealthDetails.html",
 		controller: "componentHealthDetailsController",
+	}).
+	when('/service/details/:desc/:uri*', {
+		templateUrl: "serviceHealthDetails.html",
+		controller: "serviceHealthDetailsController",
 	});
 });

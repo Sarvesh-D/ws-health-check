@@ -1,33 +1,39 @@
-package com.ds.ws.health.service;
+package com.barclays.solveit.ws.health.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.ds.ws.health.common.CoreConstants;
-import com.ds.ws.health.model.Component;
-import com.ds.ws.health.model.Environment;
-import com.ds.ws.health.model.ServiceDetail;
-import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
-import com.ds.ws.health.util.WSHealthUtils;
-import com.ds.ws.health.util.WorkbookUtils;
+import com.barclays.solveit.ws.health.common.CoreConstants;
+import com.barclays.solveit.ws.health.model.Environment;
+import com.barclays.solveit.ws.health.model.Service;
+import com.barclays.solveit.ws.health.model.Service.Status;
+import com.barclays.solveit.ws.health.model.ServiceTimeStatus;
+import com.barclays.solveit.ws.health.report.WSHealthReportGeneratorUtils;
+import com.barclays.solveit.ws.health.util.WSHealthUtils;
+import com.barclays.solveit.ws.health.util.WorkbookUtils;
 
-@Service("wSHealthServiceImpl")
+/**
+ * Default implementation for {@link WSHealthService} 
+ * @author G09633463
+ * @since 29/08/2016
+ * @version 1.0
+ *
+ */
+@org.springframework.stereotype.Service("wSHealthServiceImpl")
 public class WSHealthServiceImpl implements WSHealthService {
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(WSHealthServiceImpl.class);
+
 	@Autowired
 	private WSHealthUtils wsHealthUtils;
-	
-	@Autowired
-	private CoreConstants coreConstants;
 	
 	@Autowired
 	private WorkbookUtils workbookUtils;
@@ -35,69 +41,48 @@ public class WSHealthServiceImpl implements WSHealthService {
 	@Autowired
 	private WSHealthReportGeneratorUtils reportUtils;
 
+	@Autowired
+	private CoreConstants coreConstants;
+
 	@Override
-	public List<ServiceDetail> getServiceHealthDetails() {
-		List<ServiceDetail> serviceDetails = new ArrayList<>(wsHealthUtils.getAllServices());
-		Collections.sort(serviceDetails, ServiceDetail.SERVICE_DETAIL_COMPARATOR);
-		for (ServiceDetail serviceDetail : serviceDetails) {
-			String serviceStatus = wsHealthUtils.pingURL(serviceDetail.getUri(), coreConstants.connectionTimeoutInMillis)
-					? coreConstants.serviceStatusPassed : coreConstants.serviceStatusFailed;
+	public List<Service> getServiceHealthDetails() {
+		logger.info("Getting service health details started...");
+		List<Service> serviceDetails = new ArrayList<>(wsHealthUtils.getAllServices());
+		Collections.sort(serviceDetails, Service.SERVICE_DETAIL_COMPARATOR);
+		for (Service serviceDetail : serviceDetails) {
+			logger.debug("Getting service health details for service {} ",serviceDetail);
+			Status serviceStatus = wsHealthUtils.pingURL(serviceDetail.getUri(), coreConstants.connectionTimeoutInMillis)
+					? Status.UP : Status.DOWN;
+			logger.debug("Service is {}",serviceStatus);
 			serviceDetail.setStatus(serviceStatus);
 		}
+		logger.info("Getting service health details completed");
 		return Collections.unmodifiableList(serviceDetails);
 	}
 	
 	@Override
-	public List<Environment> getEnvHealthDetailsFromReport() {
-		List<Environment> environmentDetails = new ArrayList<>(wsHealthUtils.getAllEnvironments());
-		Collections.sort(environmentDetails, Environment.ENVIRONMENT_NAME_COMPARATOR);
-		
-		// Load workbook and sheet
-		Workbook workbook = workbookUtils.loadWorkbook(reportUtils.getReport());
-		Sheet reportSheet = workbookUtils.loadWorksheet(workbook.getSheet("report"));
-		
-		final int rowEndIndex = reportSheet.getLastRowNum();
-		final int rowStartIndex = rowEndIndex - (wsHealthUtils.getAllServices().size()-1); // index based
-		
-		List<Row> rows = workbookUtils.getRowData(rowStartIndex, rowEndIndex);
-		Set<ServiceDetail> serviceDetailsFromReport = new HashSet<>();
-		
-		for (Row row : rows) {
-			ServiceDetail serviceDetail = new ServiceDetail(row.getCell(1).getStringCellValue(),
-					row.getCell(2).getStringCellValue(), row.getCell(3).getStringCellValue(),
-					row.getCell(4).getStringCellValue());
-			serviceDetail.setStatus(row.getCell(5).getStringCellValue());
-			serviceDetailsFromReport.add(serviceDetail);
-		}
-		
-		for (Environment environmentDetail : environmentDetails) {
-			for (Component component : environmentDetail.getComponents()) {
-				for (ServiceDetail serviceDetail : component.getServices()) {
-					for (ServiceDetail serviceDetailFromReport : serviceDetailsFromReport) {
-						if(serviceDetail.equals(serviceDetailFromReport))
-							serviceDetail.setStatus(serviceDetailFromReport.getStatus());
-					}
-				}
-			}
-		}
-		
-		return Collections.unmodifiableList(environmentDetails);
+	public List<Environment> getEnvHealthDetails(EnvDetailsFetchMode fetchMode) {
+		return WSHealthUtils.instanceOf(fetchMode.getStrategy()).getEnvHealthDetails();
 	}
 	
 	@Override
-	public List<Environment> getEnvHealthDetails() {
-		List<Environment> environmentDetails = new ArrayList<>(wsHealthUtils.getAllEnvironments());
-		Collections.sort(environmentDetails, Environment.ENVIRONMENT_NAME_COMPARATOR);
-		for (Environment environmentDetail : environmentDetails) {
-			for (Component component : environmentDetail.getComponents()) {
-				for (ServiceDetail serviceDetail : component.getServices()) {
-					String status = wsHealthUtils.pingURL(serviceDetail.getUri(), coreConstants.connectionTimeoutInMillis)
-							? coreConstants.serviceStatusPassed : coreConstants.serviceStatusFailed;
-					serviceDetail.setStatus(status);
-				}
-			}
+	public List<ServiceTimeStatus> getReportForService(Service service) {
+		List<ServiceTimeStatus> serviceReport = new ArrayList<>();
+		// Load workbook and sheet
+		Workbook workbook = workbookUtils.loadWorkbook(reportUtils.getReport());
+		Sheet reportSheet = workbookUtils.loadWorksheet(workbook.getSheet("report"));
+
+		// excluding header and footer
+		List<Row> rows = workbookUtils.getRowData(reportSheet.getFirstRowNum() + 1, reportSheet.getLastRowNum() - 1);
+		logger.debug("Rows Fetched = {}",rows.size());
+		
+		for (Row row : rows) {
+			Service serviceRow = wsHealthUtils.convertRowToService(row);
+			if(service.equals(serviceRow))
+				serviceReport.add(new ServiceTimeStatus(row.getCell(0).toString(), serviceRow.getStatus().toString()));
 		}
-		return Collections.unmodifiableList(environmentDetails);
+		
+		return Collections.unmodifiableList(serviceReport);
 	}
 
-}
+}	

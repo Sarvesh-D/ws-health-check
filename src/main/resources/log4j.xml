@@ -61,7 +61,7 @@
 
 	<!-- Root Logger -->
 	<root>
-		<priority value="ALL" />
+		<priority value="DEBUG" />
 		<appender-ref ref="file" />
 		<appender-ref ref="errorFile" />
 	</root>

@@ -1,8 +1,5 @@
 /**
- * 
- */
-/**
  * @author Sarvesh
  *
  */
-package com.ds.ws.health.mail;
+package com.barclays.solveit.ws.health.mail;

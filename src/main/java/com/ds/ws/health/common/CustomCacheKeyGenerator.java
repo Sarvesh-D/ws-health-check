@@ -1,10 +1,15 @@
-package com.ds.ws.health.common;
+package com.barclays.solveit.ws.health.common;
 
 import java.lang.reflect.Method;
 
 import org.springframework.cache.interceptor.KeyGenerator;
 
-public class CustomCacheKeyGenerator implements KeyGenerator{
+/** Custom Cache key generator for Spring's ehCache
+ * @author G09633463
+ * @since 29/08/2016
+ * @version 1.0
+ */
+public class CustomCacheKeyGenerator implements KeyGenerator {
 
 	@Override
 	public Object generate(Object target, Method method, Object... params) {

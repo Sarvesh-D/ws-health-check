@@ -1,0 +1,44 @@
+package com.barclays.solveit.ws.health.web;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:spring/root-context.xml",
+		"classpath:spring/appServlet/servlet-context.xml" })
+@WebAppConfiguration
+public class WSHealthControllerTest {
+	
+	@Autowired
+	private WebApplicationContext context;
+
+	private MockMvc mvc;
+
+	@Before
+	public void setUp() throws Exception {
+		mvc = MockMvcBuilders.webAppContextSetup(context).build();
+	}
+
+	@Test
+	public void testGetEnvHealthDetails() throws Exception {
+		mvc.perform(get("/env/health")).andExpect(status().isOk());
+	}
+
+	@Test
+	public void testGetReportForService() throws Exception {
+		mvc.perform(get("/service/health").param("env", "SIT-1").param("provider", "CM").param("ver", "NA").param("uri",
+				"NA")).andExpect(status().isOk());
+	}
+
+}

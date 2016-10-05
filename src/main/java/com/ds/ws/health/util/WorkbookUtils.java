@@ -1,22 +1,17 @@
-package com.ds.ws.health.util;
+package com.barclays.solveit.ws.health.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.record.CFRuleBase.ComparisonOperator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.ConditionalFormattingRule;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.AreaReference;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
@@ -30,6 +25,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+/**
+ * Utility class for {@link Workbook} operations.<br>
+ * Most of the methods rely on the {@link Workbook} and {@link Sheet} being loaded
+ * @author G09633463
+ * @since 29/08/2016
+ * @version 1.0
+ *
+ */
 @Component
 @Scope(value=ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WorkbookUtils {
@@ -38,39 +41,73 @@ public class WorkbookUtils {
 
 	private Sheet worksheet;
 
+	/**
+	 * Loads a default {@link XSSFWorkbook} and returns the same.
+	 * @return {@link XSSFWorkbook}
+	 */
 	public Workbook loadWorkbook() {
 		loadWorkbook(new XSSFWorkbook());
 		return getWorkbook();
 	}
 
+	/**
+	 * Loads the given workbook
+	 * @param workbook to load
+	 * @return the loaded Workbook, same as passed workbook
+	 */
 	public Workbook loadWorkbook(Workbook workbook) {
 		this.workbook = workbook;
 		return getWorkbook();
 	}
 
+	/**
+	 * Loads and returns a default Sheet with name sheet_0.<br>
+	 * This results in a new sheet being created in the loaded Workbook
+	 * @return the default worksheet
+	 */
 	public Sheet loadWorksheet() {
 		return loadWorksheet("sheet_0");
 	}
 
+	/**
+	 * Loads and returns  sheet with given name.<br>
+	 * This results in a new sheet being created in the loaded Workbook
+	 * @param sheetName of sheet to be created
+	 * @return the loaded sheet
+	 */
 	public Sheet loadWorksheet(String sheetName) {
 		return loadWorksheet(getWorkbook().createSheet(sheetName));
 	}
 
+	/**
+	 * Loads and returns the given sheet.<br>
+	 * @param Sheet existing sheet
+	 * @return the loaded sheet, same as the given sheet.
+	 */
 	public Sheet loadWorksheet(Sheet sheet) {
 		this.worksheet = sheet;
 		return getWorksheet();
 	}
 
+	/**
+	 * @return The loaded Workbook
+	 */
 	public Workbook getWorkbook() {
 		Assert.notNull(workbook, "Workbook has not been loaded, load the workbook using loadWorkbook().");
 		return this.workbook;
 	}
 
+	/**
+	 * @return The loaded {@link Sheet}
+	 */
 	public Sheet getWorksheet() {
-		Assert.notNull(workbook, "Worksheet has not been loaded, load the worksheet using loadWorksheet().");
+		Assert.notNull(workbook, "Workbook has not been loaded, load the workbook using loadWorkbook().");
 		return this.worksheet;
 	}
 
+	/**
+	 * @return Hyperlink cell style
+	 */
 	public CellStyle getHyperlinkCellStyle() {
 		//cell style for hyperlinks
 		//by default hyperlinks are blue and underlined
@@ -82,19 +119,50 @@ public class WorkbookUtils {
 		return hlinkStyle;
 	}
 
+	/**
+	 * Creates hyperlink for the given URI
+	 * @param uri
+	 * @return {@link Hyperlink}
+	 */
 	public Hyperlink createHyperlink(String uri) {
 		Hyperlink link = getWorkbook().getCreationHelper().createHyperlink(Hyperlink.LINK_URL);
 		link.setAddress(uri);
 		return link;
 	}
 
+	/**
+	 * Makes the passed {@link Cell} a hyperlink to passed uri.<br>
+	 * The text of the cell is the uri passed.
+	 * @param cell
+	 * @param uri
+	 * @return Hyperlink cell
+	 */
 	public Cell createHyperlinkCell(Cell cell, String uri) {
+		return createHyperlinkCell(cell, uri, uri);
+	}
+	
+	/**
+	 * Makes the passed {@link Cell} a hyperlink to passed uri.<br>
+	 * The text of the cell is the text passed.
+	 * @param cell
+	 * @param uri
+	 * @param text
+	 * @return
+	 */
+	public Cell createHyperlinkCell(Cell cell, String uri, String text) {
 		cell.setCellStyle(getHyperlinkCellStyle());
 		cell.setHyperlink(createHyperlink(uri));
-		cell.setCellValue(uri);
+		cell.setCellValue(text);
 		return cell;
 	}
 
+	/**
+	 * Formats the region as Table
+	 * @param rowStartIndex
+	 * @param rowEndIndex
+	 * @param colStartIndex
+	 * @param colEndIndex
+	 */
 	public void formatAsTable(int rowStartIndex, int rowEndIndex, int colStartIndex, int colEndIndex) {
 		Assert.isTrue(rowEndIndex > rowStartIndex, "rowEndIndex must be greater than rowStartIndex");
 		Assert.isTrue(colEndIndex > colStartIndex, "colEndIndex must be greater than colStartIndex");
@@ -133,29 +201,19 @@ public class WorkbookUtils {
 
 	}
 
-	public void createConditionalFormattingRule() {
-		SheetConditionalFormatting sheetCF = getWorksheet().getSheetConditionalFormatting();
-		ConditionalFormattingRule successRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL,"PASSED");
-		ConditionalFormattingRule failureRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL,"FAILED");
-
-		PatternFormatting patternFmtSuccess = successRule.createPatternFormatting();
-		patternFmtSuccess.setFillBackgroundColor(IndexedColors.GREEN.index);
-
-		PatternFormatting patternFmtFailure = failureRule.createPatternFormatting();
-		patternFmtFailure.setFillBackgroundColor(IndexedColors.RED.index);
-
-		ConditionalFormattingRule [] cfRules = {successRule, failureRule};
-
-		CellRangeAddress[] regions = {CellRangeAddress.valueOf("F2")};
-		
-		sheetCF.addConditionalFormatting(regions, cfRules);
-
-	}
-
+	/**
+	 * Auto adjust the length of column corresponding to given index
+	 * @param colIndex
+	 */
 	public void autoAdjustColumnWidth(int colIndex) {
 		getWorksheet().autoSizeColumn(colIndex);
 	}
 
+	/**
+	 * Auto adjust multiple columns
+	 * @param colStartIndex
+	 * @param colEndIndex
+	 */
 	public void autoAdjustColumnWidth(int colStartIndex, int colEndIndex) {
 		Assert.isTrue(colEndIndex > colStartIndex, "colEndIndex must be greater than colStartIndex");
 		for (int i = colStartIndex; i <= colEndIndex; i++) {
@@ -163,10 +221,21 @@ public class WorkbookUtils {
 		}
 	}
 	
+	/**
+	 * Gets the row corresponding to given index
+	 * @param rowIndex
+	 * @return {@link Row}
+	 */
 	public Row getRowData(int rowIndex) {
 		return getWorksheet().getRow(rowIndex);
 	}
 	
+	/**
+	 * Gets the List of row corresponding to given index
+	 * @param rowStartIndex
+	 * @param rowEndIndex
+	 * @return {@link Row}
+	 */
 	public List<Row> getRowData(int rowStartIndex, int rowEndIndex) {
 		List<Row> rows = new ArrayList<>();
 		for (int i = rowStartIndex; i <= rowEndIndex; i++) {
@@ -174,5 +243,36 @@ public class WorkbookUtils {
 		}
 		return rows;
 	}
-
+	
+	/**
+	 * Checks if the sheet is empty or not.<br>
+	 * A sheet is considered as empty if total rows are 0.
+	 * @param sheet
+	 * @return True if the sheet is empty, False otherwise.
+	 */
+	public boolean isWorkSheetEmpty(Sheet sheet) {
+		return sheet.getLastRowNum() <= 0;
+	}
+	
+	/**
+	 * Once the report file is rolled over at 00:00:00, The new report file is empty,
+	 * to populate the new report file an explicit ping is triggered on the services.
+	 * However, if this service is called before the explicit ping executes, the new 
+	 * report file will be empty causing rowEndIndex = 0 and rowStartIndex = -ve; causing
+	 * NullPointer in the for loop.
+	 * This error window is rather small lasting from file rollover time till the explicit ping
+	 * executes: approximately 00:00:00 to 00:00:10
+	 */
+	public void proceedIfWorksheetNotEmpty(Sheet reportSheet) {
+		if(isWorkSheetEmpty(reportSheet)) {
+			try {
+				Thread.sleep(1000);
+				proceedIfWorksheetNotEmpty(reportSheet);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		else return;
+	}
+	
 }

@@ -1,4 +1,4 @@
-package com.ds.ws.health.common;
+package com.barclays.solveit.ws.health.common;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -22,23 +22,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Logging Aspect for logging
+ * @author G09633463
+ * @since 29/08/2016
+ * @version 1.0
  */
 @Component
 @Aspect
 final class LoggingAspect {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
-
 	@Autowired(required=false)
 	private HttpServletRequest request;
 
-	@Pointcut("execution(* com.ds.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
+
+	@Pointcut("execution(* com.barclays.solveit.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	private void allMethodsExceptRequests() {}
 
-	@Pointcut("execution(* com.ds.ws.health.web..*(..)) && @annotation(requestMapping)")
+	@Pointcut("execution(* com.barclays.solveit.ws.health.web..*(..)) && @annotation(requestMapping)")
 	private void allRequests(RequestMapping requestMapping) {}
 
-	@Pointcut("execution(* com.ds.ws.health..*(..))")
+	@Pointcut("execution(* com.barclays.solveit.ws.health..*(..))")
 	private void allMethods() {}
 
 	@Around("allMethodsExceptRequests()")
@@ -83,10 +86,10 @@ final class LoggingAspect {
 		requestInfo.append(Arrays.toString(requestMapping.params()));
 		requestInfo.append("\nRequest path(s) = ");
 		requestInfo.append(Arrays.toString(requestMapping.path()));
-		if (null != request) {
-			requestInfo.append("\nUser Principal = " + request.getUserPrincipal());
-			requestInfo.append("\nRequest IP = " + request.getRemoteAddr());
-			requestInfo.append("\nServer IP = " + request.getServerName());
+		if(null != request) {
+			requestInfo.append("\nUser Principal = "+request.getUserPrincipal());
+			requestInfo.append("\nRequest IP = "+request.getRemoteAddr());
+			requestInfo.append("\nServer IP = "+request.getServerName());
 		}
 		return requestInfo;
 	}

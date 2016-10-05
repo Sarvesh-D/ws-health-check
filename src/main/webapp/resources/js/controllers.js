@@ -2,62 +2,23 @@
  * JS for controllers 
  */
 
-appModule.controller('serviceHealthDetailsController' , function($scope,$timeout,wSHealthCheckFactory,NgTableParams) {
+/**
+ * Controller for Getting Environment Health Details. (Near Real Time. Max delay of 15 mins)
+ */
+appModule.controller('envHealthDetailsController',
+				function($scope, $rootScope, $timeout, envDetailsFactory,
+						envHealthDetailsService, utilityService, coreConstants) {
+	
+	$rootScope.version = coreConstants.VERSION;
 
-	var page_refresh_interval = 900000 // 15 minutes
-
-	$scope.getServiceHealthDetails = function() {
-		wSHealthCheckFactory.query(function(servicesHealthDetails) {
-			if(servicesHealthDetails.length == 0)
-				$scope.noServices = true;
-			else {
-				$scope.servicesHealthDetailsView = [];
-				angular.forEach(servicesHealthDetails,function(servicesHealthDetail) {
-					var servicesHealthDetailView = configRespServiceObj(servicesHealthDetail);
-					$scope.servicesHealthDetailsView.push(servicesHealthDetailView);
-				});
-			}
-		}).$promise.then(function() {
-			// set service health detail table data
-			$scope.tableParams = configTableOptions();
-
-			// auto refresh table data
-			$timeout(function() {
-				$scope.getServiceHealthDetails();
-			}, page_refresh_interval);
-
-			$scope.lastUpdated = new Date(); // set last updated/refreshed time
-		});
-	};
-
-	function configTableOptions() {
-		var initialParams = {
-				count: 5 // initial page size
-		};
-		var initialSettings = {
-				// page size buttons
-				counts: [5,10,15,20],
-				// determines the pager buttons
-				paginationMaxBlocks: 10,
-				paginationMinBlocks: 2,
-				dataset: $scope.servicesHealthDetailsView
-		};
-		return new NgTableParams(initialParams, initialSettings);
-	}
-
-});
-
-
-appModule.controller('envHealthDetailsController' , function($scope,$timeout,wSHealthCheckFactory,envHealthDetailsService) {
-
-	var page_refresh_interval = 900000 // 15 minutes
+	var page_refresh_interval = coreConstants.PAGE_REFRESH_INTERVAL;
 
 	$scope.getEnvHealthDetails = function() {
-		wSHealthCheckFactory.get(function(response) {
-			if(response.environments.length == 0)
+		envDetailsFactory.get(function(data) {
+			if(data.environments.length == 0)
 				$scope.noEnvs = true;
 			else {
-				$scope.envHealthDetailsView = configEnvHealthDetailsView(response.environments);
+				$scope.envHealthDetailsView = utilityService.configEnvHealthDetailsView(data.environments);
 				envHealthDetailsService.setEnvHealthDetails($scope.envHealthDetailsView);
 			}
 		}).$promise.then(function() {
@@ -72,7 +33,11 @@ appModule.controller('envHealthDetailsController' , function($scope,$timeout,wSH
 	};
 });
 
-appModule.controller('componentHealthDetailsController' , function($scope,$routeParams,envHealthDetailsService) {
+/**
+ * Controller for Populating Component Service Details. Depends on envHealthDetailsController. (Near Real Time. Max delay of 15 mins)
+ */
+appModule.controller('componentHealthDetailsController', function($scope,$rootScope,
+		$routeParams, envHealthDetailsService, componentDetailsService) {
 	$scope.componentServiceDetails = [];
 	$scope.lastUpdated = envHealthDetailsService.getLastUpdated();
 	$scope.env = $routeParams.env;
@@ -83,12 +48,54 @@ appModule.controller('componentHealthDetailsController' , function($scope,$route
 	angular.forEach(envHealthDetails,function(envHealthDetail) {
 		if(envHealthDetail.name == $routeParams.env) {
 			angular.forEach(envHealthDetail.components,function(component) {
-				if(component.name == $routeParams.component) {
+				if(component.name == $routeParams.component && component.version == $routeParams.version) {
 					angular.forEach(component.services,function(service) {
 						$scope.componentServiceDetails.push(service);
 					});
+					componentDetailsService.setComponentDetails(component);
 				}
 			});
 		}
 	});
+});
+
+/**
+ * Controller for Getting Service Health Details. (Real Time)
+ */
+appModule.controller('serviceHealthDetailsController',
+				function($scope, $routeParams, $timeout, serviceDetailsFactory,
+						componentDetailsService, utilityService, coreConstants) {
+	
+	var page_refresh_interval = coreConstants.PAGE_REFRESH_INTERVAL;
+	
+	$scope.getServiceDeails = function() {
+		component = componentDetailsService.getComponentDetails();
+		$scope.env = component.env;
+		$scope.component = component.name;
+		$scope.version = component.version;
+		$scope.desc = $routeParams.desc;
+		$scope.uri = $routeParams.uri;
+		
+		var serviceTimes = [];
+		
+		serviceDetailsFactory.get({
+			env : component.env,
+			provider : component.name,
+			ver : component.version,
+			uri : $routeParams.uri
+		}, function(data) {
+			angular.forEach(data.serviceTimes,function(serviceTime) {
+				serviceTimes.push(serviceTime);
+			});
+		}).$promise.then(function() {
+
+			utilityService.renderChart(utilityService.transformDataForChart(serviceTimes));
+			// auto refresh table data
+			$timeout(function() {
+				$scope.getServiceDeails();
+			}, page_refresh_interval);
+
+			$scope.lastUpdated = new Date(); // set last updated/refreshed time
+		});
+	}
 });

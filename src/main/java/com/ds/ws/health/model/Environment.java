@@ -1,4 +1,4 @@
-package com.ds.ws.health.model;
+package com.barclays.solveit.ws.health.model;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -7,11 +7,18 @@ import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
+/**
+ * Environment model.<br>
+ * An Environment is considered to be have a name and zero or many {@link Provider}
+ * @author G09633463
+ * @since 29/08/2016
+ * @version 1.0
+ */
 public class Environment {
 	
 	private final String name;
 
-	private Set<Component> components;
+	private Set<Provider> components;
 	
 	public static final EnvirnomentDetailsNameComaparator ENVIRONMENT_NAME_COMPARATOR = new EnvirnomentDetailsNameComaparator(); 
 	
@@ -45,13 +52,13 @@ public class Environment {
 		return true;
 	}
 
-	public Set<Component> getComponents() {
+	public Set<Provider> getComponents() {
 		if(null == components)
-			components = new TreeSet<>(Component.COMPONENT_NAME_COMPARATOR);
+			components = new TreeSet<>(Provider.COMPONENT_NAME_COMPARATOR);
 		return components;
 	}
 
-	public void setComponents(Set<Component> components) {
+	public void setComponents(Set<Provider> components) {
 		this.components = components;
 	}
 

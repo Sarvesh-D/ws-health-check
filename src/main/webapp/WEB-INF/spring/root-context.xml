@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:task="http://www.springframework.org/schema/task" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:cache="http://www.springframework.org/schema/cache"
-	xsi:schemaLocation="http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
@@ -16,24 +19,25 @@
 	<cache:annotation-driven key-generator="customCacheKeyGenerator" />
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<util:properties id="coreProperties" location="classpath:core.properties" />
-	<util:properties id="environmentProperties" location="classpath:environments.properties" />
-	<util:properties id="reportProperties" location="classpath:report.properties" />
-	<util:properties id="schedulerProperties" location="classpath:scheduler.properties" />
-	<util:properties id="mailProperties" location="classpath:mail.properties" />
-
+	<util:properties id="coreProperties" location="classpath:core.properties"/>
+	<util:properties id="environmentProperties" location="classpath:environments.properties"/>
+	<util:properties id="reportProperties" location="classpath:report.properties"/>
+	<util:properties id="schedulerProperties" location="classpath:scheduler.properties"/>
+	<util:properties id="cmPropertyFileLocations" location="classpath:cm.properties"/>
+	<util:properties id="mailProperties" location="classpath:mail.properties"/>
+	
 	<context:property-placeholder properties-ref="schedulerProperties" ignore-unresolvable="true" />
-	<context:property-placeholder properties-ref="mailProperties" ignore-unresolvable="true" />
-
-	<context:component-scan
-		base-package="com.ds.ws.health.common,
-				  com.ds.ws.health.core,
-				  com.ds.ws.health.service,
-				  com.ds.ws.health.report,
-				  com.ds.ws.health.mail,
-				  com.ds.ws.health.scheduler,
-				  com.ds.ws.health.util" />
-
+	<context:property-placeholder properties-ref="mailProperties" ignore-unresolvable="true"/>
+	
+	<context:component-scan 
+	base-package="com.barclays.solveit.ws.health.common,
+				  com.barclays.solveit.ws.health.core,
+				  com.barclays.solveit.ws.health.service,
+				  com.barclays.solveit.ws.health.mail,
+				  com.barclays.solveit.ws.health.report,
+				  com.barclays.solveit.ws.health.scheduler,
+				  com.barclays.solveit.ws.health.util" />
+				  
 	<!-- Cache Configuration -->
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
 		p:cache-manager-ref="ehcache" />
@@ -41,19 +45,23 @@
 	<bean id="ehcache"
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
 		p:config-location="classpath:ehcache.xml" p:cacheManagerName="springCache" />
-	<bean id="customCacheKeyGenerator" class="com.ds.ws.health.common.CustomCacheKeyGenerator" />
-
+	<bean id="customCacheKeyGenerator" class="com.barclays.solveit.ws.health.common.CustomCacheKeyGenerator" />
+	
+	
 	<!-- Mail Config -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
-		p:host="${mail.host}" p:port="${mail.port}" p:username="${mail.username}"
-		p:password="${mail.password}" p:javaMailProperties-ref="javaMailProperties" />
+		p:host="${mail.host}" p:port="${mail.port}" p:javaMailProperties-ref="javaMailProperties" />
+		
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean"
+			p:resourceLoaderPath="classpath:"
+         	p:preferFileSystemAccess="false"/>
 
 	<util:map id="javaMailProperties">
-		<entry key="mail.smtp.auth" value="${mail.smtp.auth}" />
-		<entry key="mail.smtp.starttls.enable" value="${mail.smtp.starttls.enable}" />
+		<entry key="mail.transport.protocol" value="${mail.transport.protocol}" />
+		<entry key="mail.smtp.ssl.trust" value="${mail.smtp.ssl.trust}" />
 		<entry key="mail.debug" value="${mail.debug}" />
 	</util:map>
 
 	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage" p:from="${report.mail.from}" />
-
+	
 </beans>

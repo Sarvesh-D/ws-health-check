@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
-	<context-root>ws-health-check</context-root>
+    <context-root>ws-health-check</context-root>
 </jboss-web>

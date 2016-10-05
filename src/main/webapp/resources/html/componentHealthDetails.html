@@ -12,7 +12,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="serviceHealthDetail in componentServiceDetails">
-				<td>{{serviceHealthDetail.description}}</td>
+				<td><a style="color: white" href="#service/details/{{serviceHealthDetail.description}}/{{serviceHealthDetail.uri}}">{{serviceHealthDetail.description}}</a></td>
 				<td><a href="{{serviceHealthDetail.uri}}?wsdl" target="_blank">{{serviceHealthDetail.uri}}</a></td>
 				<td>
 					<svg width="100" height="12" style="margin-top: 8px">
