@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.report;
+package com.ds.ws.health.report;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,7 +32,7 @@ public class WSHealthReportGeneratorUtilsTest {
 		LocalDate date_2 = new LocalDate(LocalDate.now());
 		String actualPath_2 = reportUtils.getReportFileForDate(date_2);
 		String expectedPath_2 = reportProperties.getProperty("report.file.path") + System.getProperty("file.separator")
-				+ "report_" + "2016-09-18.xlsx";
+				+ "report_" + "2016-10-26.xlsx";
 		assertTrue(actualPath_2.equalsIgnoreCase(expectedPath_2));
 	}
 

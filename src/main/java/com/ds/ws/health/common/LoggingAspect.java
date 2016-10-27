@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.common;
+package com.ds.ws.health.common;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -35,13 +35,13 @@ final class LoggingAspect {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
 
-	@Pointcut("execution(* com.barclays.solveit.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+	@Pointcut("execution(* com.ds.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	private void allMethodsExceptRequests() {}
 
-	@Pointcut("execution(* com.barclays.solveit.ws.health.web..*(..)) && @annotation(requestMapping)")
+	@Pointcut("execution(* com.ds.ws.health.web..*(..)) && @annotation(requestMapping)")
 	private void allRequests(RequestMapping requestMapping) {}
 
-	@Pointcut("execution(* com.barclays.solveit.ws.health..*(..))")
+	@Pointcut("execution(* com.ds.ws.health..*(..))")
 	private void allMethods() {}
 
 	@Around("allMethodsExceptRequests()")

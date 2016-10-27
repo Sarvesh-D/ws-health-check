@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.report;
+package com.ds.ws.health.report;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,9 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.barclays.solveit.ws.health.common.ReportConstants;
-import com.barclays.solveit.ws.health.model.Service;
-import com.barclays.solveit.ws.health.util.WorkbookUtils;
+import com.ds.ws.health.common.ReportConstants;
+import com.ds.ws.health.model.Service;
+import com.ds.ws.health.util.WorkbookUtils;
+
 
 /**
  * Helper class for generating reports.

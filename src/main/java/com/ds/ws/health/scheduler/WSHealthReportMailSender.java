@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.scheduler;
+package com.ds.ws.health.scheduler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.barclays.solveit.ws.health.mail.MailServiceFactory;
-import com.barclays.solveit.ws.health.mail.MailServiceFactory.MailServiceProvider;
-import com.barclays.solveit.ws.health.mail.MailUtils;
-import com.barclays.solveit.ws.health.report.WSHealthReportGeneratorUtils;
-import com.barclays.solveit.ws.health.service.EnvDetailsFetchMode;
-import com.barclays.solveit.ws.health.service.WSHealthService;
+import com.ds.ws.health.mail.MailServiceFactory;
+import com.ds.ws.health.mail.MailServiceFactory.MailServiceProvider;
+import com.ds.ws.health.mail.MailUtils;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
+import com.ds.ws.health.service.EnvDetailsFetchMode;
+import com.ds.ws.health.service.WSHealthService;
 
 /**
  * Scheduler class for sending report mails 

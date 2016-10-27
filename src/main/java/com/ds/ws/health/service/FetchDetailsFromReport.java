@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.service;
+package com.ds.ws.health.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,11 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.barclays.solveit.ws.health.model.Environment;
-import com.barclays.solveit.ws.health.model.Provider;
-import com.barclays.solveit.ws.health.model.Service;
-import com.barclays.solveit.ws.health.report.WSHealthReportGeneratorUtils;
-import com.barclays.solveit.ws.health.util.WSHealthUtils;
+import com.ds.ws.health.model.Environment;
+import com.ds.ws.health.model.Provider;
+import com.ds.ws.health.model.Service;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
+import com.ds.ws.health.util.WSHealthUtils;
+
 
 @org.springframework.stereotype.Service
 public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {

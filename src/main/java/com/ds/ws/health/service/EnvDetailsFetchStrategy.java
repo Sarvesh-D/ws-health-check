@@ -1,8 +1,9 @@
-package com.barclays.solveit.ws.health.service;
+package com.ds.ws.health.service;
 
 import java.util.List;
 
-import com.barclays.solveit.ws.health.model.Environment;
+import com.ds.ws.health.model.Environment;
+
 
 /**
  * Abstract Strategy class for fetching env health details.<br>

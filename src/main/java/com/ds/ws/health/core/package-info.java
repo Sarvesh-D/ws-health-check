@@ -5,4 +5,4 @@
  * @author Sarvesh
  *
  */
-package com.barclays.solveit.ws.health.core;
+package com.ds.ws.health.core;

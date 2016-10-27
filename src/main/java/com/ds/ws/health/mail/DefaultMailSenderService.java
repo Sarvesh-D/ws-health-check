@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.mail;
+package com.ds.ws.health.mail;
 
 import java.util.HashMap;
 import java.util.Map;

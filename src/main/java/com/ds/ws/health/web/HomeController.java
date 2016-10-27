@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.web;
+package com.ds.ws.health.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

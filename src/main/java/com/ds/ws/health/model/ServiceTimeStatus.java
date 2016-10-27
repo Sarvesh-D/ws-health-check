@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.model;
+package com.ds.ws.health.model;
 
 /**
  * Immutable Class to hold service ping time and its status at that time

@@ -1,6 +1,12 @@
-package com.barclays.solveit.ws.health.util;
+package com.ds.ws.health.util;
 
 import javax.annotation.PostConstruct;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.springframework.stereotype.Component;
 
@@ -12,26 +18,39 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class CustomTrustStoreManager {
-	
+
 	@PostConstruct
-	private void initCerts() {
-		System.setProperty("javax.net.ssl.keyStoreType", "jks");
-		System.setProperty("javax.net.ssl.trustStoreType", "jks");
-		System.setProperty("javax.net.ssl.keyStore","C:/certstore/auto-bulk-complaint-loader-ylvt.jks");
-		System.setProperty("javax.net.ssl.keyStorePassword", "bulk01");
-		System.setProperty("javax.net.ssl.trustStore","C:/certstore/auto-bulk-complaint-loader-ylvt.jks");
-		System.setProperty("javax.net.ssl.trustStorePassword", "bulk01");
-		System.setProperty("javax.net.debug", "true");
-
-		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-				new javax.net.ssl.HostnameVerifier(){
-
-					public boolean verify(String hostname,
-							javax.net.ssl.SSLSession sslSession) {
-						return true;
+	private void registerCustomTrustStoreManager() {
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[]{
+				new X509TrustManager() {
+					public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+						return null;
 					}
-				});
+					public void checkClientTrusted(
+							java.security.cert.X509Certificate[] certs, String authType) {
+					}
+					public void checkServerTrusted(
+							java.security.cert.X509Certificate[] certs, String authType) {
+					}
+				}
+		};
 
+		// Install the all-trusting trust manager
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HttpsURLConnection.setDefaultHostnameVerifier(new TrustAllHostNameVerifier());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-}
+	private static class TrustAllHostNameVerifier implements HostnameVerifier {
+
+		public boolean verify(String hostname, SSLSession session) {
+			return true;
+		}
+
+	}}

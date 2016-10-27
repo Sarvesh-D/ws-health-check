@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.mail;
+package com.ds.ws.health.mail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

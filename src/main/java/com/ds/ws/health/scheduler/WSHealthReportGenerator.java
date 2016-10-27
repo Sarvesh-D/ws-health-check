@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.scheduler;
+package com.ds.ws.health.scheduler;
 
 import java.util.List;
 
@@ -13,9 +13,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.barclays.solveit.ws.health.model.Service;
-import com.barclays.solveit.ws.health.report.WSHealthReportGeneratorUtils;
-import com.barclays.solveit.ws.health.service.WSHealthService;
+import com.ds.ws.health.model.Service;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
+import com.ds.ws.health.service.WSHealthService;
+
 
 /**
  * Scheduler class for generating reports 

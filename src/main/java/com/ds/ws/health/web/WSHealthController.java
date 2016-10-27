@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.web;
+package com.ds.ws.health.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.barclays.solveit.ws.health.model.EnvironmentDetailsViewResponse;
-import com.barclays.solveit.ws.health.model.Service;
-import com.barclays.solveit.ws.health.model.ServiceTimeStatusResponse;
-import com.barclays.solveit.ws.health.service.EnvDetailsFetchMode;
-import com.barclays.solveit.ws.health.service.WSHealthService;
+import com.ds.ws.health.model.EnvironmentDetailsViewResponse;
+import com.ds.ws.health.model.Service;
+import com.ds.ws.health.model.ServiceTimeStatusResponse;
+import com.ds.ws.health.service.EnvDetailsFetchMode;
+import com.ds.ws.health.service.WSHealthService;
+
 
 /**
  * Controller for getting {@link EnvironmentDetailsViewResponse}

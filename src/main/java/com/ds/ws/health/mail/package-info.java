@@ -2,4 +2,4 @@
  * @author Sarvesh
  *
  */
-package com.barclays.solveit.ws.health.mail;
+package com.ds.ws.health.mail;

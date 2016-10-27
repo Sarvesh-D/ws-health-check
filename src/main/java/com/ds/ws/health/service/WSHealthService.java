@@ -1,11 +1,11 @@
-package com.barclays.solveit.ws.health.service;
+package com.ds.ws.health.service;
 
 import java.util.List;
 
-import com.barclays.solveit.ws.health.model.Environment;
-import com.barclays.solveit.ws.health.model.Provider;
-import com.barclays.solveit.ws.health.model.Service;
-import com.barclays.solveit.ws.health.model.ServiceTimeStatus;
+import com.ds.ws.health.model.Environment;
+import com.ds.ws.health.model.Provider;
+import com.ds.ws.health.model.Service;
+import com.ds.ws.health.model.ServiceTimeStatus;
 
 /**
  * Service Interface for WS Health Reports 

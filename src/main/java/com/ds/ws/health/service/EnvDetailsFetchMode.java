@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.service;
+package com.ds.ws.health.service;
 
 /**
  * Enum for different env health fetch strategies

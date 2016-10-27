@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.util;
+package com.ds.ws.health.util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -28,13 +28,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
-import com.barclays.solveit.ws.health.common.ReportConstants;
-import com.barclays.solveit.ws.health.core.EnvironmentLoader;
-import com.barclays.solveit.ws.health.model.Environment;
-import com.barclays.solveit.ws.health.model.Provider;
-import com.barclays.solveit.ws.health.model.Service;
-import com.barclays.solveit.ws.health.model.Service.Status;
-import com.barclays.solveit.ws.health.report.WSHealthReportGeneratorUtils;
+import com.ds.ws.health.common.ReportConstants;
+import com.ds.ws.health.core.EnvironmentLoader;
+import com.ds.ws.health.model.Environment;
+import com.ds.ws.health.model.Provider;
+import com.ds.ws.health.model.Service;
+import com.ds.ws.health.model.Service.Status;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 
 /**
  * Utility class for {@link Environment} , {@link Provider} , {@link Service} related info 

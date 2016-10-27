@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.mail;
+package com.ds.ws.health.mail;
 
 /**
  * Root interface to be implemented by any Mail Service Provider.

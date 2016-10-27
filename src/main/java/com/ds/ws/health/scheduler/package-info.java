@@ -2,4 +2,4 @@
  * @author Sarvesh
  *
  */
-package com.barclays.solveit.ws.health.scheduler;
+package com.ds.ws.health.scheduler;

@@ -1,12 +1,13 @@
-package com.barclays.solveit.ws.health.service;
+package com.ds.ws.health.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.barclays.solveit.ws.health.common.CoreConstants;
-import com.barclays.solveit.ws.health.report.WSHealthReportGeneratorUtils;
-import com.barclays.solveit.ws.health.util.WSHealthUtils;
+import com.ds.ws.health.common.CoreConstants;
+import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
+import com.ds.ws.health.util.WSHealthUtils;
+
 
 @org.springframework.stereotype.Service
 public class HourlyEnvDetails extends FetchDetailsFromReport {

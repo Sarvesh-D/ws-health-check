@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.common;
+package com.ds.ws.health.common;
 
 import java.lang.reflect.Field;
 import java.util.Properties;

@@ -42,8 +42,8 @@ appModule.constant('coreConstants', {
 		'SHOW_PLOT_BORDER': '0',
 		'SHOW_VALUES': '0'
 	},
-	'CONTEXT':'ws-health-check-master',
-	'HOST_SERVER':'10.36.131.183',
+	'CONTEXT':'ws-health-check',
+	'HOST_SERVER':'localhost',
 	'HOST_PORT':'8080',
 	'VERSION':'Beta'
 });

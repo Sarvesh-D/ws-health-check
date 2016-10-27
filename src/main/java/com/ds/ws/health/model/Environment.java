@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.model;
+package com.ds.ws.health.model;
 
 import java.util.Comparator;
 import java.util.Set;

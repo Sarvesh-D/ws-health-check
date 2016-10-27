@@ -1,10 +1,11 @@
-package com.barclays.solveit.ws.health.core;
+package com.ds.ws.health.core;
 
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import com.barclays.solveit.ws.health.model.Environment;
+import com.ds.ws.health.model.Environment;
+
 
 /**
  * Root interface for all EnvironmentLoaders

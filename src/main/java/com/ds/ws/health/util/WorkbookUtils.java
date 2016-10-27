@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.util;
+package com.ds.ws.health.util;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.scheduler;
+package com.ds.ws.health.scheduler;
 
 import javax.annotation.PostConstruct;
 
@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.barclays.solveit.ws.health.core.EnvironmentLoader;
+import com.ds.ws.health.core.EnvironmentLoader;
+
 
 /**
  * Scheduler class for loading environments 

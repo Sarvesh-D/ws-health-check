@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.util;
+package com.ds.ws.health.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.barclays.solveit.ws.health.common.CoreConstants;
-import com.barclays.solveit.ws.health.model.Environment;
-import com.barclays.solveit.ws.health.model.Provider;
+import com.ds.ws.health.common.CoreConstants;
+import com.ds.ws.health.model.Environment;
+import com.ds.ws.health.model.Provider;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring/root-context.xml"})
@@ -27,7 +27,7 @@ public class WSHealthUtilsTest {
 	
 	@Test
 	public void testGetAllEnvironments() {
-		assertTrue(wsHealthUtils.getAllEnvironments().size() == 5);
+		assertTrue(wsHealthUtils.getAllEnvironments().size() == 4);
 	}
 
 	@Test
@@ -52,24 +52,24 @@ public class WSHealthUtilsTest {
 
 	@Test
 	public void testGetComponentsByEnv() {
-		assertTrue(wsHealthUtils.getComponentsByEnv("SIT-2").size() == 4);
+		assertTrue(wsHealthUtils.getComponentsByEnv("UAT").size() == 3);
 	}
 
 	@Test
 	public void testGetServicesByComponent() {
-		Provider component = new Provider("CM", "PRE-SIT", "1609");
-		assertTrue(wsHealthUtils.getServicesByComponent(component).size() == 3);
+		Provider component = new Provider("Google", "UAT", "1.0");
+		assertTrue(wsHealthUtils.getServicesByComponent(component).size() == 1);
 	}
 	
 	@Test
 	public void testPingURL() {
-		assertTrue(wsHealthUtils.pingURL("https://tcv-vpt.bem.barclays.intranet/tcvm", 1000));
+		assertTrue(wsHealthUtils.pingURL("https://www.facebook.com/", 1000));
 	}
 	
 	@Test
 	public void testCleanUrl() {
-		final String url_1 = "https://adp59-c.rfs.barclays.co.uk/teamworks/executeServiceByName?processApp=BBR&serviceName=BBR_ProcessFlowInformation";
-		final String url_2 = "https://gbrdsr000000136.intranet.barcapint.com:64200/BEMFileHandler/DocumentProcessingService_3.x";
+		final String url_1 = "https://www.google.co.in/?gws_rd\\=ssl";
+		final String url_2 = "https://www.google.co.in";
 		assertTrue(wsHealthUtils.cleanUrl(url_2).equals(url_2));
 		assertFalse(wsHealthUtils.cleanUrl(url_1).equals(url_1));
 		assertFalse(wsHealthUtils.cleanUrl(url_1).contains("?"));

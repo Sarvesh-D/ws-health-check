@@ -2,4 +2,4 @@
  * @author Sarvesh
  *
  */
-package com.barclays.solveit.ws.health.model;
+package com.ds.ws.health.model;

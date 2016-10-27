@@ -1,4 +1,4 @@
-package com.barclays.solveit.ws.health.model;
+package com.ds.ws.health.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,8 @@ import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
-import com.barclays.solveit.ws.health.util.WSHealthUtils;
+import com.ds.ws.health.util.WSHealthUtils;
+
 
 /**
  * Provider model.<br>
