@@ -49,16 +49,17 @@
 	
 	<!-- Mail Config -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
-		p:host="${mail.host}" p:port="${mail.port}" p:javaMailProperties-ref="javaMailProperties" />
+	p:host="${mail.host}" p:port="${mail.port}" p:username="${mail.username}"
+	p:password="${mail.password}" p:javaMailProperties-ref="javaMailProperties" />
 		
 	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean"
 			p:resourceLoaderPath="classpath:"
          	p:preferFileSystemAccess="false"/>
 
 	<util:map id="javaMailProperties">
-		<entry key="mail.transport.protocol" value="${mail.transport.protocol}" />
-		<entry key="mail.smtp.ssl.trust" value="${mail.smtp.ssl.trust}" />
-		<entry key="mail.debug" value="${mail.debug}" />
+		<entry key="mail.smtp.auth" value="${mail.smtp.auth}" />
+ 		<entry key="mail.smtp.starttls.enable" value="${mail.smtp.starttls.enable}" />
+ 		<entry key="mail.debug" value="${mail.debug}" />
 	</util:map>
 
 	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage" p:from="${report.mail.from}" />
