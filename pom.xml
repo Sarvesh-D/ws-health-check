@@ -10,11 +10,12 @@
 
 	<properties>
 		<build.version>0.0.1-snapshot</build.version>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<javax.mail.version>1.4.7</javax.mail.version>
 		<spring.version>4.2.6.RELEASE</spring.version>
 		<org.aspectj.version>1.6.10</org.aspectj.version>
 		<org.slf4j.version>1.7.2</org.slf4j.version>
+		<dbh2.version>1.4.187</dbh2.version>
 	</properties>
 
 	<build>
@@ -90,6 +91,21 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-jpa</artifactId>
+		    <version>1.10.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
@@ -123,6 +139,39 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.14</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+		</dependency>
+		
+		<!-- Hibernate  -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-core</artifactId>
+		    <version>4.3.11.Final</version>
+		</dependency>
+		<dependency>
+	        <groupId>org.hibernate</groupId>
+	        <artifactId>hibernate-entitymanager</artifactId>
+	        <version>4.3.11.Final</version>
+	    </dependency>
+				
+		
+		<!-- H2 DB -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${dbh2.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		    <version>2.2.6</version>
 		</dependency>
 
 		<!-- AspectJ -->

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.ds.ws.health.dao.UserDao;
 import com.ds.ws.health.mail.MailServiceFactory;
 import com.ds.ws.health.mail.MailServiceFactory.MailServiceProvider;
 import com.ds.ws.health.mail.MailUtils;
@@ -50,12 +50,16 @@ public class WSHealthReportMailSender {
 	
 	@Autowired
 	private Properties reportProperties;
-
+	
+	@Autowired
+	@Qualifier("userDao")
+	private UserDao userDao;
+	
 	@Scheduled(cron = "${mail.interval}")
 	private void sendWSHealthReportMail() {
 		logger.debug("Mail Triggered on time {}",LocalDateTime.now());
 		final String from = mailProperties.getProperty("report.mail.from");
-		final String[] to = StringUtils.split(mailProperties.getProperty("report.mail.to"), ",");
+		final String[] to = userDao.findAll().stream().map(user -> user.getEmail()).toArray(String[]::new);
 		final String subject = mailProperties.getProperty("report.mail.subject");
 		
 		final LocalDate reportDate = LocalDate.now().minusDays(1);
@@ -76,7 +80,7 @@ public class WSHealthReportMailSender {
 	private void sendWSHealthHourlyMail() {
 		logger.debug("Mail Triggered on time {}",LocalDateTime.now());
 		final String from = mailProperties.getProperty("report.mail.from");
-		final String[] to = StringUtils.split(mailProperties.getProperty("report.mail.to"), ",");
+		final String[] to = userDao.findAll().stream().map(user -> user.getEmail()).toArray(String[]::new);
 		final String subject = mailProperties.getProperty("report.mail.subject");
 		
 		final LocalDate reportDate = LocalDate.now();
