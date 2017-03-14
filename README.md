@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/Sarvesh-D/ws-health-check.svg?branch=master)](https://travis-ci.org/Sarvesh-D/ws-health-check)
+[![codecov](https://codecov.io/gh/Sarvesh-D/ws-health-check/branch/master/graph/badge.svg)](https://codecov.io/gh/Sarvesh-D/ws-health-check)
+
 
 # ws-health-check
 Checks health of Web Services and creates reports
