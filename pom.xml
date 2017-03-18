@@ -178,17 +178,10 @@
 		</dependency>
 		<dependency>
 
-	        <groupId>org.hibernate</groupId>
-	        <artifactId>hibernate-entitymanager</artifactId>
-	        <version>4.3.11.Final</version>
-	    </dependency>
-=======
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>4.3.11.Final</version>
 		</dependency>
->>>>>>> Refactoring to make bring project in working condition
-
 
 		<!-- H2 DB -->
 		<dependency>
@@ -197,10 +190,7 @@
 			<version>${dbh2.version}</version>
 		</dependency>
 
-<<<<<<< 95ff5238c4f4ed99786c966aaa5a7907b403ee00
-=======
 		<!-- HSQL DB -->
->>>>>>> Refactoring to make bring project in working condition
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
