@@ -9,7 +9,7 @@ appModule.config(function($routeProvider) {
 		templateUrl: "envHealthDetails.html",
 		controller: "envHealthDetailsController",
 	}).
-	when('/component/details/:env/:component/:version', {
+	when('/component/details/:env/:component', {
 		templateUrl: "componentHealthDetails.html",
 		controller: "componentHealthDetailsController",
 	}).

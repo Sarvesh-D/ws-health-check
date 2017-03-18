@@ -41,9 +41,9 @@ class WSHealthController {
 	
 	@RequestMapping("service/health")
 	public ServiceTimeStatusResponse getReportForService(@RequestParam String env, @RequestParam String provider,
-			@RequestParam String ver, @RequestParam String uri) {
+			@RequestParam String uri) {
 		logger.info("getServiceHealthDetails Service requested");
-		Service service = new Service(env, provider, "NA", uri);
+		Service service = new Service(env, provider, uri);
 		ServiceTimeStatusResponse response = new ServiceTimeStatusResponse();
 		response.getServiceTimes().addAll(wsHealthService.getReportForService(service));
 		return response;

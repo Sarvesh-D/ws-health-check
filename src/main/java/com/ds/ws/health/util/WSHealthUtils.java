@@ -224,7 +224,7 @@ public class WSHealthUtils implements ApplicationContextAware {
 		Map<Provider,List<Set<Service>>> providerServicesHealthMap = new HashMap<>();
 		for (Service service : services) {
 			// create provider from service
-			Provider provider = new Provider(service.getProvider(), service.getEnvironment(), "NA");
+			Provider provider = new Provider(service.getProvider(), service.getEnvironment());
 			if(providerServicesHealthMap.containsKey(provider)) {
 				// if MAP contains provider, get services LIST 
 				List<Set<Service>> providerAllServices = providerServicesHealthMap.get(provider);

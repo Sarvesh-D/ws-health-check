@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CoreConstants {
 	
-	public final String environmentDetailsSeparatorKey;
+	public final String serviceDetailsSeparatorKey;
 	
 	public final int connectionTimeoutInMillis;
 	
@@ -36,7 +36,7 @@ public final class CoreConstants {
 	@Autowired
 	private CoreConstants(Properties coreProperties, Properties schedulerProperties) {
 		logger.info("initialising core constants...");
-		environmentDetailsSeparatorKey = coreProperties.getProperty("environment.details.separator.key");
+		serviceDetailsSeparatorKey = coreProperties.getProperty("service.details.separator.key");
 		connectionTimeoutInMillis = Integer.parseInt(coreProperties.getProperty("connection.timeout"));
 		connectionProxyHost = coreProperties.getProperty("connection.proxy.host");
 		connectionProxyPort = Integer.valueOf(coreProperties.getProperty("connection.proxy.port"));

@@ -58,7 +58,6 @@ appModule.service('utilityService', function(coreConstants) {
 			angular.forEach(envHealthDetail.components,function(component) {
 				var componentDetailView = {
 						name : component.name,
-						version : component.version,
 						env: component.environment,
 						services : component.services,
 						status : component.status,
