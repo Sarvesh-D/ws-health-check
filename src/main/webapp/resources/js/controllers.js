@@ -72,7 +72,6 @@ appModule.controller('serviceHealthDetailsController',
 		component = componentDetailsService.getComponentDetails();
 		$scope.env = component.env;
 		$scope.component = component.name;
-		$scope.version = component.version;
 		$scope.desc = $routeParams.desc;
 		$scope.uri = $routeParams.uri;
 		
@@ -81,7 +80,6 @@ appModule.controller('serviceHealthDetailsController',
 		serviceDetailsFactory.get({
 			env : component.env,
 			provider : component.name,
-			ver : component.version,
 			uri : $routeParams.uri
 		}, function(data) {
 			angular.forEach(data.serviceTimes,function(serviceTime) {

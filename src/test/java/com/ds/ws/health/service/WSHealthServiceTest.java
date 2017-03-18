@@ -65,7 +65,7 @@ public class WSHealthServiceTest {
 		for (Environment environment : environments) {
 			for (Provider component : environment.getComponents()) {
 				serviceCount += component.getServices().size();
-				if(component.equals(new Provider("Google", "UAT", "1.0")))
+				if(component.equals(new Provider("Google", "UAT")))
 					assertTrue(component.getStatus().equals(Status.RED));
 			}
 		}

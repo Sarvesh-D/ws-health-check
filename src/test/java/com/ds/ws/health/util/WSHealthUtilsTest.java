@@ -57,7 +57,7 @@ public class WSHealthUtilsTest {
 
 	@Test
 	public void testGetServicesByComponent() {
-		Provider component = new Provider("Google", "UAT", "1.0");
+		Provider component = new Provider("Google", "UAT");
 		assertTrue(wsHealthUtils.getServicesByComponent(component).size() == 1);
 	}
 	

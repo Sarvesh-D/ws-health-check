@@ -22,7 +22,7 @@ public class ProviderTest {
 
 	@Test
 	public void testGetStatus() {
-		Provider provider = wsHealthUtils.getProvider(new Provider("Google", "SIT", "1.0"));
+		Provider provider = wsHealthUtils.getProvider(new Provider("Google", "SIT"));
 		final int totalServices = wsHealthUtils.getServicesByComponent(provider).size();
 		for (Service service : wsHealthUtils.getServicesByComponent(provider)) {
 			service.setStatus(Status.UP);

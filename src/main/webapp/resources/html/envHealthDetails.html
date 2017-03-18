@@ -6,7 +6,7 @@
 			<div ng-repeat="component in envHealthDetail.components" class="row">
 				<div class="row">
 					<div class="col-md-5">
-						<h4><a href="#component/details/{{component.env}}/{{component.name}}/{{component.version}}">{{component.name}}</a></h4>
+						<h4><a href="#component/details/{{component.env}}/{{component.name}}">{{component.name}}</a></h4>
 					</div>
 					<div class="col-md-5">
 						<svg width="100" height="12" style="margin-top: 8px">
@@ -15,9 +15,6 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-5">
-						<h5>Version : {{component.version}}</h5>
-					</div>
 					<div class="col-md-5" ng-show="component.status != 'GREEN'">
 						<h5 style="color: {{component.status}}">Services Down : {{component.downServices}}</h5>
 					</div>

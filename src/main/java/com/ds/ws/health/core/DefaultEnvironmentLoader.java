@@ -1,6 +1,7 @@
 package com.ds.ws.health.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -19,7 +21,6 @@ import org.springframework.util.Assert;
 
 import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
-import com.ds.ws.health.model.EnvironmentDetail;
 import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.util.WSHealthUtils;
@@ -39,7 +40,8 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultEnvironmentLoader.class); 
 
 	@Autowired
-	private Properties environmentProperties;
+	@Qualifier("environmentProperties")
+	private Properties serviceProperties;
 
 	@Autowired
 	private CoreConstants coreConstants;
@@ -49,25 +51,21 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 
 	private final Set<Environment> environments = new HashSet<>();
 
-	// to track which env is up, if the env is down its details wont be loaded
-	private final Set<String> environmentsUp = new HashSet<>();
-
 	@Override
 	@Cacheable("environments")
 	public final void loadEnvironments() {
 		logger.info("Loading environmets started...");
-		List<EnvironmentDetail> environmentDetails = getEnvDetailsViaProperties();
-		for (EnvironmentDetail environmentDetailsView : environmentDetails) {
-			logger.debug("loading env details for {}", environmentDetailsView);
-			final String envName = environmentDetailsView.getEnvName();
-			final String providerName = environmentDetailsView.getProviderName();
-			final String providerVersion = environmentDetailsView.getProviderVer();
-			final String desc = environmentDetailsView.getServiceDesc();
-			final String uri = environmentDetailsView.getServiceUri();
+		List<Service> serviceDetails = getServiceDetailsViaProperties();
+		for (Service service : serviceDetails) {
+			logger.debug("loading Service details for {}", service);
+			final String envName = service.getEnvironment();
+			final String providerName = service.getProvider();
+			final String desc = service.getDescription();
+			final String uri = service.getUri();
 
 			final Environment environment = new Environment(envName);
 			logger.debug("Environment created {}",environment);
-			final Provider provider = new Provider(providerName, envName, providerVersion);
+			final Provider provider = new Provider(providerName, envName);
 			logger.debug("Provider created {}",provider);
 			final Service serviceDetail = new Service(envName, providerName, desc, uri);
 			logger.debug("Service created {}",serviceDetail);
@@ -116,37 +114,35 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	}
 
 	/**
-	 * Get the Env details from property file
-	 * @return list {@link EnvironmentDetail}
+	 * Get the Service details from property file
+	 * @return list {@link Service}
 	 */
-	private List<EnvironmentDetail> getEnvDetailsViaProperties() {
+	private List<Service> getServiceDetailsViaProperties() {
 		logger.debug("Fetching ENV details via properties...");
-		final List<EnvironmentDetail> environmentDetails = new ArrayList<>();
-		for (Entry<Object,Object> envDetailEntry : environmentProperties.entrySet()) {
-			String[] envDetails = StringUtils.split(StringUtils.trimToEmpty(envDetailEntry.getValue().toString()),
-					coreConstants.environmentDetailsSeparatorKey);
+		final List<Service> serviceDetails = new ArrayList<>();
+		for (Entry<Object,Object> serviceDetailEntry : serviceProperties.entrySet()) {
+			String[] serviceDetail = StringUtils.split(StringUtils.trimToEmpty(serviceDetailEntry.getValue().toString()),
+					coreConstants.serviceDetailsSeparatorKey);
 
-			Assert.isTrue(envDetails.length == 5,
-					"environment details currently supports only 5 properties viz [enviornment,provider,provider_version,description,uri]");
+			logger.debug("service Detail {}",Arrays.toString(serviceDetail));
+			Assert.isTrue(serviceDetail.length == 4,
+					"service details currently supports only 4 properties viz [enviornment,provider,description,uri]");
 
-			final String envName = envDetails[0];
-			final String provider = envDetails[1];
-			final String providerVersion = envDetails[2];
-			final String desc = envDetails[3];
-			final String uri = envDetails[4];
+			final String envName = serviceDetail[0];
+			final String provider = serviceDetail[1];
+			final String desc = serviceDetail[2];
+			final String uri = serviceDetail[3];
 
-			if(!environmentsUp.contains(envName))
-				logger.debug("[{}] is down, correct details cannot not be loaded.",envName);
 
-			EnvironmentDetail environmentDetail = new EnvironmentDetail.Builder(envName, provider,
-					wsHealthUtils.cleanUrl(uri)).providerVer(providerVersion).serviceDesc(desc).build();
-			environmentDetails.add(environmentDetail);
+			Service service = new Service(envName, provider,desc,
+					wsHealthUtils.cleanUrl(uri));
+			serviceDetails.add(service);
 
-			logger.debug("ENV details fetched {}",environmentDetail);
+			logger.debug("Service details fetched {}",service);
 			
 		}
-		logger.debug("Fetching ENV details via properties completed");
-		return Collections.unmodifiableList(environmentDetails);
+		logger.debug("Fetching Service details via properties completed");
+		return Collections.unmodifiableList(serviceDetails);
 	}
 
 	private DefaultEnvironmentLoader() {}

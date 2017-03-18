@@ -11,7 +11,7 @@
 	</appender>
 
 	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${catalina.home}/applogs/ws-health-check/serviceLogs.log" />
+		<param name="file" value="${logs.dir}/applogs/ws-health-check/serviceLogs.log" />
 		<filter class="org.apache.log4j.varia.LevelMatchFilter">
 			<param name="LevelToMatch" value="ERROR" />
 			<param name="AcceptOnMatch" value="False" />
@@ -24,7 +24,7 @@
 	</appender>
 
 	<appender name="errorFile" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${catalina.home}/applogs/ws-health-check/errorLogs.log" />
+		<param name="file" value="${logs.dir}/applogs/ws-health-check/errorLogs.log" />
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="LevelMin" value="ERROR" />
 			<param name="LevelMax" value="ERROR" />

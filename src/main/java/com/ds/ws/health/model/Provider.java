@@ -31,8 +31,6 @@ public class Provider {
 	
 	private final String name;
 	
-	private final String version;
-	
 	private Set<Service> services;
 	
 	private Status status;
@@ -47,13 +45,11 @@ public class Provider {
 		GREEN
 	}
 	
-	public Provider(String name, String environment, String version) {
+	public Provider(String name, String environment) {
 		Assert.isTrue(StringUtils.isNotBlank(name), "Provider name cannot be null or blank");
 		Assert.isTrue(StringUtils.isNotBlank(environment), "Provider Environment name cannot be null or blank");
-		Assert.isTrue(StringUtils.isNotBlank(version), "Provider version cannot be null or blank");
 		this.name = name;
 		this.environment = environment;
-		this.version = version;
 	}
 	
 	@Override
@@ -80,11 +76,6 @@ public class Provider {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		/*if (version == null) {
-			if (other.version != null)
-				return false;
-		} else if (!version.equals(other.version))
-			return false;*/
 		if (environment == null) {
 			if (other.environment != null)
 				return false;
@@ -111,10 +102,6 @@ public class Provider {
 		return environment;
 	}
 
-	public String getVersion() {
-		return version;
-	}
-	
 	/**
 	 * Calculates and sets the status of the provider.
 	 * @param services List of provider services. The size of the list shall correspond to<br>
@@ -194,7 +181,7 @@ public class Provider {
 
 	@Override
 	public String toString() {
-		return "Provider [environment=" + environment + ", name=" + name + ", version=" + version + ", services="
+		return "Provider [environment=" + environment + ", name=" + name + ", services="
 				+ services + ", status=" + status + "]";
 	}
 
