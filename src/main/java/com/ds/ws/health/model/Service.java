@@ -7,14 +7,33 @@ import org.springframework.util.Assert;
 
 /**
  * A Service model.<br>
- * Service is supposed to have a uri, desc, the name of its {@link Provider}, {@link Environment}.<br>
+ * Service is supposed to have a uri, desc, the name of its {@link Provider},
+ * {@link Environment}.<br>
  * Service also has a status which can be either up or down
- * @author G09633463
+ * 
+ * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
  *
  */
 public class Service {
+
+    public static enum Status {
+	UP, DOWN
+    }
+
+    private static class ServiceDetailComaparator implements Comparator<Service> {
+
+	@Override
+	public int compare(Service o1, Service o2) {
+	    final String serviceDetailsLeft = o1.getEnvironment() + "#" + o1.getProvider() + "#" + o1.getUri();
+	    final String serviceDetailsRight = o2.getEnvironment() + "#" + o2.getProvider() + "#" + o2.getUri();
+	    return serviceDetailsLeft.compareTo(serviceDetailsRight);
+	}
+
+    }
+
+    public static final ServiceDetailComaparator SERVICE_DETAIL_COMPARATOR = new ServiceDetailComaparator();
 
     private final String uri;
 
@@ -26,11 +45,8 @@ public class Service {
 
     private Status status;
 
-    public static final ServiceDetailComaparator SERVICE_DETAIL_COMPARATOR = new ServiceDetailComaparator();
-
-    public static enum Status {
-	UP,
-	DOWN
+    public Service(String environment, String provider, String uri) {
+	this(environment, provider, "NA", uri);
     }
 
     public Service(String environment, String provider, String description, String uri) {
@@ -41,20 +57,6 @@ public class Service {
 	this.provider = provider;
 	this.description = description;
 	this.uri = uri;
-    }
-
-    public Service(String environment, String provider, String uri) {
-	this(environment, provider, "NA", uri);   
-    }
-
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((environment == null) ? 0 : environment.hashCode());
-	result = prime * result + ((provider == null) ? 0 : provider.hashCode());
-	result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-	return result;
     }
 
     @Override
@@ -84,6 +86,10 @@ public class Service {
 	return true;
     }
 
+    public String getDescription() {
+	return description;
+    }
+
     public final String getEnvironment() {
 	return environment;
     }
@@ -92,45 +98,40 @@ public class Service {
 	return provider;
     }
 
-    public String getDescription() {
-	return description;
+    public final Status getStatus() {
+	return status;
     }
 
     public String getUri() {
 	return uri;
     }
 
-    public final Status getStatus() {
-	return status;
-    }
-
-    public final void setStatus(Status status) {
-	this.status = status;
-    }
-
-    public boolean isUp() {
-	return this.status.equals(Status.UP);
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((environment == null) ? 0 : environment.hashCode());
+	result = prime * result + ((provider == null) ? 0 : provider.hashCode());
+	result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+	return result;
     }
 
     public boolean isDown() {
 	return !isUp();
     }
 
+    public boolean isUp() {
+	return this.status.equals(Status.UP);
+    }
+
+    public final void setStatus(Status status) {
+	this.status = status;
+    }
+
     @Override
     public String toString() {
 	return "Service [environment=" + environment + ", provider=" + provider + ", description=" + description
 		+ ", uri=" + uri + ", status=" + status + "]";
-    }
-
-    private static class ServiceDetailComaparator implements Comparator<Service> {
-
-	@Override
-	public int compare(Service o1, Service o2) {
-	    final String serviceDetailsLeft = o1.getEnvironment()+"#"+o1.getProvider()+"#"+o1.getUri();
-	    final String serviceDetailsRight = o2.getEnvironment()+"#"+o2.getProvider()+"#"+o2.getUri();
-	    return serviceDetailsLeft.compareTo(serviceDetailsRight);
-	}
-
     }
 
 }

@@ -7,7 +7,5 @@ import com.ds.ws.health.domain.User;
 
 @Repository
 public interface UserDao extends JpaRepository<User, Integer> {
-	
-	
 
 }

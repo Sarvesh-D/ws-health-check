@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Logging Aspect for logging
- * @author G09633463
+ * 
+ * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
  */
@@ -30,76 +31,78 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Aspect
 final class LoggingAspect {
 
-	@Autowired(required=false)
-	private HttpServletRequest request;
+    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class); 
+    @Autowired(required = false)
+    private HttpServletRequest request;
 
-	@Pointcut("execution(* com.ds.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-	private void allMethodsExceptRequests() {}
+    @Pointcut("execution(* com.ds.ws.health..*(..))")
+    private void allMethods() {
+    }
 
-	@Pointcut("execution(* com.ds.ws.health.web..*(..)) && @annotation(requestMapping)")
-	private void allRequests(RequestMapping requestMapping) {}
+    @Pointcut("execution(* com.ds.ws.health..*(..)) && !@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    private void allMethodsExceptRequests() {
+    }
 
-	@Pointcut("execution(* com.ds.ws.health..*(..))")
-	private void allMethods() {}
+    @Pointcut("execution(* com.ds.ws.health.web..*(..)) && @annotation(requestMapping)")
+    private void allRequests(RequestMapping requestMapping) {
+    }
 
-	@Around("allMethodsExceptRequests()")
-	private Object logMethodsExceptRequests(ProceedingJoinPoint pjp) throws Throwable {
-		putUuid();
-		Object retval = null;
-		logger.trace("Entering method : {}", pjp.getSignature());
-		retval = pjp.proceed();
-		return retval;
+    private StringBuilder getRequestInfo(RequestMapping requestMapping) {
+	StringBuilder requestInfo = new StringBuilder();
+	requestInfo.append("\nRequest header(s) = ");
+	requestInfo.append(Arrays.toString(requestMapping.headers()));
+	requestInfo.append("\nRequest method(s) = ");
+	requestInfo.append(Arrays.toString(requestMapping.method()));
+	requestInfo.append("\nRequest value(s) = ");
+	requestInfo.append(Arrays.toString(requestMapping.value()));
+	requestInfo.append("\nRequest param(s) = ");
+	requestInfo.append(Arrays.toString(requestMapping.params()));
+	requestInfo.append("\nRequest path(s) = ");
+	requestInfo.append(Arrays.toString(requestMapping.path()));
+	if (null != request) {
+	    requestInfo.append("\nUser Principal = " + request.getUserPrincipal());
+	    requestInfo.append("\nRequest IP = " + request.getRemoteAddr());
+	    requestInfo.append("\nServer IP = " + request.getServerName());
 	}
+	return requestInfo;
+    }
 
-	@Around("allRequests(requestMapping)")
-	private Object logRequests(ProceedingJoinPoint pjp, RequestMapping requestMapping) throws Throwable {
-		putUuid();
-		Object retval = null;
-		logger.trace("Entering method : {}", pjp.getSignature());
-		logger.debug("Request Info {}",getRequestInfo(requestMapping));
-		retval = pjp.proceed();
-		return retval;
-	}
+    @AfterThrowing(pointcut = "allMethods()", throwing = "error")
+    private void logException(JoinPoint jp, Throwable error) {
+	logger.error("Exception occured in method : {}", jp.getSignature());
+	logger.error("Exception : {}", error.getMessage());
+    }
 
-	@AfterThrowing(pointcut="allMethods()", throwing="error")
-	private void logException(JoinPoint jp , Throwable error) {
-		logger.error("Exception occured in method : {}", jp.getSignature());
-		logger.error("Exception : {}", error.getMessage());
-	}
+    @Around("allMethodsExceptRequests()")
+    private Object logMethodsExceptRequests(ProceedingJoinPoint pjp) throws Throwable {
+	putUuid();
+	Object retval = null;
+	logger.trace("Entering method : {}", pjp.getSignature());
+	retval = pjp.proceed();
+	return retval;
+    }
 
-	@AfterReturning(pointcut="allMethods()", returning="retval")
-	private void logSuccessfulExit(JoinPoint jp, Object retval) {
-		logger.trace("Successfully Exiting method : {}", jp.getSignature());
-	}
+    @Around("allRequests(requestMapping)")
+    private Object logRequests(ProceedingJoinPoint pjp, RequestMapping requestMapping) throws Throwable {
+	putUuid();
+	Object retval = null;
+	logger.trace("Entering method : {}", pjp.getSignature());
+	logger.debug("Request Info {}", getRequestInfo(requestMapping));
+	retval = pjp.proceed();
+	return retval;
+    }
 
-	private StringBuilder getRequestInfo(RequestMapping requestMapping) {
-		StringBuilder requestInfo = new StringBuilder();
-		requestInfo.append("\nRequest header(s) = ");
-		requestInfo.append(Arrays.toString(requestMapping.headers()));
-		requestInfo.append("\nRequest method(s) = ");
-		requestInfo.append(Arrays.toString(requestMapping.method()));
-		requestInfo.append("\nRequest value(s) = ");
-		requestInfo.append(Arrays.toString(requestMapping.value()));
-		requestInfo.append("\nRequest param(s) = ");
-		requestInfo.append(Arrays.toString(requestMapping.params()));
-		requestInfo.append("\nRequest path(s) = ");
-		requestInfo.append(Arrays.toString(requestMapping.path()));
-		if(null != request) {
-			requestInfo.append("\nUser Principal = "+request.getUserPrincipal());
-			requestInfo.append("\nRequest IP = "+request.getRemoteAddr());
-			requestInfo.append("\nServer IP = "+request.getServerName());
-		}
-		return requestInfo;
-	}
+    @AfterReturning(pointcut = "allMethods()", returning = "retval")
+    private void logSuccessfulExit(JoinPoint jp, Object retval) {
+	logger.trace("Successfully Exiting method : {}", jp.getSignature());
+    }
 
-	private void putUuid() {
-		if(StringUtils.isBlank(MDC.get("uuid"))) {
-			String uuid = UUID.randomUUID().toString().replaceAll("-", "")
-					.toUpperCase();
-			MDC.put("uuid", uuid);
-		}
+    private void putUuid() {
+	if (StringUtils.isBlank(MDC.get("uuid"))) {
+	    String uuid = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+	    MDC.put("uuid", uuid);
 	}
+    }
 
 }

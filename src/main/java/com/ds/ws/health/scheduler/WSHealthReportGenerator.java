@@ -17,55 +17,56 @@ import com.ds.ws.health.model.Service;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.service.WSHealthService;
 
-
 /**
- * Scheduler class for generating reports 
- * @author G09633463
+ * Scheduler class for generating reports
+ * 
+ * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
  */
 @Component
 class WSHealthReportGenerator {
-	
-	private static final Logger logger = LoggerFactory.getLogger(WSHealthReportGenerator.class);
 
-	@Autowired
-	@Qualifier("wSHealthServiceImpl")
-	private WSHealthService wsHealthService;
+    private static final Logger logger = LoggerFactory.getLogger(WSHealthReportGenerator.class);
 
-	@Autowired
-	private WSHealthReportGeneratorUtils wsHealthReportGeneratorUtils;
-	
-	@PostConstruct
-	private void buildReportOnStartup() {
-		logger.debug("Building report file on startup");
-		buildWSHealthReport();
-	}
-	
-	@PreDestroy
-	private void saveReportBeforeShutdown() {
-		logger.debug("Saving report file on shutdown");
-		createReportFile();
-	}
+    @Autowired
+    @Qualifier("wSHealthServiceImpl")
+    private WSHealthService wsHealthService;
 
-	@Scheduled(cron = "${ping.interval}")
-	void buildWSHealthReport() {
-		logger.debug("Building report file started on time {}",LocalDateTime.now());
-		List<Service> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
-		wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
-	}
+    @Autowired
+    private WSHealthReportGeneratorUtils wsHealthReportGeneratorUtils;
 
-	@Scheduled(cron = "${file.rollover.interval}")
-	void createReportFile() {
-		logger.debug("Saving report file started on time {}",LocalDateTime.now());
-		wsHealthReportGeneratorUtils.saveReport();
-		/*
-		 * After creating report file, the new report file will be empty.
-		 * To support com.ds.ws.health.service.WSHealthService.getEnvHealthDetailsFromReport() service,
-		 * the report file must contain some data, hence calling buildWSHealthReport()
-		 * explicitly instead of waiting till ping.interval 
-		 */
-		buildWSHealthReport();
-	}
-	
+    @Scheduled(cron = "${ping.interval}")
+    void buildWSHealthReport() {
+	logger.debug("Building report file started on time {}", LocalDateTime.now());
+	List<Service> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
+	wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
+    }
+
+    @Scheduled(cron = "${file.rollover.interval}")
+    void createReportFile() {
+	logger.debug("Saving report file started on time {}", LocalDateTime.now());
+	wsHealthReportGeneratorUtils.saveReport();
+	/*
+	 * After creating report file, the new report file will be empty. To
+	 * support com.ds.ws.health.service.WSHealthService.
+	 * getEnvHealthDetailsFromReport() service, the report file must contain
+	 * some data, hence calling buildWSHealthReport() explicitly instead of
+	 * waiting till ping.interval
+	 */
+	buildWSHealthReport();
+    }
+
+    @PostConstruct
+    private void buildReportOnStartup() {
+	logger.debug("Building report file on startup");
+	buildWSHealthReport();
+    }
+
+    @PreDestroy
+    private void saveReportBeforeShutdown() {
+	logger.debug("Saving report file on shutdown");
+	createReportFile();
+    }
+
 }

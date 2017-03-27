@@ -13,7 +13,7 @@
 		<java.version>1.8</java.version>
 		<javax.mail.version>1.4.7</javax.mail.version>
 		<spring.version>4.2.6.RELEASE</spring.version>
-		<org.aspectj.version>1.6.10</org.aspectj.version>
+		<org.aspectj.version>1.8.7</org.aspectj.version>
 		<org.slf4j.version>1.7.2</org.slf4j.version>
 		<dbh2.version>1.4.193</dbh2.version>
 	</properties>
@@ -51,7 +51,7 @@
 							<artifactId>findbugs-maven-plugin</artifactId>
 							<!-- <version>2.5.2</version> -->
 							<configuration>
-								<!-- Enables analysis which takes more memory but finds more bugs.
+								<!-- Enables analysis which takes more memory but finds more bugs. 
 									If you run out of memory, changes the value of the effort element to 'low'. -->
 								<effort>low</effort>
 								<!-- Reports all bugs (other values are medium and max) -->
@@ -73,6 +73,33 @@
 						<format>xml</format>
 					</formats>
 					<check />
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<failOnError>false</failOnError>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -349,7 +376,7 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-		<!-- Below jackson dependencies required for Spring 4.2+ for databinding
+		<!-- Below jackson dependencies required for Spring 4.2+ for databinding 
 			@ResponseBody -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -367,7 +394,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

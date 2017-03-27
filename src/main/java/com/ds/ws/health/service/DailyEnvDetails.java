@@ -17,58 +17,60 @@ import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 import com.ds.ws.health.util.WorkbookUtils;
 
-
 @org.springframework.stereotype.Service
 public class DailyEnvDetails extends FetchDetailsFromReport {
-	
-	private static final Logger logger = LoggerFactory.getLogger(DailyEnvDetails.class);
 
-	@Autowired
-	private WSHealthUtils wsHealthUtils;
-	
-	@Autowired
-	private WSHealthReportGeneratorUtils reportUtils;
-	
-	@Autowired
-	private ReportConstants reportConstants;
-	
-	@Autowired
-	private CoreConstants coreConstants;
-	
-	@Autowired
-	private WorkbookUtils workbookUtils;
+    private static final Logger logger = LoggerFactory.getLogger(DailyEnvDetails.class);
 
-	@Override
-	int getFirstRowNum() {
-		return 1;
-	}
-	
-	@Override
-	int getLastRowNum() {
-		return getReportBook().getSheet(reportConstants.reportFileSheetName).getLastRowNum() - 1;
-	}
-	
-	@Override
-	Workbook getReportBook() {
-		final LocalDate reportFileDate = LocalDate.now().minusDays(1);
-		logger.info("Getting Env Health for date []",reportFileDate);
-		Workbook reportBook = null;
-		try {
-			 reportBook = workbookUtils.loadWorkbook(new XSSFWorkbook(new File(reportUtils.getReportFileForDate(reportFileDate))));
-			 logger.debug("Workbook for date [{}] found", reportFileDate);
-		} catch (InvalidFormatException | IOException e) {
-			logger.error("Error occured fetching Workbook for date [{}]", reportFileDate);
-		}
-		return reportBook;
-	}
-	
-	@Override
-	int getExpectedRowsCount() {
-		return getDailyMaxPing() * wsHealthUtils.getAllServices().size();
-	}
+    @Autowired
+    private WSHealthUtils wsHealthUtils;
 
-	private int getDailyMaxPing() {
-		return (24 * 60) / coreConstants.pingIntervalInMins + 1; // adding one for server startup ping
+    @Autowired
+    private WSHealthReportGeneratorUtils reportUtils;
+
+    @Autowired
+    private ReportConstants reportConstants;
+
+    @Autowired
+    private CoreConstants coreConstants;
+
+    @Autowired
+    private WorkbookUtils workbookUtils;
+
+    @Override
+    int getExpectedRowsCount() {
+	return getDailyMaxPing() * wsHealthUtils.getAllServices().size();
+    }
+
+    @Override
+    int getFirstRowNum() {
+	return 1;
+    }
+
+    @Override
+    int getLastRowNum() {
+	return getReportBook().getSheet(reportConstants.reportFileSheetName).getLastRowNum() - 1;
+    }
+
+    @Override
+    Workbook getReportBook() {
+	final LocalDate reportFileDate = LocalDate.now().minusDays(1);
+	logger.info("Getting Env Health for date []", reportFileDate);
+	Workbook reportBook = null;
+	try {
+	    reportBook = workbookUtils
+		    .loadWorkbook(new XSSFWorkbook(new File(reportUtils.getReportFileForDate(reportFileDate))));
+	    logger.debug("Workbook for date [{}] found", reportFileDate);
+	} catch (InvalidFormatException | IOException e) {
+	    logger.error("Error occured fetching Workbook for date [{}]", reportFileDate);
 	}
+	return reportBook;
+    }
+
+    private int getDailyMaxPing() {
+	return (24 * 60) / coreConstants.pingIntervalInMins + 1; // adding one
+								 // for server
+								 // startup ping
+    }
 
 }

@@ -39,7 +39,7 @@
 
 
 	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core">
+	<!-- <logger name="org.springframework.core">
 		<level value="NONE" />
 		<appender-ref ref="console" />
 	</logger>
@@ -57,7 +57,7 @@
 	<logger name="org.springframework.web">
 		<level value="NONE" />
 		<appender-ref ref="console" />
-	</logger>
+	</logger> -->
 
 	<!-- Root Logger -->
 	<root>
