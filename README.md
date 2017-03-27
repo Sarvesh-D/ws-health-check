@@ -19,9 +19,7 @@ Checks health of Web Services and creates reports
 - add admin functionality to set alert mail when a environment/provider/service goes down. (Use Observer pattern to observe state of environment/provider/service)
 - secure admin APIs with spring security
 
-### Resilience
+### Technologies
 - use rabbit MQ for sending/receiving admin requests
 - add circuit breakers for services
-
-### Scaling
 - migrate to spring boot
