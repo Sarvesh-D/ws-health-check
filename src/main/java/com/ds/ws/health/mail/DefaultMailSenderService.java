@@ -86,11 +86,9 @@ public class DefaultMailSenderService implements MailService {
 
     void logMailProps(String from, String[] to, String subject, String body, String[] filePaths) {
 	mailProps.put("From", from);
-	mailProps.put("To", to.toString());
+	mailProps.put("To", Arrays.toString(to));
 	mailProps.put("Subject", subject);
-	mailProps.put("Body", body);
-	mailProps.put("Attachments", filePaths.toString());
-
+	mailProps.put("Attachments", Arrays.toString(filePaths));
 	prettyPrint();
     }
 

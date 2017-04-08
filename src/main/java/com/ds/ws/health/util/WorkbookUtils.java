@@ -72,7 +72,8 @@ public class WorkbookUtils {
      * @return {@link Hyperlink}
      */
     public Hyperlink createHyperlink(String uri) {
-	Hyperlink link = getWorkbook().getCreationHelper().createHyperlink(org.apache.poi.common.usermodel.Hyperlink.LINK_URL);
+	Hyperlink link = getWorkbook().getCreationHelper()
+		.createHyperlink(org.apache.poi.common.usermodel.Hyperlink.LINK_URL);
 	link.setAddress(uri);
 	return link;
     }

@@ -8,11 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
-import com.ds.ws.health.model.Provider;
-import com.ds.ws.health.model.Service;
-import com.ds.ws.health.model.Service.Status;
 import com.ds.ws.health.util.WSHealthUtils;
 
 @org.springframework.stereotype.Service
@@ -23,28 +19,13 @@ public class RealTimeEnvDetails extends EnvDetailsFetchStrategy {
     @Autowired
     private WSHealthUtils wsHealthUtils;
 
-    @Autowired
-    private CoreConstants coreConstants;
-
     @Override
     List<Environment> getEnvHealthDetails() {
 	logger.info("Getting Env Health Details realtime");
 	List<Environment> environmentDetails = new ArrayList<>(wsHealthUtils.getAllEnvironments());
 	Collections.sort(environmentDetails, Environment.ENVIRONMENT_NAME_COMPARATOR);
-	for (Environment environmentDetail : environmentDetails) {
-	    for (Provider component : environmentDetail.getComponents()) {
-		for (Service serviceDetail : component.getServices()) {
-		    logger.debug("Getting status for service {}", serviceDetail);
-		    Status status = wsHealthUtils.pingURL(serviceDetail.getUri(),
-			    coreConstants.connectionTimeoutInMillis) ? Status.UP : Status.DOWN;
-		    serviceDetail.setStatus(status);
-		    logger.debug("Service is {}", status);
-		}
-		component.setDownServices(new ArrayList<>(component.getServices()));
-		component.setStatus(wsHealthUtils.getServicesHealthForProvider(new ArrayList<>(component.getServices()),
-			component));
-	    }
-	}
+	environmentDetails.stream().map(Environment::getComponents)
+		.forEach(providers -> wsHealthUtils.setStatusForProviders(providers));
 	logger.info("Getting Env Health Details realtime completed.");
 	return Collections.unmodifiableList(environmentDetails);
 

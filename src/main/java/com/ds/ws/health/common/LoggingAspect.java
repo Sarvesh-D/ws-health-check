@@ -1,6 +1,7 @@
 package com.ds.ws.health.common;
 
 import java.util.Arrays;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,24 +49,19 @@ final class LoggingAspect {
     private void allRequests(RequestMapping requestMapping) {
     }
 
-    private StringBuilder getRequestInfo(RequestMapping requestMapping) {
-	StringBuilder requestInfo = new StringBuilder();
-	requestInfo.append("\nRequest header(s) = ");
-	requestInfo.append(Arrays.toString(requestMapping.headers()));
-	requestInfo.append("\nRequest method(s) = ");
-	requestInfo.append(Arrays.toString(requestMapping.method()));
-	requestInfo.append("\nRequest value(s) = ");
-	requestInfo.append(Arrays.toString(requestMapping.value()));
-	requestInfo.append("\nRequest param(s) = ");
-	requestInfo.append(Arrays.toString(requestMapping.params()));
-	requestInfo.append("\nRequest path(s) = ");
-	requestInfo.append(Arrays.toString(requestMapping.path()));
+    private String getRequestInfo(RequestMapping requestMapping) {
+	StringJoiner requestInfo = new StringJoiner("\n");
+	requestInfo.add("Request header(s) = " + Arrays.toString(requestMapping.headers()));
+	requestInfo.add("Request method(s) = " + Arrays.toString(requestMapping.method()));
+	requestInfo.add("Request value(s) = " + Arrays.toString(requestMapping.value()));
+	requestInfo.add("Request param(s) = " + Arrays.toString(requestMapping.params()));
+	requestInfo.add("Request path(s) = " + Arrays.toString(requestMapping.path()));
 	if (null != request) {
-	    requestInfo.append("\nUser Principal = " + request.getUserPrincipal());
-	    requestInfo.append("\nRequest IP = " + request.getRemoteAddr());
-	    requestInfo.append("\nServer IP = " + request.getServerName());
+	    requestInfo.add("User Principal = " + request.getUserPrincipal());
+	    requestInfo.add("Request IP = " + request.getRemoteAddr());
+	    requestInfo.add("Server IP = " + request.getServerName());
 	}
-	return requestInfo;
+	return requestInfo.toString();
     }
 
     @AfterThrowing(pointcut = "allMethods()", throwing = "error")

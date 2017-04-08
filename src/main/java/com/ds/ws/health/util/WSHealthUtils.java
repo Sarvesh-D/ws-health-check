@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -28,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
+import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.common.ReportConstants;
 import com.ds.ws.health.core.EnvironmentLoader;
 import com.ds.ws.health.model.Environment;
@@ -63,6 +65,9 @@ public class WSHealthUtils implements ApplicationContextAware {
 
     @Autowired
     private WSHealthReportGeneratorUtils reportUtils;
+
+    @Autowired
+    private CoreConstants coreConstants;
 
     /**
      * Factory method to get an object of type T from the spring context
@@ -383,6 +388,47 @@ public class WSHealthUtils implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 	context = applicationContext;
+    }
+
+    public void setStatusForProvider(Provider provider) {
+	setStatusForServices(provider.getServices());
+	provider.setDownServices(new ArrayList<>(provider.getServices()));
+	provider.setStatus(getServicesHealthForProvider(new ArrayList<>(provider.getServices()), provider));
+    }
+
+    public void setStatusForProviderFromReport(Provider provider, List<Service> serviceDetailsFromReport) {
+	setStatusForServicesFromReport(provider.getServices(), serviceDetailsFromReport);
+	provider.setDownServices(serviceDetailsFromReport);
+	provider.setStatus(getServicesHealthForProvider(new ArrayList<>(provider.getServices()), provider));
+    }
+
+    public void setStatusForProviders(Set<Provider> providers) {
+	providers.stream().forEach(provider -> setStatusForProvider(provider));
+    }
+
+    public void setStatusForProvidersFromReport(Set<Provider> providers, List<Service> serviceDetailsFromReport) {
+	providers.stream().forEach(provider -> setStatusForProviderFromReport(provider, serviceDetailsFromReport));
+    }
+
+    public void setStatusForService(Service service) {
+	logger.debug("Getting status for service {}", service);
+	Status status = pingURL(service.getUri(), coreConstants.connectionTimeoutInMillis) ? Status.UP : Status.DOWN;
+	service.setStatus(status);
+	logger.debug("Service is {}", status);
+    }
+
+    public void setStatusForServices(Set<Service> services) {
+	services.stream().forEach(service -> setStatusForService(service));
+    }
+
+    public void setStatusForServicesFromReport(Set<Service> services, List<Service> serviceDetailsFromReport) {
+	services.stream().forEach(service -> {
+	    Optional<Service> mathcedServiceFromReport = serviceDetailsFromReport.stream()
+		    .filter(serviceFromReport -> service.equals(serviceFromReport)).findFirst();
+	    if (mathcedServiceFromReport.isPresent())
+		service.setStatus(mathcedServiceFromReport.get().getStatus());
+	});
+
     }
 
 }

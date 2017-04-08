@@ -68,9 +68,8 @@ public class DailyEnvDetails extends FetchDetailsFromReport {
     }
 
     private int getDailyMaxPing() {
-	return (24 * 60) / coreConstants.pingIntervalInMins + 1; // adding one
-								 // for server
-								 // startup ping
+	// adding one for server ping at startup
+	return (24 * 60) / coreConstants.pingIntervalInMins + 1;
     }
 
 }

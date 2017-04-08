@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.slf4j.Logger;
@@ -130,7 +129,7 @@ public class WSHealthReportGeneratorUtils {
 	    insertFooter();
 	    report.write(out);
 	} catch (IOException e) {
-	    logger.error("Error occured while sending mail : {}", e.getMessage());
+	    logger.error("Error occured while saving report : {}", e.getMessage());
 	} finally {
 	    pings = 0; // reset pings
 	    initReportFile(); // reset report file to start writing data in new
@@ -186,12 +185,9 @@ public class WSHealthReportGeneratorUtils {
 	rowNum = 0; // reset the sheet row number counter
 	logger.debug("Row Num set to {}", rowNum);
 	logger.debug("Reseting Workbook");
-	report = workbookUtils.loadWorkbook(); // reset the
-							      // workbook
+	report = workbookUtils.loadWorkbook();
 	logger.debug("Reseting WorkSheet");
-	sheet = workbookUtils.loadWorksheet(reportConstants.reportFileSheetName); // reset
-										  // the
-										  // sheet
+	sheet = workbookUtils.loadWorksheet(reportConstants.reportFileSheetName);
 	insertHeader();
     }
 

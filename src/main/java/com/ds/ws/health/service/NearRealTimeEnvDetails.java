@@ -28,10 +28,10 @@ public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 	// 0
 	if (totalPings == 1)
 	    firstRowNum = 1;
-	else
-	    firstRowNum = 1 + (--totalPings * totalServices); // adding 1 to
-							      // exclude table
-							      // header
+	else {
+	    // adding 1 to exclude table header
+	    firstRowNum = 1 + (--totalPings * totalServices);
+	}
 	logger.debug("First Row number = [{}]", firstRowNum);
 	return firstRowNum;
     }

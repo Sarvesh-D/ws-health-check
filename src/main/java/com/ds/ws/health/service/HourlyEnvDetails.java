@@ -30,11 +30,8 @@ public class HourlyEnvDetails extends FetchDetailsFromReport {
     @Override
     int getFirstRowNum() {
 	int firstRowNum = 0;
-	int totalPings = (reportUtils.getPings() - 1) - getPingsForStatusCalc(); // subtracting
-										 // the
-										 // server
-										 // startup
-										 // ping
+	// subtracting the server startup ping
+	int totalPings = (reportUtils.getPings() - 1) - getPingsForStatusCalc();
 	logger.debug("Total Pings [{}]", totalPings);
 	if (totalPings <= 0)
 	    firstRowNum = 1; // 0 is table header, starting from row 1
@@ -48,8 +45,8 @@ public class HourlyEnvDetails extends FetchDetailsFromReport {
     int getLastRowNum() {
 	int lastRowNum = 0;
 	final int totalServices = wsHealthUtils.getAllServices().size();
-	int totalPings = reportUtils.getPings() - 1; // subtracting the server
-						     // startup ping
+	// subtracting the server startup ping
+	int totalPings = reportUtils.getPings() - 1;
 	logger.debug("Total Pings [{}]", totalPings);
 	lastRowNum = totalPings * totalServices;
 	logger.debug("Last Row number = [{}]", lastRowNum);
