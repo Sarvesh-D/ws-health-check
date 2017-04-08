@@ -1,10 +1,10 @@
 package com.ds.ws.health.mail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class to get instance of <code>MailService</code>
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @see MailServiceProvider
  */
 @Service
+@Slf4j
 public class MailServiceFactory {
 
     /**
@@ -40,8 +41,6 @@ public class MailServiceFactory {
 
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(MailServiceFactory.class);
-
     @Autowired
     private ApplicationContext context;
 
@@ -56,7 +55,7 @@ public class MailServiceFactory {
      *         {@link DefaultMailSenderService} if no Provider is specified.
      */
     public MailService getInstance(MailServiceProvider provider) {
-	logger.debug("Getting Instance of Mail Provider {}", provider);
+	log.debug("Getting Instance of Mail Provider {}", provider);
 	MailService mailService = null;
 	if (null != provider)
 	    mailService = context.getBean(provider.valueOf(), MailService.class);

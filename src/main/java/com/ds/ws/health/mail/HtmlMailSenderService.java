@@ -4,19 +4,18 @@ import java.util.Arrays;
 
 import javax.mail.MessagingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class HtmlMailSenderService extends DefaultMailSenderService {
-
-    private static final Logger logger = LoggerFactory.getLogger(HtmlMailSenderService.class);
 
     @Override
     public void sendMimeMail(String from, String[] to, String subject, String body, String... filePaths) {
@@ -39,10 +38,10 @@ public class HtmlMailSenderService extends DefaultMailSenderService {
 	    logMailProps(from, to, subject, body, filePaths);
 
 	    mailSender.send(helper.getMimeMessage());
-	    logger.debug("Mail Sent");
+	    log.debug("Mail Sent");
 
 	} catch (Exception e) {
-	    logger.error("Error occured while sending mail : {}", e.getMessage());
+	    log.error("Error occured while sending mail : {}", e.getMessage());
 	}
 
     }

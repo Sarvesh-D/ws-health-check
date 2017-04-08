@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
@@ -24,6 +22,8 @@ import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.util.WSHealthUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * This class is the heart of ws-health-check.<br>
  * This class loads the {@link Environment}, {@link Provider} and
@@ -35,9 +35,8 @@ import com.ds.ws.health.util.WSHealthUtils;
  */
 @Component
 @DependsOn(value = "customTrustStoreManager")
+@Slf4j
 public class DefaultEnvironmentLoader implements EnvironmentLoader {
-
-    private static final Logger logger = LoggerFactory.getLogger(DefaultEnvironmentLoader.class);
 
     @Autowired
     @Qualifier("environmentProperties")
@@ -61,16 +60,16 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 
     @Override
     public final void loadEnvironments() {
-	logger.info("Loading environmets started...");
+	log.info("Loading environmets started...");
 	List<Service> serviceDetails = getServiceDetailsViaProperties();
 
 	serviceDetails.stream().map(service -> buildEnvHierarchyFromService(service)).forEach(environments::add);
 
-	logger.info("Loading environmets completed.");
+	log.info("Loading environmets completed.");
     }
 
     private Environment buildEnvHierarchyFromService(Service service) {
-	logger.debug("Building Env Hierarchy from Service {}", service);
+	log.debug("Building Env Hierarchy from Service {}", service);
 	final String envName = service.getEnvironment();
 	final String providerName = service.getProvider();
 	Provider providerToCheck = new Provider(providerName, envName);
@@ -84,23 +83,23 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 		    .findFirst();
 	    // check if component is loaded in this env.
 	    if (provider.isPresent()) {
-		logger.debug("Env Components contains Component {}", provider);
+		log.debug("Env Components contains Component {}", provider);
 		provider.get().getServices().add(service);
 	    } else {
 		// if component is not loaded in this env, then add this
 		// component to env components
-		logger.debug("Env Components does not contain Component {}", providerName);
+		log.debug("Env Components does not contain Component {}", providerName);
 		providerToCheck.getServices().add(service);
 		environment.get().getComponents().add(providerToCheck);
 	    }
-	    logger.debug("Service {} added to Component {} in Env {}", service, providerName, envName);
+	    log.debug("Service {} added to Component {} in Env {}", service, providerName, envName);
 	    return environment.get();
 	} else {
-	    logger.debug("Environments Set does not contain ENV {}", environment);
+	    log.debug("Environments Set does not contain ENV {}", environment);
 	    providerToCheck.getServices().add(service);
 	    Environment newEnvironment = new Environment(envName);
 	    newEnvironment.getComponents().add(providerToCheck);
-	    logger.debug("Service {} added to Component {} in Env {}", service, providerName, envName);
+	    log.debug("Service {} added to Component {} in Env {}", service, providerName, envName);
 	    return newEnvironment;
 	}
     }
@@ -111,10 +110,10 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
      * @return list {@link Service}
      */
     private List<Service> getServiceDetailsViaProperties() {
-	logger.debug("Fetching ENV details via properties...");
+	log.debug("Fetching ENV details via properties...");
 	final List<Service> serviceDetails = serviceProperties.values().stream()
 		.map(serviceDetailEntry -> mapToService(serviceDetailEntry)).collect(Collectors.toList());
-	logger.debug("Fetching Service details via properties completed");
+	log.debug("Fetching Service details via properties completed");
 	return Collections.unmodifiableList(serviceDetails);
     }
 
@@ -122,7 +121,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	String[] serviceDetail = StringUtils.split(StringUtils.trimToEmpty(serviceDetailEntry.toString()),
 		coreConstants.serviceDetailsSeparatorKey);
 
-	logger.debug("service Detail {}", Arrays.toString(serviceDetail));
+	log.debug("service Detail {}", Arrays.toString(serviceDetail));
 	Assert.isTrue(serviceDetail.length == 4,
 		"service details currently supports only 4 properties viz [enviornment,provider,description,uri]");
 
@@ -132,7 +131,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	final String uri = serviceDetail[3];
 
 	Service service = new Service(envName, provider, desc, wsHealthUtils.cleanUrl(uri));
-	logger.debug("Service created {}", service);
+	log.debug("Service created {}", service);
 	return service;
     }
 

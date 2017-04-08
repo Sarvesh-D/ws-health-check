@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ds.ws.health.model.Environment;
@@ -14,10 +12,11 @@ import com.ds.ws.health.model.Service;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 
-@org.springframework.stereotype.Service
-public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(NearRealTimeEnvDetails.class);
+@org.springframework.stereotype.Service
+@Slf4j
+public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {
 
     @Autowired
     private WSHealthUtils wsHealthUtils;
@@ -27,7 +26,7 @@ public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {
 
     @Override
     List<Environment> getEnvHealthDetails() {
-	logger.info("Getting Env Health near realtime");
+	log.info("Getting Env Health near realtime");
 	List<Environment> environmentDetails = new ArrayList<>(wsHealthUtils.getAllEnvironments());
 	Collections.sort(environmentDetails, Environment.ENVIRONMENT_NAME_COMPARATOR);
 
@@ -35,13 +34,13 @@ public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {
 		getFirstRowNum(), getLastRowNum());
 	final int totalServices = getExpectedRowsCount();
 	if (serviceDetailsFromReport.size() != totalServices)
-	    logger.error("Number of rows fetched [{}] in not equal to total service rows [{}]",
+	    log.error("Number of rows fetched [{}] in not equal to total service rows [{}]",
 		    serviceDetailsFromReport.size(), totalServices);
 
 	environmentDetails.stream().map(Environment::getComponents).forEach(
 		providers -> wsHealthUtils.setStatusForProvidersFromReport(providers, serviceDetailsFromReport));
 
-	logger.info("Getting Env Health Details realtime completed.");
+	log.info("Getting Env Health Details realtime completed.");
 	return Collections.unmodifiableList(environmentDetails);
     }
 

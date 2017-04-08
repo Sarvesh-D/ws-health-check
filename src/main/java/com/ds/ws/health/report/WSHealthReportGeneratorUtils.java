@@ -18,8 +18,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -27,6 +25,8 @@ import org.springframework.util.Assert;
 import com.ds.ws.health.common.ReportConstants;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.util.WorkbookUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Helper class for generating reports.
@@ -37,9 +37,8 @@ import com.ds.ws.health.util.WorkbookUtils;
  *
  */
 @Component
+@Slf4j
 public class WSHealthReportGeneratorUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(WSHealthReportGeneratorUtils.class);
 
     @Autowired
     private WorkbookUtils workbookUtils;
@@ -76,7 +75,7 @@ public class WSHealthReportGeneratorUtils {
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getDescription());
 	    workbookUtils.createHyperlinkCell(row.createCell(cellNum++), serviceDetail.getUri());
 	    row.createCell(cellNum).setCellValue(serviceDetail.getStatus().toString());
-	    logger.debug("Row entered for Service {}", serviceDetail);
+	    log.debug("Row entered for Service {}", serviceDetail);
 	}
     }
 
@@ -105,12 +104,12 @@ public class WSHealthReportGeneratorUtils {
      *         Since the report is still not generated for the day
      */
     public String getReportFileForDate(LocalDate date) {
-	logger.debug("Getting Report file path for date {}", date);
+	log.debug("Getting Report file path for date {}", date);
 	Assert.notNull(date, "Date cannot be null");
 	LocalDate reportFileFor = date;
 	if (reportFileFor.equals(LocalDate.now()))
 	    reportFileFor = reportFileFor.minusDays(1);
-	logger.debug("Report file path for {} shall be returned", reportFileFor);
+	log.debug("Report file path for {} shall be returned", reportFileFor);
 	return getReportFileNameFor(reportFileFor);
     }
 
@@ -119,17 +118,17 @@ public class WSHealthReportGeneratorUtils {
      */
     public void saveReport() {
 	try (FileOutputStream out = new FileOutputStream(getReportFileNameFor(LocalDate.now()))) {
-	    logger.debug("Saving report started...");
-	    logger.debug("Applying condtional formatting");
+	    log.debug("Saving report started...");
+	    log.debug("Applying condtional formatting");
 	    applyConditionalFormattingRule();
-	    logger.debug("Formatting as Table");
+	    log.debug("Formatting as Table");
 	    workbookUtils.formatAsTable(0, rowNum, 0, reportHeaders.length - 1);
-	    logger.debug("Auto Adjusting columns");
+	    log.debug("Auto Adjusting columns");
 	    workbookUtils.autoAdjustColumnWidth(0, reportHeaders.length - 1);
 	    insertFooter();
 	    report.write(out);
 	} catch (IOException e) {
-	    logger.error("Error occured while saving report : {}", e.getMessage());
+	    log.error("Error occured while saving report : {}", e.getMessage());
 	} finally {
 	    pings = 0; // reset pings
 	    initReportFile(); // reset report file to start writing data in new
@@ -164,7 +163,7 @@ public class WSHealthReportGeneratorUtils {
     private String getReportFileNameFor(LocalDate date) {
 	final String reportFileName = reportConstants.reportFilePath + System.getProperty("file.separator")
 		+ reportConstants.reportFileName + "_" + date + ".xlsx";
-	logger.debug("Report File Name for date {} is {}", date, reportFileName);
+	log.debug("Report File Name for date {} is {}", date, reportFileName);
 	return reportFileName;
     }
 
@@ -181,12 +180,12 @@ public class WSHealthReportGeneratorUtils {
      * inits a new report file post file rollover
      */
     private void initReportFile() {
-	logger.debug("Intialising Report File..");
+	log.debug("Intialising Report File..");
 	rowNum = 0; // reset the sheet row number counter
-	logger.debug("Row Num set to {}", rowNum);
-	logger.debug("Reseting Workbook");
+	log.debug("Row Num set to {}", rowNum);
+	log.debug("Reseting Workbook");
 	report = workbookUtils.loadWorkbook();
-	logger.debug("Reseting WorkSheet");
+	log.debug("Reseting WorkSheet");
 	sheet = workbookUtils.loadWorksheet(reportConstants.reportFileSheetName);
 	insertHeader();
     }
@@ -195,7 +194,7 @@ public class WSHealthReportGeneratorUtils {
      * inserts the report footer
      */
     private void insertFooter() {
-	logger.debug("Inserting Footer");
+	log.debug("Inserting Footer");
 	Row row = sheet.createRow(rowNum + 2);
 	workbookUtils.createHyperlinkCell(row.createCell(4), reportConstants.reportFooterLink,
 		reportConstants.reportFooter);
@@ -205,7 +204,7 @@ public class WSHealthReportGeneratorUtils {
      * inserts the report header
      */
     private void insertHeader() {
-	logger.debug("Inserting Header");
+	log.debug("Inserting Header");
 	Row row = sheet.createRow(rowNum++);
 	int cellNum = 0;
 	for (String title : reportHeaders) {

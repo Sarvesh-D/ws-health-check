@@ -6,8 +6,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +15,8 @@ import com.ds.ws.health.model.Service;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.service.WSHealthService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Scheduler class for generating reports
  * 
@@ -25,9 +25,8 @@ import com.ds.ws.health.service.WSHealthService;
  * @version 1.0
  */
 @Component
+@Slf4j
 class WSHealthReportGenerator {
-
-    private static final Logger logger = LoggerFactory.getLogger(WSHealthReportGenerator.class);
 
     @Autowired
     @Qualifier("wSHealthServiceImpl")
@@ -38,14 +37,14 @@ class WSHealthReportGenerator {
 
     @Scheduled(cron = "${ping.interval}")
     void buildWSHealthReport() {
-	logger.debug("Building report file started on time {}", LocalDateTime.now());
+	log.debug("Building report file started on time {}", LocalDateTime.now());
 	List<Service> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
 	wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
     }
 
     @Scheduled(cron = "${file.rollover.interval}")
     void createReportFile() {
-	logger.debug("Saving report file started on time {}", LocalDateTime.now());
+	log.debug("Saving report file started on time {}", LocalDateTime.now());
 	wsHealthReportGeneratorUtils.saveReport();
 	/*
 	 * After creating report file, the new report file will be empty. To
@@ -59,13 +58,13 @@ class WSHealthReportGenerator {
 
     @PostConstruct
     private void buildReportOnStartup() {
-	logger.debug("Building report file on startup");
+	log.debug("Building report file on startup");
 	buildWSHealthReport();
     }
 
     @PreDestroy
     private void saveReportBeforeShutdown() {
-	logger.debug("Saving report file on shutdown");
+	log.debug("Saving report file on shutdown");
 	createReportFile();
     }
 

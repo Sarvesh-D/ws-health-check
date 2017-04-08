@@ -14,12 +14,12 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Logging Aspect for logging
@@ -30,9 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Component
 @Aspect
+@Slf4j
 final class LoggingAspect {
-
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Autowired(required = false)
     private HttpServletRequest request;
@@ -66,15 +65,15 @@ final class LoggingAspect {
 
     @AfterThrowing(pointcut = "allMethods()", throwing = "error")
     private void logException(JoinPoint jp, Throwable error) {
-	logger.error("Exception occured in method : {}", jp.getSignature());
-	logger.error("Exception : {}", error.getMessage());
+	log.error("Exception occured in method : {}", jp.getSignature());
+	log.error("Exception : {}", error.getMessage());
     }
 
     @Around("allMethodsExceptRequests()")
     private Object logMethodsExceptRequests(ProceedingJoinPoint pjp) throws Throwable {
 	putUuid();
 	Object retval = null;
-	logger.trace("Entering method : {}", pjp.getSignature());
+	log.trace("Entering method : {}", pjp.getSignature());
 	retval = pjp.proceed();
 	return retval;
     }
@@ -83,15 +82,15 @@ final class LoggingAspect {
     private Object logRequests(ProceedingJoinPoint pjp, RequestMapping requestMapping) throws Throwable {
 	putUuid();
 	Object retval = null;
-	logger.trace("Entering method : {}", pjp.getSignature());
-	logger.debug("Request Info {}", getRequestInfo(requestMapping));
+	log.trace("Entering method : {}", pjp.getSignature());
+	log.debug("Request Info {}", getRequestInfo(requestMapping));
 	retval = pjp.proceed();
 	return retval;
     }
 
     @AfterReturning(pointcut = "allMethods()", returning = "retval")
     private void logSuccessfulExit(JoinPoint jp, Object retval) {
-	logger.trace("Successfully Exiting method : {}", jp.getSignature());
+	log.trace("Successfully Exiting method : {}", jp.getSignature());
     }
 
     private void putUuid() {

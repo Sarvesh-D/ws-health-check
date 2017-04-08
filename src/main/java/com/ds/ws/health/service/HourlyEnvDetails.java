@@ -1,17 +1,16 @@
 package com.ds.ws.health.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 
-@org.springframework.stereotype.Service
-public class HourlyEnvDetails extends FetchDetailsFromReport {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(HourlyEnvDetails.class);
+@org.springframework.stereotype.Service
+@Slf4j
+public class HourlyEnvDetails extends FetchDetailsFromReport {
 
     @Autowired
     private WSHealthUtils wsHealthUtils;
@@ -32,12 +31,12 @@ public class HourlyEnvDetails extends FetchDetailsFromReport {
 	int firstRowNum = 0;
 	// subtracting the server startup ping
 	int totalPings = (reportUtils.getPings() - 1) - getPingsForStatusCalc();
-	logger.debug("Total Pings [{}]", totalPings);
+	log.debug("Total Pings [{}]", totalPings);
 	if (totalPings <= 0)
 	    firstRowNum = 1; // 0 is table header, starting from row 1
 	else
 	    firstRowNum = 1 + (totalPings * wsHealthUtils.getAllServices().size());
-	logger.debug("First Row number = [{}]", firstRowNum);
+	log.debug("First Row number = [{}]", firstRowNum);
 	return firstRowNum;
     }
 
@@ -47,9 +46,9 @@ public class HourlyEnvDetails extends FetchDetailsFromReport {
 	final int totalServices = wsHealthUtils.getAllServices().size();
 	// subtracting the server startup ping
 	int totalPings = reportUtils.getPings() - 1;
-	logger.debug("Total Pings [{}]", totalPings);
+	log.debug("Total Pings [{}]", totalPings);
 	lastRowNum = totalPings * totalServices;
-	logger.debug("Last Row number = [{}]", lastRowNum);
+	log.debug("Last Row number = [{}]", lastRowNum);
 	return lastRowNum;
     }
 

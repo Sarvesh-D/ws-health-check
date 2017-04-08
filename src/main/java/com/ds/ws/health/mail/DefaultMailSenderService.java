@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +16,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This is the default mail sender service implementation.
@@ -29,9 +29,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Slf4j
 public class DefaultMailSenderService implements MailService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DefaultMailSenderService.class);
 
     @Autowired
     JavaMailSender mailSender;
@@ -72,10 +71,10 @@ public class DefaultMailSenderService implements MailService {
 	    logMailProps(from, to, subject, body, filePaths);
 
 	    mailSender.send(helper.getMimeMessage());
-	    logger.debug("Mail Sent");
+	    log.debug("Mail Sent");
 
 	} catch (Exception e) {
-	    logger.error("Error occured while sending mail : {}", e.getMessage());
+	    log.error("Error occured while sending mail : {}", e.getMessage());
 	}
     }
 
@@ -96,6 +95,6 @@ public class DefaultMailSenderService implements MailService {
 	StringBuilder builder = new StringBuilder("\nSending Mail\n");
 	builder.append(mailProps.entrySet().stream().map(entry -> entry.getKey() + "\t-->\t" + entry.getValue())
 		.collect(Collectors.joining("\n")));
-	logger.debug(builder.toString());
+	log.debug(builder.toString());
     }
 }

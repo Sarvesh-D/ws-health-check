@@ -7,8 +7,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ds.ws.health.common.CoreConstants;
@@ -17,10 +15,11 @@ import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 import com.ds.ws.health.util.WorkbookUtils;
 
-@org.springframework.stereotype.Service
-public class DailyEnvDetails extends FetchDetailsFromReport {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(DailyEnvDetails.class);
+@org.springframework.stereotype.Service
+@Slf4j
+public class DailyEnvDetails extends FetchDetailsFromReport {
 
     @Autowired
     private WSHealthUtils wsHealthUtils;
@@ -55,14 +54,14 @@ public class DailyEnvDetails extends FetchDetailsFromReport {
     @Override
     Workbook getReportBook() {
 	final LocalDate reportFileDate = LocalDate.now().minusDays(1);
-	logger.info("Getting Env Health for date []", reportFileDate);
+	log.info("Getting Env Health for date []", reportFileDate);
 	Workbook reportBook = null;
 	try {
 	    reportBook = workbookUtils
 		    .loadWorkbook(new XSSFWorkbook(new File(reportUtils.getReportFileForDate(reportFileDate))));
-	    logger.debug("Workbook for date [{}] found", reportFileDate);
+	    log.debug("Workbook for date [{}] found", reportFileDate);
 	} catch (InvalidFormatException | IOException e) {
-	    logger.error("Error occured fetching Workbook for date [{}]", reportFileDate);
+	    log.error("Error occured fetching Workbook for date [{}]", reportFileDate);
 	}
 	return reportBook;
     }

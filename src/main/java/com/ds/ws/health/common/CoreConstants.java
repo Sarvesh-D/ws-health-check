@@ -3,10 +3,10 @@ package com.ds.ws.health.common;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class containing core constants.<br>
@@ -18,9 +18,8 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
+@Slf4j
 public final class CoreConstants {
-
-    private static final Logger logger = LoggerFactory.getLogger(CoreConstants.class);
 
     public final String serviceDetailsSeparatorKey;
 
@@ -36,18 +35,18 @@ public final class CoreConstants {
 
     @Autowired
     private CoreConstants(Properties coreProperties, Properties schedulerProperties) {
-	logger.info("initialising core constants...");
+	log.info("initialising core constants...");
 	serviceDetailsSeparatorKey = coreProperties.getProperty("service.details.separator.key");
 	connectionTimeoutInMillis = Integer.parseInt(coreProperties.getProperty("connection.timeout"));
 	connectionProxyHost = coreProperties.getProperty("connection.proxy.host");
 	connectionProxyPort = Integer.valueOf(coreProperties.getProperty("connection.proxy.port"));
 	pingIntervalInMins = Integer.valueOf(schedulerProperties.getProperty("ping.mins"));
 	componentStatusPingCount = Integer.valueOf(schedulerProperties.getProperty("component.status.ping.count"));
-	logger.info("initialising core constants completed");
+	log.info("initialising core constants completed");
 
 	Arrays.stream(CoreConstants.class.getDeclaredFields()).forEach(field -> {
 	    try {
-		logger.debug("Setting constant [{}] --> [{}]", field.getName(), field.get(this));
+		log.debug("Setting constant [{}] --> [{}]", field.getName(), field.get(this));
 	    } catch (IllegalArgumentException | IllegalAccessException e1) {
 		e1.printStackTrace();
 	    }

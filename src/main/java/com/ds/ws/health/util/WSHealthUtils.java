@@ -19,8 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,6 +36,8 @@ import com.ds.ws.health.model.Service;
 import com.ds.ws.health.model.Service.Status;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Utility class for {@link Environment} , {@link Provider} , {@link Service}
  * related info
@@ -47,9 +47,8 @@ import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
  * @version 1.0
  */
 @org.springframework.stereotype.Service
+@Slf4j
 public class WSHealthUtils implements ApplicationContextAware {
-
-    private static final Logger logger = LoggerFactory.getLogger(WSHealthUtils.class);
 
     private static ApplicationContext context;
 
@@ -92,7 +91,7 @@ public class WSHealthUtils implements ApplicationContextAware {
     public String cleanUrl(String url) {
 	Assert.notNull(url, "URL cannot be null");
 	if (url.contains("?"))
-	    logger.debug("URL {} may contain request parameters. Stripping request params.", url);
+	    log.debug("URL {} may contain request parameters. Stripping request params.", url);
 	return StringUtils.substringBefore(url, "?");
     }
 
@@ -251,8 +250,8 @@ public class WSHealthUtils implements ApplicationContextAware {
     public List<Service> getServiceDetailsFromReport(Workbook reportBook, int rowStartIndex, int rowEndIndex) {
 	Assert.notNull(reportBook, "reportbook cannot be empty");
 	Assert.isTrue(rowEndIndex > rowStartIndex, "rowEndIndex must be greater than rowStartIndex");
-	logger.debug("Row Start Index is {}", rowStartIndex);
-	logger.debug("Row End Index is {}", rowEndIndex);
+	log.debug("Row Start Index is {}", rowStartIndex);
+	log.debug("Row End Index is {}", rowEndIndex);
 
 	// load workbook
 	workbookUtils.loadWorkbook(reportBook);
@@ -262,7 +261,7 @@ public class WSHealthUtils implements ApplicationContextAware {
 	workbookUtils.proceedIfWorksheetNotEmpty(reportSheet);
 
 	List<Row> rows = workbookUtils.getRowData(rowStartIndex, rowEndIndex);
-	logger.debug("Rows Fetched = {}", rows.size());
+	log.debug("Rows Fetched = {}", rows.size());
 
 	return convertRowsToService(rows);
     }
@@ -378,7 +377,7 @@ public class WSHealthUtils implements ApplicationContextAware {
 	    connection.setReadTimeout(timeout);
 	    connection.setRequestMethod("HEAD");
 	    int responseCode = connection.getResponseCode();
-	    logger.debug("Response Code for URL {} is {}", url, responseCode);
+	    log.debug("Response Code for URL {} is {}", url, responseCode);
 	    return (200 <= responseCode && responseCode <= 399);
 	} catch (IOException exception) {
 	    return false;
@@ -411,10 +410,10 @@ public class WSHealthUtils implements ApplicationContextAware {
     }
 
     public void setStatusForService(Service service) {
-	logger.debug("Getting status for service {}", service);
+	log.debug("Getting status for service {}", service);
 	Status status = pingURL(service.getUri(), coreConstants.connectionTimeoutInMillis) ? Status.UP : Status.DOWN;
 	service.setStatus(status);
-	logger.debug("Service is {}", status);
+	log.debug("Service is {}", status);
     }
 
     public void setStatusForServices(Set<Service> services) {

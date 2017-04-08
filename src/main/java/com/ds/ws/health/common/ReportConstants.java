@@ -3,10 +3,10 @@ package com.ds.ws.health.common;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class containing Report constants.<br>
@@ -18,9 +18,8 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
+@Slf4j
 public class ReportConstants {
-
-    private static final Logger logger = LoggerFactory.getLogger(ReportConstants.class);
 
     public final String reportFilePath;
 
@@ -36,18 +35,18 @@ public class ReportConstants {
 
     @Autowired
     private ReportConstants(Properties reportProperties) {
-	logger.info("initialising report constants...");
+	log.info("initialising report constants...");
 	reportFilePath = reportProperties.getProperty("report.file.path");
 	reportFileName = reportProperties.getProperty("report.file.workbook.name");
 	reportFileSheetName = reportProperties.getProperty("report.file.sheet.name");
 	reportHeaders = reportProperties.getProperty("report.header");
 	reportFooter = reportProperties.getProperty("report.footer");
 	reportFooterLink = reportProperties.getProperty("report.footer.link");
-	logger.info("initialising report constants completed");
+	log.info("initialising report constants completed");
 
 	Arrays.stream(ReportConstants.class.getDeclaredFields()).forEach(field -> {
 	    try {
-		logger.debug("Setting constant [{}] --> [{}]", field.getName(), field.get(this));
+		log.debug("Setting constant [{}] --> [{}]", field.getName(), field.get(this));
 	    } catch (IllegalArgumentException | IllegalAccessException e1) {
 		e1.printStackTrace();
 	    }

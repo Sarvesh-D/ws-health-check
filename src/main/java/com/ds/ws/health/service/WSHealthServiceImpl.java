@@ -7,8 +7,6 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ds.ws.health.common.CoreConstants;
@@ -20,6 +18,8 @@ import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 import com.ds.ws.health.util.WorkbookUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Default implementation for {@link WSHealthService}
  * 
@@ -29,9 +29,8 @@ import com.ds.ws.health.util.WorkbookUtils;
  *
  */
 @org.springframework.stereotype.Service("wSHealthServiceImpl")
+@Slf4j
 public class WSHealthServiceImpl implements WSHealthService {
-
-    private static final Logger logger = LoggerFactory.getLogger(WSHealthServiceImpl.class);
 
     @Autowired
     private WSHealthUtils wsHealthUtils;
@@ -59,7 +58,7 @@ public class WSHealthServiceImpl implements WSHealthService {
 
 	// excluding header and footer
 	List<Row> rows = workbookUtils.getRowData(reportSheet.getFirstRowNum() + 1, reportSheet.getLastRowNum() - 1);
-	logger.debug("Rows Fetched = {}", rows.size());
+	log.debug("Rows Fetched = {}", rows.size());
 
 	for (Row row : rows) {
 	    Service serviceRow = wsHealthUtils.convertRowToService(row);
@@ -72,17 +71,17 @@ public class WSHealthServiceImpl implements WSHealthService {
 
     @Override
     public List<Service> getServiceHealthDetails() {
-	logger.info("Getting service health details started...");
+	log.info("Getting service health details started...");
 	List<Service> serviceDetails = new ArrayList<>(wsHealthUtils.getAllServices());
 	Collections.sort(serviceDetails, Service.SERVICE_DETAIL_COMPARATOR);
 	for (Service serviceDetail : serviceDetails) {
-	    logger.debug("Getting service health details for service {} ", serviceDetail);
+	    log.debug("Getting service health details for service {} ", serviceDetail);
 	    Status serviceStatus = wsHealthUtils.pingURL(serviceDetail.getUri(),
 		    coreConstants.connectionTimeoutInMillis) ? Status.UP : Status.DOWN;
-	    logger.debug("Service is {}", serviceStatus);
+	    log.debug("Service is {}", serviceStatus);
 	    serviceDetail.setStatus(serviceStatus);
 	}
-	logger.info("Getting service health details completed");
+	log.info("Getting service health details completed");
 	return Collections.unmodifiableList(serviceDetails);
     }
 

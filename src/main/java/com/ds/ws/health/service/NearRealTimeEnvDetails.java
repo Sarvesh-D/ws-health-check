@@ -1,16 +1,15 @@
 package com.ds.ws.health.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
 
-@org.springframework.stereotype.Service
-public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(NearRealTimeEnvDetails.class);
+@org.springframework.stereotype.Service
+@Slf4j
+public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 
     @Autowired
     private WSHealthUtils wsHealthUtils;
@@ -23,7 +22,7 @@ public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 	int firstRowNum = 0;
 	final int totalServices = wsHealthUtils.getAllServices().size();
 	int totalPings = reportUtils.getPings();
-	logger.debug("Total Pings [{}]", totalPings);
+	log.debug("Total Pings [{}]", totalPings);
 	// first row is table header which corresponds to row num 1 or row index
 	// 0
 	if (totalPings == 1)
@@ -32,7 +31,7 @@ public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 	    // adding 1 to exclude table header
 	    firstRowNum = 1 + (--totalPings * totalServices);
 	}
-	logger.debug("First Row number = [{}]", firstRowNum);
+	log.debug("First Row number = [{}]", firstRowNum);
 	return firstRowNum;
     }
 
@@ -41,9 +40,9 @@ public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 	int lastRowNum = 0;
 	final int totalServices = wsHealthUtils.getAllServices().size();
 	int totalPings = reportUtils.getPings();
-	logger.debug("Total Pings [{}]", totalPings);
+	log.debug("Total Pings [{}]", totalPings);
 	lastRowNum = totalPings * totalServices;
-	logger.debug("Last Row number = [{}]", lastRowNum);
+	log.debug("Last Row number = [{}]", lastRowNum);
 	return lastRowNum;
     }
 

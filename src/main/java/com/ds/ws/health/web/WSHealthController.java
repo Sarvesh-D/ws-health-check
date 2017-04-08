@@ -1,7 +1,5 @@
 package com.ds.ws.health.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +12,8 @@ import com.ds.ws.health.model.ServiceTimeStatusResponse;
 import com.ds.ws.health.service.EnvDetailsFetchMode;
 import com.ds.ws.health.service.WSHealthService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller for getting {@link EnvironmentDetailsViewResponse}
  * 
@@ -23,9 +23,8 @@ import com.ds.ws.health.service.WSHealthService;
  *
  */
 @RestController
+@Slf4j
 class WSHealthController {
-
-    private static final Logger logger = LoggerFactory.getLogger(WSHealthController.class);
 
     @Autowired
     @Qualifier("wSHealthServiceImpl")
@@ -33,7 +32,7 @@ class WSHealthController {
 
     @RequestMapping("env/health")
     public EnvironmentDetailsViewResponse getEnvHealthDetails() {
-	logger.info("getEnvHealthDetails Service requested");
+	log.info("getEnvHealthDetails Service requested");
 	EnvironmentDetailsViewResponse response = new EnvironmentDetailsViewResponse();
 	response.getEnvironments().addAll(wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.NEAR_REAL_TIME));
 	return response;
@@ -42,7 +41,7 @@ class WSHealthController {
     @RequestMapping("service/health")
     public ServiceTimeStatusResponse getReportForService(@RequestParam String env, @RequestParam String provider,
 	    @RequestParam String uri) {
-	logger.info("getServiceHealthDetails Service requested");
+	log.info("getServiceHealthDetails Service requested");
 	Service service = new Service(env, provider, uri);
 	ServiceTimeStatusResponse response = new ServiceTimeStatusResponse();
 	response.getServiceTimes().addAll(wsHealthService.getReportForService(service));
