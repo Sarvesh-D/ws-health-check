@@ -2,8 +2,11 @@ package com.ds.ws.health.model;
 
 import java.util.Comparator;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.util.Assert;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * A Service model.<br>
@@ -16,6 +19,10 @@ import org.springframework.util.Assert;
  * @version 1.0
  *
  */
+@RequiredArgsConstructor
+@EqualsAndHashCode(of = { "uri", "environment", "provider" })
+@ToString
+@Getter
 public class Service {
 
     public static enum Status {
@@ -43,77 +50,12 @@ public class Service {
 
     private String description;
 
+    @Setter
     private Status status;
 
-    public Service(String environment, String provider, String uri) {
-	this(environment, provider, "NA", uri);
-    }
-
     public Service(String environment, String provider, String description, String uri) {
-	Assert.isTrue(StringUtils.isNotBlank(environment), "Service environment cannot be null or blank");
-	Assert.isTrue(StringUtils.isNotBlank(provider), "Service provider cannot be null or blank");
-	Assert.isTrue(StringUtils.isNotBlank(uri), "Service URI cannot be null or blank");
-	this.environment = environment;
-	this.provider = provider;
+	this(uri, provider, environment);
 	this.description = description;
-	this.uri = uri;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Service other = (Service) obj;
-	if (uri == null) {
-	    if (other.uri != null)
-		return false;
-	} else if (!uri.equals(other.uri))
-	    return false;
-	if (provider == null) {
-	    if (other.provider != null)
-		return false;
-	} else if (!provider.equals(other.provider))
-	    return false;
-	if (environment == null) {
-	    if (other.environment != null)
-		return false;
-	} else if (!environment.equals(other.environment))
-	    return false;
-	return true;
-    }
-
-    public String getDescription() {
-	return description;
-    }
-
-    public final String getEnvironment() {
-	return environment;
-    }
-
-    public String getProvider() {
-	return provider;
-    }
-
-    public final Status getStatus() {
-	return status;
-    }
-
-    public String getUri() {
-	return uri;
-    }
-
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((environment == null) ? 0 : environment.hashCode());
-	result = prime * result + ((provider == null) ? 0 : provider.hashCode());
-	result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-	return result;
     }
 
     public boolean isDown() {
@@ -122,16 +64,6 @@ public class Service {
 
     public boolean isUp() {
 	return this.status.equals(Status.UP);
-    }
-
-    public final void setStatus(Status status) {
-	this.status = status;
-    }
-
-    @Override
-    public String toString() {
-	return "Service [environment=" + environment + ", provider=" + provider + ", description=" + description
-		+ ", uri=" + uri + ", status=" + status + "]";
     }
 
 }

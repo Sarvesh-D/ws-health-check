@@ -8,10 +8,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.util.Assert;
-
 import com.ds.ws.health.util.WSHealthUtils;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Provider model.<br>
@@ -24,6 +27,9 @@ import com.ds.ws.health.util.WSHealthUtils;
  * @version 1.0
  *
  */
+@RequiredArgsConstructor
+@EqualsAndHashCode(of = { "name", "environment" })
+@ToString
 public class Provider {
 
     public static enum Status {
@@ -43,74 +49,28 @@ public class Provider {
 
     private WSHealthUtils wsHealthUtils = WSHealthUtils.instanceOf(WSHealthUtils.class);
 
+    @Getter
+    private final String name;
+    
+    @Getter
     private final String environment;
 
-    private final String name;
-
+    @Setter
     private Set<Service> services;
 
+    @Getter
     private Status status;
 
     private Set<Service> downServices;
 
-    public Provider(String name, String environment) {
-	Assert.isTrue(StringUtils.isNotBlank(name), "Provider name cannot be null or blank");
-	Assert.isTrue(StringUtils.isNotBlank(environment), "Provider Environment name cannot be null or blank");
-	this.name = name;
-	this.environment = environment;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Provider other = (Provider) obj;
-	if (name == null) {
-	    if (other.name != null)
-		return false;
-	} else if (!name.equals(other.name))
-	    return false;
-	if (environment == null) {
-	    if (other.environment != null)
-		return false;
-	} else if (!environment.equals(other.environment))
-	    return false;
-	return true;
-    }
-
     public Set<Service> getDownServices() {
 	return Collections.unmodifiableSet(this.downServices);
-    }
-
-    public String getEnvironment() {
-	return environment;
-    }
-
-    public final String getName() {
-	return name;
     }
 
     public final Set<Service> getServices() {
 	if (null == services)
 	    services = new TreeSet<>(Service.SERVICE_DETAIL_COMPARATOR);
 	return services;
-    }
-
-    public Status getStatus() {
-	return status;
-    }
-
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((environment == null) ? 0 : environment.hashCode());
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	return result;
     }
 
     public boolean isDown() {
@@ -143,10 +103,6 @@ public class Provider {
 	this.downServices = getDownServices(services);
     }
 
-    public final void setServices(Set<Service> services) {
-	this.services = services;
-    }
-
     /**
      * Calculates and sets the status of the provider.
      * 
@@ -160,12 +116,6 @@ public class Provider {
 	List<Status> statuses = services.stream().map(serviceSet -> calculateStatus(serviceSet))
 		.collect(Collectors.toList());
 	this.status = computeStatus(statuses);
-    }
-
-    @Override
-    public String toString() {
-	return "Provider [environment=" + environment + ", name=" + name + ", services=" + services + ", status="
-		+ status + "]";
     }
 
     private Status calculateStatus(Set<Service> services) {

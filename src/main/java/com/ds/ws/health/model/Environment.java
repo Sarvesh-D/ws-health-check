@@ -4,8 +4,11 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.util.Assert;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Environment model.<br>
@@ -16,6 +19,9 @@ import org.springframework.util.Assert;
  * @since 29/08/2016
  * @version 1.0
  */
+@RequiredArgsConstructor
+@EqualsAndHashCode(of = "name")
+@ToString
 public class Environment {
 
     private static class EnvirnomentDetailsNameComaparator implements Comparator<Environment> {
@@ -29,57 +35,16 @@ public class Environment {
 
     public static final EnvirnomentDetailsNameComaparator ENVIRONMENT_NAME_COMPARATOR = new EnvirnomentDetailsNameComaparator();
 
+    @Getter
     private final String name;
 
+    @Setter
     private Set<Provider> components;
-
-    public Environment(String name) {
-	Assert.isTrue(StringUtils.isNotBlank(name), "Environment name cannot be null or blank");
-	this.name = name;
-    }
-
-    @Override
-    public final boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Environment other = (Environment) obj;
-	if (name == null) {
-	    if (other.name != null)
-		return false;
-	} else if (!name.equals(other.name))
-	    return false;
-	return true;
-    }
 
     public Set<Provider> getComponents() {
 	if (null == components)
 	    components = new TreeSet<>(Provider.COMPONENT_NAME_COMPARATOR);
 	return components;
-    }
-
-    public String getName() {
-	return name;
-    }
-
-    @Override
-    public final int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	return result;
-    }
-
-    public void setComponents(Set<Provider> components) {
-	this.components = components;
-    }
-
-    @Override
-    public String toString() {
-	return "Environment [name=" + name + ", components=" + components + "]";
     }
 
 }

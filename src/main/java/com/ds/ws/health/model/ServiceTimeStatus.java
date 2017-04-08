@@ -1,5 +1,7 @@
 package com.ds.ws.health.model;
 
+import lombok.Data;
+
 /**
  * Immutable Class to hold service ping time and its status at that time
  * 
@@ -7,27 +9,10 @@ package com.ds.ws.health.model;
  * @since 19/09/2016
  * @version 1.0
  */
+@Data
 public class ServiceTimeStatus {
 
     private final String time;
     private final String status;
-
-    public ServiceTimeStatus(String time, String status) {
-	this.time = time;
-	this.status = status;
-    }
-
-    public String getStatus() {
-	return status;
-    }
-
-    public String getTime() {
-	return time;
-    }
-
-    @Override
-    public String toString() {
-	return "Response [time=" + time + ", status=" + status + "]";
-    }
 
 }
