@@ -54,7 +54,7 @@ public class DailyEnvDetails extends FetchDetailsFromReport {
     @Override
     Workbook getReportBook() {
 	final LocalDate reportFileDate = LocalDate.now().minusDays(1);
-	log.info("Getting Env Health for date []", reportFileDate);
+	log.info("Getting Env Health for date [{}]", reportFileDate);
 	Workbook reportBook = null;
 	try {
 	    reportBook = workbookUtils
