@@ -29,7 +29,7 @@ import lombok.ToString;
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = { "name", "environment" })
-@ToString
+@ToString(of = { "name", "environment" })
 public class Provider {
 
     public static enum Status {
@@ -51,7 +51,7 @@ public class Provider {
 
     @Getter
     private final String name;
-    
+
     @Getter
     private final String environment;
 
