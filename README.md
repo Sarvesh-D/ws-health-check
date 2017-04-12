@@ -8,6 +8,7 @@ Checks health of Web Services and creates reports
 # Road Map
 
 ### Refactoring
+~~/
 - refactor code to java 8
 - use lombok
 - refactor code to use spring java config
