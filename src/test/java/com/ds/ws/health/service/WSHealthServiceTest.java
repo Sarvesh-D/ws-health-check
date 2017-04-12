@@ -14,10 +14,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
+import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 import com.ds.ws.health.util.WSHealthUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/root-context.xml" })
+@ContextConfiguration(classes = HealthCheckRootConfig.class)
 public class WSHealthServiceTest {
 
     @Autowired
@@ -67,7 +68,7 @@ public class WSHealthServiceTest {
 	assertTrue(serviceCount == wsHealthUtils.getAllServices().size());
     }
 
-    //@Test
+    // @Test
     // TODO see how to run this test on Travis.
     public void testGetEnvHealthDetailsFromReportForDate() {
 	final List<Environment> environments = wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.DAILY);

@@ -10,8 +10,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 /*@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/root-context.xml",
-	"classpath:spring/appServlet/servlet-context.xml" })
+@ContextConfiguration(classes = {HealthCheckRootConfig.class, HealthCheckServletContext.class})
 @WebAppConfiguration*/
 public class WSHealthControllerTest {
 
