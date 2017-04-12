@@ -8,10 +8,10 @@ Checks health of Web Services and creates reports
 # Road Map
 
 ### Refactoring
-~~/
-- refactor code to java 8
-- use lombok
-- refactor code to use spring java config
+
+- ~~refactor code to java 8~~
+- ~~use lombok~~
+- ~~refactor code to use spring java config~~
 
 ### Admin Functionalities
 - add admin functionality for add/update/delete configured environment/providers/services
