@@ -11,10 +11,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ds.ws.health.model.Service.Status;
+import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 import com.ds.ws.health.util.WSHealthUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/root-context.xml" })
+@ContextConfiguration(classes = HealthCheckRootConfig.class)
 public class ProviderTest {
 
     @Autowired
