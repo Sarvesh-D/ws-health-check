@@ -5,28 +5,27 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.function.Function;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.runners.JUnit4;
 
+import com.ds.ws.health.BaseTest;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
-import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 import com.ds.ws.health.util.WSHealthUtils;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = HealthCheckRootConfig.class)
-public class WSHealthServiceTest {
+@RunWith(JUnit4.class)
+public final class WSHealthServiceTest extends BaseTest {
 
-    @Autowired
-    @Qualifier("wSHealthServiceImpl")
     private WSHealthService wsHealthService;
-
-    @Autowired
     private WSHealthUtils wsHealthUtils;
+
+    @Before
+    public void setUp() {
+	wsHealthUtils = rootContext.getBean(WSHealthUtils.class);
+	wsHealthService = WSHealthUtils.instanceOf(WSHealthService.class);
+    }
 
     @Test
     public void testGetEnvHealthDetails() {

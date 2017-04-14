@@ -3,23 +3,25 @@ package com.ds.ws.health.report;
 import java.util.Properties;
 
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.runners.JUnit4;
 
-import com.ds.ws.health.spring.config.HealthCheckRootConfig;
+import com.ds.ws.health.BaseTest;
+import com.ds.ws.health.util.WSHealthUtils;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = HealthCheckRootConfig.class)
-public class WSHealthReportGeneratorUtilsTest {
+@RunWith(JUnit4.class)
+public final class WSHealthReportGeneratorUtilsTest extends BaseTest {
 
-    @Autowired
     private WSHealthReportGeneratorUtils reportUtils;
-
-    @Autowired
     private Properties reportProperties;
+
+    @Before
+    public void setUp() {
+	reportUtils = WSHealthUtils.instanceOf(WSHealthReportGeneratorUtils.class);
+	reportProperties = rootContext.getBean("reportProperties", Properties.class);
+    }
 
     @Test
     // TODO see how to preform this test w/o manually changing date each time.

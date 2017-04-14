@@ -8,23 +8,25 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.runners.JUnit4;
 
+import com.ds.ws.health.BaseTest;
 import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
-import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = HealthCheckRootConfig.class)
-public class WSHealthUtilsTest {
+@RunWith(JUnit4.class)
+public final class WSHealthUtilsTest extends BaseTest {
 
-    @Autowired
     private WSHealthUtils wsHealthUtils;
+
+    @Before
+    public void setUp() {
+	wsHealthUtils = rootContext.getBean(WSHealthUtils.class);
+    }
 
     @Test
     public void testCleanUrl() {

@@ -62,9 +62,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
     public final void loadEnvironments() {
 	log.info("Loading environmets started...");
 	List<Service> serviceDetails = getServiceDetailsViaProperties();
-
 	serviceDetails.stream().map(service -> buildEnvHierarchyFromService(service)).forEach(environments::add);
-
 	log.info("Loading environmets completed.");
     }
 

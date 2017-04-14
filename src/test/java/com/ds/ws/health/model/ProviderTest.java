@@ -4,22 +4,24 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.runners.JUnit4;
 
+import com.ds.ws.health.BaseTest;
 import com.ds.ws.health.model.Service.Status;
-import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 import com.ds.ws.health.util.WSHealthUtils;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = HealthCheckRootConfig.class)
-public class ProviderTest {
+@RunWith(JUnit4.class)
+public final class ProviderTest extends BaseTest {
 
-    @Autowired
     private WSHealthUtils wsHealthUtils;
+
+    @Before
+    public void setUp() {
+	wsHealthUtils = WSHealthUtils.instanceOf(WSHealthUtils.class);
+    }
 
     @Test
     public void testGetStatus() {
