@@ -11,7 +11,7 @@ jdk:
 
 script:
   - mvn clean package
-  - mvn cobertura:cobertura
+  - mvn cobertura:cobertura -DskipTests=True
 
 cache:
   directories:
