@@ -89,6 +89,7 @@ public class WSHealthReportGeneratorUtils {
     /**
      * @return the report file currently in creation.
      */
+    @Deprecated
     public Workbook getReport() {
 	return report;
     }

@@ -67,7 +67,7 @@ public class WSHealthReportMailSender {
 	Map<String, Object> templateParams = new HashMap<>();
 	templateParams.put("reportDate", reportDate);
 	templateParams.put("dashboardLink", reportProperties.getProperty("report.footer.link"));
-	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.HOURLY));
+	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
 	templateParams.put("attachment", false);
 
 	final String body = mailUtils.transformTemplateBody(mailProperties.getProperty("report.mail.body.template"),
@@ -90,7 +90,7 @@ public class WSHealthReportMailSender {
 	Map<String, Object> templateParams = new HashMap<>();
 	templateParams.put("reportDate", reportDate);
 	templateParams.put("dashboardLink", reportProperties.getProperty("report.footer.link"));
-	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.DAILY));
+	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
 	templateParams.put("attachment", true);
 
 	final String body = mailUtils.transformTemplateBody(mailProperties.getProperty("report.mail.body.template"),

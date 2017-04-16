@@ -48,6 +48,7 @@ public final class WSHealthServiceTest extends BaseTest {
     }
 
     @Test
+    @Deprecated
     public void testGetEnvHealthDetailsFromReport() {
 	int componentCount = 0;
 	int serviceCount = 0;
@@ -69,6 +70,7 @@ public final class WSHealthServiceTest extends BaseTest {
 
     // @Test
     // TODO see how to run this test on Travis.
+    @Deprecated
     public void testGetEnvHealthDetailsFromReportForDate() {
 	final List<Environment> environments = wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.DAILY);
 

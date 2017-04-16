@@ -34,7 +34,7 @@ class WSHealthController {
     public EnvironmentDetailsViewResponse getEnvHealthDetails() {
 	log.info("getEnvHealthDetails Service requested");
 	EnvironmentDetailsViewResponse response = new EnvironmentDetailsViewResponse();
-	response.getEnvironments().addAll(wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.NEAR_REAL_TIME));
+	response.getEnvironments().addAll(wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
 	return response;
     }
 

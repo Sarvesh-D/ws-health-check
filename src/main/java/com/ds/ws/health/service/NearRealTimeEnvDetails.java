@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * to make UI faster by returning the result from service report worksheet which
  * is stored in memory.
  */
+@Deprecated
 public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 
     @Autowired

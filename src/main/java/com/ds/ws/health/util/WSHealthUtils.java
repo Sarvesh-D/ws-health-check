@@ -251,6 +251,7 @@ public class WSHealthUtils implements ApplicationContextAware {
      *            index of last service row
      * @return List of {@link Service} for the corresponding row range
      */
+    @Deprecated
     public List<Service> getServiceDetailsFromReport(int rowStartIndex, int rowEndIndex) {
 	// Load current report workbook
 	Workbook workbook = workbookUtils.loadWorkbook(reportUtils.getReport());
@@ -268,6 +269,7 @@ public class WSHealthUtils implements ApplicationContextAware {
      *            index of last service row
      * @return List of {@link Service} for the corresponding row range
      */
+    @Deprecated
     public List<Service> getServiceDetailsFromReport(Workbook reportBook, int rowStartIndex, int rowEndIndex) {
 	Assert.notNull(reportBook, "reportbook cannot be empty");
 	Assert.isTrue(rowEndIndex > rowStartIndex, "rowEndIndex must be greater than rowStartIndex");

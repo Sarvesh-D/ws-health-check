@@ -24,6 +24,7 @@ public enum EnvDetailsFetchMode {
      * builds the response.<br>
      * Results best performance.
      */
+    @Deprecated
     NEAR_REAL_TIME(NearRealTimeEnvDetails.class),
 
     /**
@@ -35,6 +36,7 @@ public enum EnvDetailsFetchMode {
      * the number of records fetched<br>
      * can grow exponentially and may have direct impact on performance
      */
+    @Deprecated
     HOURLY(HourlyEnvDetails.class),
 
     /**
@@ -46,6 +48,7 @@ public enum EnvDetailsFetchMode {
      * the number of records fetched<br>
      * can grow exponentially. Results in worst performance.
      */
+    @Deprecated
     DAILY(DailyEnvDetails.class);
 
     private Class<? extends EnvDetailsFetchStrategy> strategyClass;

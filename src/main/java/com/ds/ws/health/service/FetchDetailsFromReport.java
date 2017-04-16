@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Service
 @Slf4j
+@Deprecated
 public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {
 
     @Autowired

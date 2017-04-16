@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  * status of provider is much more reliable which is calculated after each
  * scheduled ping to each service.
  */
+@Deprecated
 public class DailyEnvDetails extends FetchDetailsFromReport {
 
     @Autowired
