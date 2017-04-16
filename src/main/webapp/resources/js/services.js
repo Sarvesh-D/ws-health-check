@@ -37,7 +37,7 @@ appModule.service('componentDetailsService', function() {
 	}
 });
 
-appModule.service('utilityService', function(coreConstants) {
+appModule.service('utilityService', function(coreConstants,$filter) {
 	
 	var self = this;
 
@@ -109,7 +109,7 @@ appModule.service('utilityService', function(coreConstants) {
 		var transformedData = [];
 		angular.forEach(data, function(entry) {
 			var transformedEntry = {
-					label : entry.time.substring(0, 5),
+					label : $filter('date')(entry.time, 'HH:mm'),
 					value : entry.status == coreConstants.SERVICE_STATUS.UP ? coreConstants.CHART_PROPERTY.Y_AXIS_MAX_VALUE : coreConstants.CHART_PROPERTY.Y_AXIS_MIN_VALUE, 
 							color : entry.status == coreConstants.SERVICE_STATUS.UP ? coreConstants.COLOR.HEX.GREEN : coreConstants.COLOR.HEX.RED
 			}

@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 public class ServiceTimeStatus {
 
-    private final String time;
+    private final long time;
     private final ServiceStatus status;
 
 }

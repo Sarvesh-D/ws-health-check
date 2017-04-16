@@ -51,22 +51,8 @@ public class WSHealthServiceImpl implements WSHealthService {
 
     @Override
     public List<ServiceTimeStatus> getReportForService(Service service) {
-	List<ServiceTimeStatus> serviceReport = new ArrayList<>();
-	// Load workbook and sheet
-	Workbook workbook = workbookUtils.loadWorkbook(reportUtils.getReport());
-	Sheet reportSheet = workbookUtils.loadWorksheet(workbook.getSheet("report"));
-
-	// excluding header and footer
-	List<Row> rows = workbookUtils.getRowData(reportSheet.getFirstRowNum() + 1, reportSheet.getLastRowNum() - 1);
-	log.debug("Rows Fetched = {}", rows.size());
-
-	for (Row row : rows) {
-	    if (service.equals(wsHealthUtils.convertRowToService(row)))
-		serviceReport.add(new ServiceTimeStatus(row.getCell(0).toString(),
-			ServiceStatus.valueOf(row.getCell(5).toString())));
-	}
-
-	return Collections.unmodifiableList(serviceReport);
+	Service loadedService = wsHealthUtils.getLoadedService(service);
+	return loadedService.getServiceTimeStatusResponse().getServiceTimes();
     }
 
     @Override
@@ -78,7 +64,7 @@ public class WSHealthServiceImpl implements WSHealthService {
 	    ServiceStatus status = wsHealthUtils.getStatusForService(serviceDetail);
 	    // set below entry when scheduler pings the service to test
 	    serviceDetail.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), status));
+		    .add(new ServiceTimeStatus(System.currentTimeMillis(), status));
 	    // calculate overall status of service after each ping
 	    serviceDetail.setStatus(status).calculateOverallStatus();
 	}

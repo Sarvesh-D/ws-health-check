@@ -32,7 +32,7 @@ public final class ProviderTest extends BaseTest {
 	for (Service service : services) {
 	    service.setServiceTimeStatusResponse(new ServiceTimeStatusResponse());
 	    service.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.UP));
+		    .add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP));
 	    service.calculateOverallStatus();
 	}
 	provider.calculateOverallStatus();
@@ -41,11 +41,11 @@ public final class ProviderTest extends BaseTest {
 	for (Service service : services) {
 	    service.setServiceTimeStatusResponse(new ServiceTimeStatusResponse());
 	    service.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.DOWN));
+		    .add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.DOWN));
 	    service.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.UP));
+		    .add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP));
 	    service.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.UP));
+		    .add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP));
 	    service.calculateOverallStatus();
 	}
 	provider.calculateOverallStatus();
@@ -54,7 +54,7 @@ public final class ProviderTest extends BaseTest {
 	for (Service service : services) {
 	    service.setServiceTimeStatusResponse(new ServiceTimeStatusResponse());
 	    service.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.DOWN));
+		    .add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.DOWN));
 	    service.calculateOverallStatus();
 	}
 

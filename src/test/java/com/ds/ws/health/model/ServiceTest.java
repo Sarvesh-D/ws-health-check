@@ -32,23 +32,23 @@ public class ServiceTest extends BaseTest {
 
 	service.setServiceTimeStatusResponse(new ServiceTimeStatusResponse());
 	IntStream.range(0, 10).forEach(i -> service.getServiceTimeStatusResponse().getServiceTimes()
-		.add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.DOWN)));
+		.add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.DOWN)));
 	service.calculateOverallStatus();
 	assertTrue("Status must be RED", service.getOverallStatus().equals(Status.RED));
 	assertTrue("Provider Status must be RED", provider.getOverallStatus().equals(Status.RED));
 
 	service.setServiceTimeStatusResponse(new ServiceTimeStatusResponse());
 	IntStream.range(0, 4).forEach(i -> service.getServiceTimeStatusResponse().getServiceTimes()
-		.add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.DOWN)));
+		.add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.DOWN)));
 	IntStream.range(0, 5).forEach(i -> service.getServiceTimeStatusResponse().getServiceTimes()
-		.add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.UP)));
+		.add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP)));
 	service.calculateOverallStatus();
 	assertTrue("Status must be AMBER", service.getOverallStatus().equals(Status.AMBER));
 	assertTrue("Provider Status must be AMBER", provider.getOverallStatus().equals(Status.AMBER));
 
 	service.setServiceTimeStatusResponse(new ServiceTimeStatusResponse());
 	IntStream.range(0, 10).forEach(i -> service.getServiceTimeStatusResponse().getServiceTimes()
-		.add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), ServiceStatus.UP)));
+		.add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP)));
 	service.calculateOverallStatus();
 	assertTrue("Status must be GREEN", service.getOverallStatus().equals(Status.GREEN));
 	assertTrue("Provider Status must be GREEN", provider.getOverallStatus().equals(Status.GREEN));
