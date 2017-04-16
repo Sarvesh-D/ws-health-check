@@ -3,10 +3,13 @@ package com.ds.ws.health.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ds.ws.health.model.Environment;
+import com.ds.ws.health.model.Provider;
+import com.ds.ws.health.model.Service;
 import com.ds.ws.health.util.WSHealthUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +26,15 @@ public class RealTimeEnvDetails extends EnvDetailsFetchStrategy {
 	log.info("Getting Env Health Details realtime");
 	List<Environment> environmentDetails = new ArrayList<>(wsHealthUtils.getAllEnvironments());
 	Collections.sort(environmentDetails, Environment.ENVIRONMENT_NAME_COMPARATOR);
-	environmentDetails.stream().map(Environment::getComponents)
-		.forEach(providers -> wsHealthUtils.setStatusForProviders(providers));
+	environmentDetails.stream().map(Environment::getComponents).flatMap(Set::stream).map(Provider::getServices)
+		.flatMap(Set::stream).forEach(this::setStatusForService);
 	log.info("Getting Env Health Details realtime completed.");
 	return Collections.unmodifiableList(environmentDetails);
 
+    }
+
+    private void setStatusForService(Service service) {
+	service.setStatus(wsHealthUtils.getStatusForService(service));
     }
 
 }

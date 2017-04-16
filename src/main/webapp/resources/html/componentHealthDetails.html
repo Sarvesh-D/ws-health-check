@@ -16,7 +16,7 @@
 				<td><a href="{{serviceHealthDetail.uri}}" target="_blank">{{serviceHealthDetail.uri}}</a></td>
 				<td>
 					<svg width="100" height="12" style="margin-top: 8px">
-						<circle cx="30" cy="6" r="6" fill="{{serviceHealthDetail.status == 'DOWN' ? 'red' : 'green'}}"/>
+						<circle cx="30" cy="6" r="6" fill="{{serviceHealthDetail.overallStatus}}"/>
 					</svg>
 				</td>
 			</tr>

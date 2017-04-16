@@ -48,7 +48,7 @@ appModule.controller('componentHealthDetailsController', function($scope,$rootSc
 	angular.forEach(envHealthDetails,function(envHealthDetail) {
 		if(envHealthDetail.name == $routeParams.env) {
 			angular.forEach(envHealthDetail.components,function(component) {
-				if(component.name == $routeParams.component && component.version == $routeParams.version) {
+				if(component.name == $routeParams.component) {
 					angular.forEach(component.services,function(service) {
 						$scope.componentServiceDetails.push(service);
 					});

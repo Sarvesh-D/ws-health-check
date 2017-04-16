@@ -9,6 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Service
 @Slf4j
+/*
+ * TODO check to see if this can be deprecated, this strategy class was required
+ * to make UI faster by returning the result from service report worksheet which
+ * is stored in memory.
+ */
 public class NearRealTimeEnvDetails extends FetchDetailsFromReport {
 
     @Autowired

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Service;
-import com.ds.ws.health.model.Service.Status;
+import com.ds.ws.health.model.Service.ServiceStatus;
 import com.ds.ws.health.model.ServiceTimeStatus;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
@@ -61,9 +61,9 @@ public class WSHealthServiceImpl implements WSHealthService {
 	log.debug("Rows Fetched = {}", rows.size());
 
 	for (Row row : rows) {
-	    Service serviceRow = wsHealthUtils.convertRowToService(row);
-	    if (service.equals(serviceRow))
-		serviceReport.add(new ServiceTimeStatus(row.getCell(0).toString(), serviceRow.getStatus().toString()));
+	    if (service.equals(wsHealthUtils.convertRowToService(row)))
+		serviceReport.add(new ServiceTimeStatus(row.getCell(0).toString(),
+			ServiceStatus.valueOf(row.getCell(5).toString())));
 	}
 
 	return Collections.unmodifiableList(serviceReport);
@@ -75,11 +75,12 @@ public class WSHealthServiceImpl implements WSHealthService {
 	List<Service> serviceDetails = new ArrayList<>(wsHealthUtils.getAllServices());
 	Collections.sort(serviceDetails, Service.SERVICE_DETAIL_COMPARATOR);
 	for (Service serviceDetail : serviceDetails) {
-	    log.debug("Getting service health details for service {} ", serviceDetail);
-	    Status serviceStatus = wsHealthUtils.pingURL(serviceDetail.getUri(),
-		    coreConstants.connectionTimeoutInMillis) ? Status.UP : Status.DOWN;
-	    log.debug("Service is {}", serviceStatus);
-	    serviceDetail.setStatus(serviceStatus);
+	    ServiceStatus status = wsHealthUtils.getStatusForService(serviceDetail);
+	    // set below entry when scheduler pings the service to test
+	    serviceDetail.getServiceTimeStatusResponse().getServiceTimes()
+		    .add(new ServiceTimeStatus(String.valueOf(System.currentTimeMillis()), status));
+	    // calculate overall status of service after each ping
+	    serviceDetail.setStatus(status).calculateOverallStatus();
 	}
 	log.info("Getting service health details completed");
 	return Collections.unmodifiableList(serviceDetails);

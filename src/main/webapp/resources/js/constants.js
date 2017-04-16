@@ -16,10 +16,10 @@ appModule.constant('coreConstants', {
 		'UP':'UP',
 		'DOWN':'DOWN'
 	},
-	'COMPONENT_STATUS':{
+	'STATUS':{
+		'GREEN':'GREEN',
 		'RED':'RED',
-		'AMBER':'AMBER',
-		'GREEN':'GREEN'
+		'AMBER':'AMBER'
 	},
 	'CHART_PROPERTY':{
 		'TYPE': 'column2d',

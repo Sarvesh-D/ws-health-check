@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ import com.ds.ws.health.core.EnvironmentLoader;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
-import com.ds.ws.health.model.Service.Status;
+import com.ds.ws.health.model.Service.ServiceStatus;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -122,9 +123,9 @@ public class WSHealthUtils implements ApplicationContextAware {
     public Service convertRowToService(Row row) {
 	Assert.notNull(row, "Row cannot be null");
 	Service service = new Service(row.getCell(1).getStringCellValue(), row.getCell(2).getStringCellValue(),
-		row.getCell(3).getStringCellValue(), row.getCell(4).getStringCellValue());
-	service.setStatus(Status.valueOf(row.getCell(5).getStringCellValue()));
-	return service;
+		row.getCell(4).getStringCellValue(), row.getCell(3).getStringCellValue());
+	service.setStatus(ServiceStatus.valueOf(row.getCell(5).toString()));
+	return getLoadedService(service);
     }
 
     /**
@@ -201,6 +202,16 @@ public class WSHealthUtils implements ApplicationContextAware {
 	return null;
     }
 
+    public Service getLoadedService(Service service) {
+	Assert.notNull(service, "Service cannot be null");
+	Optional<Service> loadedService = getAllServices().stream()
+		.filter(serviceFromLoadedServices -> serviceFromLoadedServices.equals(service)).findFirst();
+	if (loadedService.isPresent())
+	    return loadedService.get();
+	else
+	    throw new NoSuchElementException("Unable to find service " + service);
+    }
+
     /**
      * Gets the loaded Provider along with all the services loaded for this
      * Provider
@@ -218,6 +229,16 @@ public class WSHealthUtils implements ApplicationContextAware {
 		return component;
 	}
 	return null;
+    }
+
+    public Provider getProviderForService(Service service) {
+	Provider serviceProvider = new Provider(service.getProvider(), service.getEnvironment());
+	Optional<Provider> provider = getAllComponents().stream().filter(component -> component.equals(serviceProvider))
+		.findFirst();
+	if (provider.isPresent())
+	    return provider.get();
+	else
+	    throw new NoSuchElementException("No Provider Found for Service " + service);
     }
 
     /**
@@ -300,6 +321,7 @@ public class WSHealthUtils implements ApplicationContextAware {
      *            Provider was hit.
      * @return Map of Provider as key and List of provider services as values
      */
+    @Deprecated
     public Map<Provider, List<Set<Service>>> getServicesHealthAllComponent(List<Service> services) {
 	Map<Provider, List<Set<Service>>> providerServicesHealthMap = new HashMap<>();
 	for (Service service : services) {
@@ -347,8 +369,17 @@ public class WSHealthUtils implements ApplicationContextAware {
      *         to number iteration of<br>
      *         the given component was hit
      */
+    @Deprecated
     public List<Set<Service>> getServicesHealthForProvider(List<Service> services, Provider component) {
 	return getServicesHealthAllComponent(services).get(component);
+    }
+
+    public ServiceStatus getStatusForService(Service service) {
+	log.debug("Getting status for service {}", service);
+	ServiceStatus status = pingURL(service.getUri(), coreConstants.connectionTimeoutInMillis) ? ServiceStatus.UP
+		: ServiceStatus.DOWN;
+	log.debug("Service is {}", status);
+	return status;
     }
 
     /**
@@ -384,50 +415,48 @@ public class WSHealthUtils implements ApplicationContextAware {
 	}
     }
 
+    /*
+     * public void setStatusForProvider(Provider provider) { //
+     * setStatusForServices(provider.getServices());
+     * provider.setDownServices(new ArrayList<>(provider.getServices()));
+     * provider.setOverallStatus(getServicesHealthForProvider(new
+     * ArrayList<>(provider.getServices()), provider)); }
+     * 
+     * public void setStatusForProviderFromReport(Provider provider,
+     * List<Service> serviceDetailsFromReport) { //
+     * setStatusForServicesFromReport(provider.getServices(), //
+     * serviceDetailsFromReport);
+     * provider.setDownServices(serviceDetailsFromReport);
+     * provider.setOverallStatus(getServicesHealthForProvider(new
+     * ArrayList<>(provider.getServices()), provider)); }
+     * 
+     * public void setStatusForProviders(Set<Provider> providers) {
+     * providers.stream().forEach(provider -> setStatusForProvider(provider)); }
+     * 
+     * public void setStatusForProvidersFromReport(Set<Provider> providers,
+     * List<Service> serviceDetailsFromReport) {
+     * providers.stream().forEach(provider ->
+     * setStatusForProviderFromReport(provider, serviceDetailsFromReport)); }
+     */
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 	context = applicationContext;
     }
 
-    public void setStatusForProvider(Provider provider) {
-	setStatusForServices(provider.getServices());
-	provider.setDownServices(new ArrayList<>(provider.getServices()));
-	provider.setStatus(getServicesHealthForProvider(new ArrayList<>(provider.getServices()), provider));
-    }
+    /*
+     * public void setStatusForServices(Set<Service> services) {
+     * services.stream().forEach(service -> setStatusForService(service)); }
+     */
 
-    public void setStatusForProviderFromReport(Provider provider, List<Service> serviceDetailsFromReport) {
-	setStatusForServicesFromReport(provider.getServices(), serviceDetailsFromReport);
-	provider.setDownServices(serviceDetailsFromReport);
-	provider.setStatus(getServicesHealthForProvider(new ArrayList<>(provider.getServices()), provider));
-    }
-
-    public void setStatusForProviders(Set<Provider> providers) {
-	providers.stream().forEach(provider -> setStatusForProvider(provider));
-    }
-
-    public void setStatusForProvidersFromReport(Set<Provider> providers, List<Service> serviceDetailsFromReport) {
-	providers.stream().forEach(provider -> setStatusForProviderFromReport(provider, serviceDetailsFromReport));
-    }
-
-    public void setStatusForService(Service service) {
-	log.debug("Getting status for service {}", service);
-	Status status = pingURL(service.getUri(), coreConstants.connectionTimeoutInMillis) ? Status.UP : Status.DOWN;
-	service.setStatus(status);
-	log.debug("Service is {}", status);
-    }
-
-    public void setStatusForServices(Set<Service> services) {
-	services.stream().forEach(service -> setStatusForService(service));
-    }
-
-    public void setStatusForServicesFromReport(Set<Service> services, List<Service> serviceDetailsFromReport) {
-	services.stream().forEach(service -> {
-	    Optional<Service> mathcedServiceFromReport = serviceDetailsFromReport.stream()
-		    .filter(serviceFromReport -> service.equals(serviceFromReport)).findFirst();
-	    if (mathcedServiceFromReport.isPresent())
-		service.setStatus(mathcedServiceFromReport.get().getStatus());
-	});
-
-    }
+    /*
+     * public void setStatusForServicesFromReport(Set<Service> services,
+     * List<Service> serviceDetailsFromReport) {
+     * services.stream().forEach(service -> { Optional<Service>
+     * mathcedServiceFromReport = serviceDetailsFromReport.stream()
+     * .filter(serviceFromReport ->
+     * service.equals(serviceFromReport)).findFirst(); if
+     * (mathcedServiceFromReport.isPresent()) service.setStatus(); }); }
+     */
 
 }

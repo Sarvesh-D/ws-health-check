@@ -19,6 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Service
 @Slf4j
+/*
+ * TODO check to see if this can be deprecated, since this strategy class was
+ * required to calculate the daily status of Provider. But now, the overall
+ * status of provider is much more reliable which is calculated after each
+ * scheduled ping to each service.
+ */
 public class DailyEnvDetails extends FetchDetailsFromReport {
 
     @Autowired

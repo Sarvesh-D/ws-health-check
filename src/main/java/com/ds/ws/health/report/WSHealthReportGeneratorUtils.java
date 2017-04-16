@@ -142,12 +142,13 @@ public class WSHealthReportGeneratorUtils {
     private void applyConditionalFormattingRule() {
 	SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
 
-	ConditionalFormattingRule successRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL, "UP");
+	ConditionalFormattingRule successRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL,
+		"GREEN");
 	PatternFormatting patternFmtSuccess = successRule.createPatternFormatting();
 	patternFmtSuccess.setFillBackgroundColor(IndexedColors.LIGHT_GREEN.index);
 
 	ConditionalFormattingRule failureRule = sheetCF.createConditionalFormattingRule(ComparisonOperator.EQUAL,
-		"DOWN");
+		"RED");
 	PatternFormatting patternFmtFailure = failureRule.createPatternFormatting();
 	patternFmtFailure.setFillBackgroundColor(IndexedColors.RED.index);
 

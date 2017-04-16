@@ -1,6 +1,5 @@
 package com.ds.ws.health.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -8,7 +7,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import com.ds.ws.health.common.Status;
 import com.ds.ws.health.util.WSHealthUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,11 +31,8 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = { "name", "environment" })
 @ToString(of = { "name", "environment" })
+@JsonIgnoreProperties(value = { "wsHealthUtils" })
 public class Provider {
-
-    public static enum Status {
-	RED, AMBER, GREEN
-    }
 
     private static class ComponentNameComparator implements Comparator<Provider> {
 
@@ -59,9 +57,31 @@ public class Provider {
     private Set<Service> services;
 
     @Getter
-    private Status status;
+    private Status overallStatus;
 
     private Set<Service> downServices;
+
+    /**
+     * Calculates and sets the overallStatus of the provider.
+     * 
+     * @param services
+     *            List of provider services. The size of the list shall
+     *            correspond to<br>
+     *            number of times the provider was hit before calculating the
+     *            overallStatus
+     */
+    public void calculateOverallStatus() {
+	List<Status> statuses = this.services.stream().map(Service::getOverallStatus).collect(Collectors.toList());
+	final int totalStatuses = statuses.size();
+	int statusGreenCount = wsHealthUtils.countMatches(statuses, Status.GREEN);
+	int statusRedCount = wsHealthUtils.countMatches(statuses, Status.RED);
+	if (statusGreenCount == totalStatuses)
+	    this.overallStatus = Status.GREEN;
+	else if (statusRedCount > totalStatuses / 2)
+	    this.overallStatus = Status.RED;
+	else
+	    this.overallStatus = Status.AMBER;
+    }
 
     public Set<Service> getDownServices() {
 	return Collections.unmodifiableSet(this.downServices);
@@ -74,11 +94,11 @@ public class Provider {
     }
 
     public boolean isDown() {
-	return this.status.equals(Status.RED);
+	return this.overallStatus.equals(Status.RED);
     }
 
     public boolean isUp() {
-	return this.status.equals(Status.GREEN);
+	return this.overallStatus.equals(Status.GREEN);
     }
 
     /**
@@ -99,51 +119,9 @@ public class Provider {
      * @param services
      *            of this provider
      */
-    public void setDownServices(List<Service> services) {
-	this.downServices = getDownServices(services);
-    }
-
-    /**
-     * Calculates and sets the status of the provider.
-     * 
-     * @param services
-     *            List of provider services. The size of the list shall
-     *            correspond to<br>
-     *            number of times the provider was hit before calculating the
-     *            status
-     */
-    public void setStatus(List<Set<Service>> services) {
-	List<Status> statuses = services.stream().map(serviceSet -> calculateStatus(serviceSet))
-		.collect(Collectors.toList());
-	this.status = computeStatus(statuses);
-    }
-
-    private Status calculateStatus(Set<Service> services) {
-	Set<Service> downServices = getDownServices(new ArrayList<>(services));
-	if (downServices.isEmpty())
-	    return Status.GREEN;
-	else if (downServices.size() == getServices().size())
-	    return Status.RED;
-	else
-	    return Status.AMBER;
-    }
-
-    private Status computeStatus(List<Status> statuses) {
-	final int totalHits = statuses.size();
-	int statusGreenCount = wsHealthUtils.countMatches(statuses, Status.GREEN);
-	int statusRedCount = wsHealthUtils.countMatches(statuses, Status.RED);
-
-	if (statusGreenCount == totalHits)
-	    return Status.GREEN;
-	else if (statusRedCount > totalHits / 2)
-	    return Status.RED;
-	else
-	    return Status.AMBER;
-    }
-
-    private Set<Service> getDownServices(List<Service> services) {
-	return services.stream().filter(service -> providesService(service) && service.isDown())
-		.collect(Collectors.toSet());
+    public Provider setDownServices() {
+	this.downServices = services.stream().filter(Service::isDown).collect(Collectors.toSet());
+	return this;
     }
 
 }

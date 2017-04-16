@@ -20,6 +20,7 @@ import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
+import com.ds.ws.health.model.ServiceTimeStatusResponse;
 import com.ds.ws.health.util.WSHealthUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -128,7 +129,8 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	final String desc = serviceDetail[2];
 	final String uri = serviceDetail[3];
 
-	Service service = new Service(envName, provider, desc, wsHealthUtils.cleanUrl(uri));
+	Service service = new Service(envName, provider, wsHealthUtils.cleanUrl(uri), desc,
+		new ServiceTimeStatusResponse());
 	log.debug("Service created {}", service);
 	return service;
     }

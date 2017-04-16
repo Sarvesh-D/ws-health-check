@@ -48,18 +48,18 @@ th {
 				<tr>
 					<th>Environment</th>
 					<th>Component</th>
-					<th>Status</th>
+					<th>Overall Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				#foreach($environment in $environments)
 					#set($envColAdded = false)
 					#foreach($component in $environment.components)
-						#if($component.status == "RED")
+						#if($component.overallStatus == "RED")
 							#set($color = "RED")
-						#elseif($component.status == "AMBER")
+						#elseif($component.overallStatus == "AMBER")
 							#set($color = "ORANGE")
-						#elseif($component.status == "GREEN")
+						#elseif($component.overallStatus == "GREEN")
 							#set($color = "GREEN")
 						#end
 						<tr>
@@ -68,7 +68,7 @@ th {
 								#set($envColAdded = true)
 							#end
 							<td style="background-color: #C8C8C8">$component.name</td>
-							<td style="background-color: $color">$component.status</td>
+							<td style="background-color: $color">$component.overallStatus</td>
 						</tr>
 					#end
 					<tr>

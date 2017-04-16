@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import lombok.ToString;
+
 /**
  * ServiceTimeStatusResponse to be used as {@link ResponseEntity}
  * 
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
  * @version 1.0
  *
  */
+@ToString(of = "serviceTimes")
 public class ServiceTimeStatusResponse {
 
     private List<ServiceTimeStatus> serviceTimes;

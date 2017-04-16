@@ -37,8 +37,11 @@ public abstract class FetchDetailsFromReport extends EnvDetailsFetchStrategy {
 	    log.error("Number of rows fetched [{}] in not equal to total service rows [{}]",
 		    serviceDetailsFromReport.size(), totalServices);
 
-	environmentDetails.stream().map(Environment::getComponents).forEach(
-		providers -> wsHealthUtils.setStatusForProvidersFromReport(providers, serviceDetailsFromReport));
+	/*
+	 * environmentDetails.stream().map(Environment::getComponents).forEach(
+	 * providers -> wsHealthUtils.setStatusForProvidersFromReport(providers,
+	 * serviceDetailsFromReport));
+	 */
 
 	log.info("Getting Env Health Details realtime completed.");
 	return Collections.unmodifiableList(environmentDetails);

@@ -1,6 +1,10 @@
 package com.ds.ws.health.model;
 
-import lombok.Data;
+import com.ds.ws.health.model.Service.ServiceStatus;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * Immutable Class to hold service ping time and its status at that time
@@ -9,10 +13,12 @@ import lombok.Data;
  * @since 19/09/2016
  * @version 1.0
  */
-@Data
+@RequiredArgsConstructor
+@Getter
+@ToString
 public class ServiceTimeStatus {
 
     private final String time;
-    private final String status;
+    private final ServiceStatus status;
 
 }
