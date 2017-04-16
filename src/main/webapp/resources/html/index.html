@@ -47,14 +47,12 @@
 <body style="background-color: black;color: white;">
 	
 	<div class="container-fluid">
-	
-		<div ng-include="'includes/header.html'" class="page-header"></div>
-		
-		<div ng-view></div>
+		<div ng-include="'includes/header.html'"></div>
 		
 		<div class="loading-dialog" data-loading></div>
+		<div ng-view></div>
 		
-		<div ng-include="'includes/footer.html'" ></div>
+		<div ng-include="'includes/footer.html'"></div>
 	
 	</div>
 	
