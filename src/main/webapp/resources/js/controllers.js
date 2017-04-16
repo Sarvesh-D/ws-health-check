@@ -26,7 +26,8 @@ appModule.controller('envHealthDetailsController',
 			$timeout(function() {
 				$scope.getEnvHealthDetails();
 			}, page_refresh_interval);
-
+			
+			$scope.envDetailsLoadMsg = 'Env Health Details : Last updated on';
 			$scope.lastUpdated = new Date(); // set last updated/refreshed time
 			envHealthDetailsService.setLastUpdated($scope.lastUpdated);
 		});

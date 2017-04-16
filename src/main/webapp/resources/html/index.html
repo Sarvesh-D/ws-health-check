@@ -3,6 +3,7 @@
 <head>
 
 <!-- Include libraries  -->
+<script src="../js/lib/jquery-3.1.0.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../js/lib/angular.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../js/lib/angular-resource.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../js/lib/angular-route.min.js" type="text/javascript" charset="utf-8"></script>
@@ -35,6 +36,9 @@
 <!-- Include Factories -->
 <script src="../js/factories.js" type="text/javascript" charset="utf-8"></script>
 
+<!-- Include Directives -->
+<script src="../js/directives.js" type="text/javascript" charset="utf-8"></script>
+
 <!-- Include Constants -->
 <script src="../js/constants.js" type="text/javascript" charset="utf-8"></script>
 
@@ -47,6 +51,8 @@
 		<div ng-include="'includes/header.html'" class="page-header"></div>
 		
 		<div ng-view></div>
+		
+		<div class="loading-dialog" data-loading></div>
 		
 		<div ng-include="'includes/footer.html'" ></div>
 	

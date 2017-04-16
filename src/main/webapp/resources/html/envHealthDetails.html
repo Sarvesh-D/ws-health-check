@@ -1,5 +1,5 @@
 <div class="container" ng-init="getEnvHealthDetails()">
-	<h5>Env Health Details : Last updated on {{lastUpdated | date:'mediumTime'}}</h5><br>
+	<h5>{{envDetailsLoadMsg}} {{lastUpdated | date:'mediumTime'}}</h5><br>
 	<div class="row">
 		<div ng-repeat="envHealthDetail in envHealthDetailsView" class="col-md-4 repeated-item">
 			<h3 align="center">{{envHealthDetail.name}}</h3>

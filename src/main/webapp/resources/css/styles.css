@@ -20,3 +20,14 @@
 .custom-success {
 	background-color: green;
 }
+
+.loading-dialog {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba( 0, 0, 0, .2 ) url('../img/spin.gif') 50% 50% no-repeat;
+}
