@@ -1,25 +1,30 @@
 <div class="container">
-	<h4>Environment : {{env}} | Component : {{component}}</h4><br>
-	<h5>Component Health Details : Last updated on {{lastUpdated | date:'mediumTime'}}</h5><br>
-	
-	<table class="table table-bordered table-condensed">
-		<thead>
-			<tr>
-				<th>Description</th>
-				<th>URI</th>
-				<th>Status</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="serviceHealthDetail in componentServiceDetails">
-				<td><a style="color: white" href="#service/details/{{serviceHealthDetail.description}}/{{serviceHealthDetail.uri}}">{{serviceHealthDetail.description}}</a></td>
-				<td><a href="{{serviceHealthDetail.uri}}" target="_blank">{{serviceHealthDetail.uri}}</a></td>
-				<td>
-					<svg width="100" height="12" style="margin-top: 8px">
-						<circle cx="30" cy="6" r="6" fill="{{serviceHealthDetail.overallStatus}}"/>
-					</svg>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<h4>Environment : {{env}} | Component : {{component}}</h4>
+	<br>
+	<h5>Component Health Details : Last updated on {{lastUpdated |
+		date:'mediumTime'}}</h5>
+	<br>
+
+	<div class="table-responsive">
+		<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>URI</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="serviceHealthDetail in componentServiceDetails">
+					<td><a style="color: white"
+						href="#service/details/{{serviceHealthDetail.description}}/{{serviceHealthDetail.uri}}">{{serviceHealthDetail.description}}</a></td>
+					<td><a href="{{serviceHealthDetail.uri}}" target="_blank">{{serviceHealthDetail.uri}}</a></td>
+					<td><svg width="100" height="12" style="margin-top: 8px">
+						<circle cx="30" cy="6" r="6"
+								fill="{{serviceHealthDetail.overallStatus}}" />
+					</svg></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
