@@ -2,8 +2,6 @@ package com.ds.ws.health.core;
 
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import com.ds.ws.health.model.Environment;
 
 /**
@@ -28,7 +26,6 @@ public interface EnvironmentLoader {
      * Loads all the {@link Environment} present in the system.<br>
      * See the {@link Environment} hierarchy for more detail.<br>
      * The implementer can cache the call for performance reasons.<br>
-     * Also the implementer must call this during {@link PostConstruct} as well.
      */
     void loadEnvironments();
 

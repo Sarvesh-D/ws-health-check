@@ -8,14 +8,13 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import com.ds.ws.health.exception.HealthCheckException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
  * @see MailService
  */
 @Service
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Slf4j
 public class DefaultMailSenderService implements MailService {
 
@@ -64,7 +62,8 @@ public class DefaultMailSenderService implements MailService {
 		try {
 		    helper.addAttachment(file.getFilename(), file);
 		} catch (MessagingException e) {
-		    e.printStackTrace();
+		    throw new HealthCheckException(String.format(
+			    "Exception occurerd while adding attachemets. Detailed Message is : %s", e.getMessage()));
 		}
 	    });
 
@@ -74,7 +73,7 @@ public class DefaultMailSenderService implements MailService {
 	    log.debug("Mail Sent");
 
 	} catch (Exception e) {
-	    log.error("Error occured while sending mail : {}", e.getMessage());
+	    throw new HealthCheckException(String.format("Error occured while sending mail : %s", e.getMessage()));
 	}
     }
 

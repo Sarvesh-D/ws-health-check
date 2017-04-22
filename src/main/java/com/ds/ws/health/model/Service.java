@@ -20,7 +20,7 @@ import lombok.ToString;
  * A Service model.<br>
  * Service is supposed to have a uri, desc, the name of its {@link Provider},
  * {@link Environment}.<br>
- * Service also has a overallStatus which can be either up or down
+ * Service also has a overallStatus which can be either one of {@link Status}
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
@@ -74,7 +74,6 @@ public class Service {
     private String description;
 
     @Setter
-    // this setter is only exposed for test purpose
     private ServiceTimeStatusResponse serviceTimeStatusResponse;
 
     @Getter
@@ -94,15 +93,13 @@ public class Service {
     }
 
     /**
-     * Should ONLY be called with each ping to re-calculate the Status. This
-     * implies this method should only be called when WSHealthReportGenerator
-     * pings the service according to set ping.interval property. Also, since
-     * the overall status of service affects the status of its enclosing
-     * provider, call to this method MUST trigger call to
-     * {@link Provider#setOverallStatus(List)} in the end. TODO need to check if
-     * overallStatus can be reseted after the file rollover occurs. This will
-     * mean that Provider wont be able to calculate its Status, since it depends
-     * on overallStatus of its services
+     * Calculates and sets the overall status of the Service. Should ONLY be
+     * called with each ping to re-calculate the Status. This implies this
+     * method should only be called when WSHealthReportGenerator pings the
+     * service according to set ping.interval property. Also, since the overall
+     * status of service affects the status of its enclosing provider, call to
+     * this method MUST trigger call to {@link Provider#setOverallStatus(List)}
+     * in the end.
      */
     public void calculateOverallStatus() {
 	List<Status> statuses = serviceTimeStatusResponse.getServiceTimes().stream().map(ServiceTimeStatus::getStatus)

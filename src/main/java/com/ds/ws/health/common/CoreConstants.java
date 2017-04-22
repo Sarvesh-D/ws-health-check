@@ -6,6 +6,8 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ds.ws.health.exception.HealthCheckException;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -25,10 +27,6 @@ public final class CoreConstants {
 
     public final int connectionTimeoutInMillis;
 
-    public final String connectionProxyHost;
-
-    public final int connectionProxyPort;
-
     public final int pingIntervalInMins;
 
     public final int componentStatusPingCount;
@@ -38,17 +36,16 @@ public final class CoreConstants {
 	log.info("initialising core constants...");
 	serviceDetailsSeparatorKey = coreProperties.getProperty("service.details.separator.key");
 	connectionTimeoutInMillis = Integer.parseInt(coreProperties.getProperty("connection.timeout"));
-	connectionProxyHost = coreProperties.getProperty("connection.proxy.host");
-	connectionProxyPort = Integer.valueOf(coreProperties.getProperty("connection.proxy.port"));
 	pingIntervalInMins = Integer.valueOf(schedulerProperties.getProperty("ping.mins"));
 	componentStatusPingCount = Integer.valueOf(schedulerProperties.getProperty("component.status.ping.count"));
 	log.info("initialising core constants completed");
 
 	Arrays.stream(CoreConstants.class.getDeclaredFields()).forEach(field -> {
 	    try {
-		log.debug("Setting constant [{}] --> [{}]", field.getName(), field.get(this));
+		log.debug("Setting Core constant [{}] --> [{}]", field.getName(), field.get(this));
 	    } catch (IllegalArgumentException | IllegalAccessException e1) {
-		e1.printStackTrace();
+		throw new HealthCheckException(
+			String.format("Exception occured while setting core constants : %s", e1.getMessage()));
 	    }
 	});
     }

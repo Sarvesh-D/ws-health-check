@@ -25,6 +25,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.ds.ws.health.exception.HealthCheckException;
+
 /**
  * Utility class for {@link Workbook} operations.<br>
  * Most of the methods rely on the {@link Workbook} and {@link Sheet} being
@@ -294,7 +296,7 @@ public class WorkbookUtils {
 		Thread.sleep(1000);
 		proceedIfWorksheetNotEmpty(reportSheet);
 	    } catch (InterruptedException e) {
-		e.printStackTrace();
+		throw new HealthCheckException(e.getMessage());
 	    }
 	} else
 	    return;

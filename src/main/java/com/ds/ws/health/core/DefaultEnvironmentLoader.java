@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -23,19 +22,20 @@ import com.ds.ws.health.model.Service;
 import com.ds.ws.health.model.ServiceTimeStatusResponse;
 import com.ds.ws.health.util.WSHealthUtils;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is the heart of ws-health-check.<br>
  * This class loads the {@link Environment}, {@link Provider} and
- * {@link Service}
+ * {@link Service} hierarchy
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
  */
 @Component
-@DependsOn(value = "customTrustStoreManager")
+@NoArgsConstructor
 @Slf4j
 public class DefaultEnvironmentLoader implements EnvironmentLoader {
 
@@ -51,9 +51,6 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 
     private Set<Environment> environments = new HashSet<>();
 
-    private DefaultEnvironmentLoader() {
-    }
-
     @Override
     public Set<Environment> getEnvironments() {
 	return Collections.unmodifiableSet(this.environments);
@@ -67,6 +64,14 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	log.info("Loading environmets completed.");
     }
 
+    /**
+     * Takes a single {@link Service} object and returns the corresponding
+     * {@link Environment} hierarchy
+     * 
+     * @param service
+     *            to build {@link Environment} from
+     * @return {@link Environment}
+     */
     private Environment buildEnvHierarchyFromService(Service service) {
 	log.debug("Building Env Hierarchy from Service {}", service);
 	final String envName = service.getEnvironment();
@@ -106,7 +111,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
     /**
      * Get the Service details from property file
      * 
-     * @return list {@link Service}
+     * @return list of {@link Service}
      */
     private List<Service> getServiceDetailsViaProperties() {
 	log.debug("Fetching ENV details via properties...");
@@ -116,7 +121,15 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	return Collections.unmodifiableList(serviceDetails);
     }
 
+    /**
+     * Maps a single entry conforming to {@link Service} object into an actual
+     * {@link Service}
+     * 
+     * @param serviceDetailEntry
+     * @return {@link Service}
+     */
     private Service mapToService(Object serviceDetailEntry) {
+	Assert.notNull(serviceDetailEntry, "Service Detail Entry cannot be null");
 	String[] serviceDetail = StringUtils.split(StringUtils.trimToEmpty(serviceDetailEntry.toString()),
 		coreConstants.serviceDetailsSeparatorKey);
 

@@ -6,6 +6,8 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ds.ws.health.exception.HealthCheckException;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,9 +48,10 @@ public class ReportConstants {
 
 	Arrays.stream(ReportConstants.class.getDeclaredFields()).forEach(field -> {
 	    try {
-		log.debug("Setting constant [{}] --> [{}]", field.getName(), field.get(this));
+		log.debug("Setting Report constant [{}] --> [{}]", field.getName(), field.get(this));
 	    } catch (IllegalArgumentException | IllegalAccessException e1) {
-		e1.printStackTrace();
+		throw new HealthCheckException(
+			String.format("Exception occured while setting report constants : %s", e1.getMessage()));
 	    }
 	});
 

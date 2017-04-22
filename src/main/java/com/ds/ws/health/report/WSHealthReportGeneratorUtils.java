@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.ds.ws.health.common.ReportConstants;
+import com.ds.ws.health.exception.HealthCheckException;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.util.WorkbookUtils;
 
@@ -52,8 +53,6 @@ public class WSHealthReportGeneratorUtils {
 
     private Sheet sheet;
 
-    private int pings = 0;
-
     private String[] reportHeaders;
 
     /**
@@ -64,11 +63,9 @@ public class WSHealthReportGeneratorUtils {
      *            to be saved in the report
      */
     public void buildReport(List<Service> serviceHealthDetails) {
-	pings++; // increment ping
 	for (Service serviceDetail : serviceHealthDetails) {
 	    Row row = sheet.createRow(rowNum++);
 	    int cellNum = 0;
-	    // TODO save provider version column in report
 	    row.createCell(cellNum++).setCellValue(LocalTime.now().toString());
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getEnvironment());
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getProvider());
@@ -77,21 +74,6 @@ public class WSHealthReportGeneratorUtils {
 	    row.createCell(cellNum).setCellValue(serviceDetail.getStatus().toString());
 	    log.debug("Row entered for Service {}", serviceDetail);
 	}
-    }
-
-    /**
-     * @return number of time the services have been pinged to check status
-     */
-    public int getPings() {
-	return pings;
-    }
-
-    /**
-     * @return the report file currently in creation.
-     */
-    @Deprecated
-    public Workbook getReport() {
-	return report;
     }
 
     /**
@@ -129,9 +111,8 @@ public class WSHealthReportGeneratorUtils {
 	    insertFooter();
 	    report.write(out);
 	} catch (IOException e) {
-	    log.error("Error occured while saving report : {}", e.getMessage());
+	    throw new HealthCheckException(String.format("Error occured while saving report : %s", e.getMessage()));
 	} finally {
-	    pings = 0; // reset pings
 	    initReportFile(); // reset report file to start writing data in new
 			      // file
 	}

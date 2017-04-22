@@ -63,12 +63,6 @@ public class Provider {
 
     /**
      * Calculates and sets the overallStatus of the provider.
-     * 
-     * @param services
-     *            List of provider services. The size of the list shall
-     *            correspond to<br>
-     *            number of times the provider was hit before calculating the
-     *            overallStatus
      */
     public void calculateOverallStatus() {
 	List<Status> statuses = this.services.stream().map(Service::getOverallStatus).collect(Collectors.toList());
@@ -83,6 +77,9 @@ public class Provider {
 	    this.overallStatus = Status.AMBER;
     }
 
+    /**
+     * @return the Set of down services of {@link Provider}
+     */
     public Set<Service> getDownServices() {
 	return Collections.unmodifiableSet(this.downServices);
     }
@@ -113,12 +110,6 @@ public class Provider {
 	return getServices().contains(service);
     }
 
-    /**
-     * Given list of services, sets the downservices
-     * 
-     * @param services
-     *            of this provider
-     */
     public Provider setDownServices() {
 	this.downServices = services.stream().filter(Service::isDown).collect(Collectors.toSet());
 	return this;

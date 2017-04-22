@@ -4,16 +4,15 @@ import java.util.Arrays;
 
 import javax.mail.MessagingException;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.ds.ws.health.exception.HealthCheckException;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class HtmlMailSenderService extends DefaultMailSenderService {
 
@@ -31,7 +30,8 @@ public class HtmlMailSenderService extends DefaultMailSenderService {
 		try {
 		    helper.addAttachment(file.getFilename(), file);
 		} catch (MessagingException e) {
-		    e.printStackTrace();
+		    throw new HealthCheckException(String.format(
+			    "Exception occurerd while adding attachemets. Detailed Message is : %s", e.getMessage()));
 		}
 	    });
 
@@ -41,7 +41,7 @@ public class HtmlMailSenderService extends DefaultMailSenderService {
 	    log.debug("Mail Sent");
 
 	} catch (Exception e) {
-	    log.error("Error occured while sending mail : {}", e.getMessage());
+	    throw new HealthCheckException(String.format("Error occured while sending mail : %s", e.getMessage()));
 	}
 
     }

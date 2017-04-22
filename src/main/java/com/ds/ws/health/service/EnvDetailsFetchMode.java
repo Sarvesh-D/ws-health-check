@@ -15,41 +15,7 @@ public enum EnvDetailsFetchMode {
      * Pings all the services of all environments to build the response
      * resulting slow performance.
      */
-    REAL_TIME(RealTimeEnvDetails.class),
-
-    /**
-     * Fetches the env health details for the most recent instance when the
-     * services were pinged.<br>
-     * Retrieves details of env health from a stored location (in memory) and
-     * builds the response.<br>
-     * Results best performance.
-     */
-    @Deprecated
-    NEAR_REAL_TIME(NearRealTimeEnvDetails.class),
-
-    /**
-     * Fetches the env health details for the duration specified by
-     * hourly.mail.interval property.<br>
-     * Retrieves details of env health from a stored location (in memory) and
-     * builds the response.<br>
-     * Depending on the ping interval as configured by mail.interval property
-     * the number of records fetched<br>
-     * can grow exponentially and may have direct impact on performance
-     */
-    @Deprecated
-    HOURLY(HourlyEnvDetails.class),
-
-    /**
-     * Fetches the env health details for the duration specified by
-     * daily.mail.interval property.<br>
-     * Retrieves details of env health from a stored location (in memory) and
-     * builds the response.<br>
-     * Depending on the ping interval as configured by mail.interval property
-     * the number of records fetched<br>
-     * can grow exponentially. Results in worst performance.
-     */
-    @Deprecated
-    DAILY(DailyEnvDetails.class);
+    REAL_TIME(RealTimeEnvDetails.class);
 
     private Class<? extends EnvDetailsFetchStrategy> strategyClass;
 

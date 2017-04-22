@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.model.Service.ServiceStatus;
 import com.ds.ws.health.model.ServiceTimeStatus;
-import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
 import com.ds.ws.health.util.WSHealthUtils;
-import com.ds.ws.health.util.WorkbookUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,15 +28,6 @@ public class WSHealthServiceImpl implements WSHealthService {
 
     @Autowired
     private WSHealthUtils wsHealthUtils;
-
-    @Autowired
-    private WorkbookUtils workbookUtils;
-
-    @Autowired
-    private WSHealthReportGeneratorUtils reportUtils;
-
-    @Autowired
-    private CoreConstants coreConstants;
 
     @Override
     public List<Environment> getEnvHealthDetails(EnvDetailsFetchMode fetchMode) {
