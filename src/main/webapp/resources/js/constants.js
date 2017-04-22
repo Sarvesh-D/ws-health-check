@@ -43,7 +43,7 @@ appModule.constant('coreConstants', {
 		'SHOW_VALUES': '0'
 	},
 	'CONTEXT':'ws-health-check',
-	'HOST_SERVER':'localhost',
+	'HOST_SERVER':'192.168.1.100',
 	'HOST_PORT':'8080',
 	'VERSION':'Beta'
 });
