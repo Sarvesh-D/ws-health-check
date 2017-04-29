@@ -7,20 +7,32 @@ Checks health of Web Services and creates reports
 
 # Road Map
 
-### Refactoring
-
-- ~~refactor code to java 8~~
-- ~~use lombok~~
-- ~~refactor code to use spring java config~~
-
-### Admin Functionalities
-- add admin functionality for add/update/delete configured environment/providers/services
-- add admin functionality to update scheduler time intervals
-- add admin functionality to add/update/delete users for sending emails.
-- add admin functionality to set alert mail when a environment/provider/service goes down. (Use Observer pattern to observe state of environment/provider/service)
-- secure admin APIs with spring security
-
-### Technologies
-- use rabbit MQ for sending/receiving admin requests
-- add circuit breakers for services
-- migrate to spring boot
+### MileStone 1
+ - Code Coverage 80+%
+ - Exception Handling
+ - Logging
+ - Documentation
+### MileStone 2
+ - Admin Functionalities Using Spring Data
+	 - Configure Environment Hirerachy
+	 - Configure Scheduler Intervals
+	 - Configure Report Properties
+	 - Configure Users for mailing report
+ - Securing Admin Functionalities Using Spring Security
+ - Saving Report to DB (currently its in-memory)
+### MileStone 3
+ - RabitMQ for sending admin requests to queue
+ - Spring Boot for self configuring app server
+ - Circuit Breakers for Admin/Monitoring APIs
+ - Containerise using docker for easy deployment
+### MileStone 4
+ - Immediate mail trigger for frequently failing services (decide frequency for mail trigger)
+ - Immediate mail trigger for critical services, providers, environments (using observer pattern)
+ - Support different rules for determining status of service (using strategy pattern)
+	 - Support for POST/PUT/DELETE APIs
+	 - Support rules to read the API response to determine its status
+ - Log/Store in DB, the reason why a particular API failed
+ - Provide UI to view Audit logs of reasons of failed APIs
+### MileStone 5
+ - Make the application Product as a Service app. Provide UI for clients to register themselves to the application. Only registered user will have access to all application features.
+ - Use OAUTH 2.0 for authentication.
