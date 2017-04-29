@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.ds.ws.health.common.Status;
 import com.ds.ws.health.util.WSHealthUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.EqualsAndHashCode;
@@ -120,10 +121,12 @@ public class Service {
 	wsHealthUtils.getProviderForService(this).setDownServices().calculateOverallStatus();
     }
 
+    @JsonIgnore
     public boolean isDown() {
 	return this.overallStatus.equals(Status.RED);
     }
 
+    @JsonIgnore
     public boolean isUp() {
 	return this.overallStatus.equals(Status.GREEN);
     }

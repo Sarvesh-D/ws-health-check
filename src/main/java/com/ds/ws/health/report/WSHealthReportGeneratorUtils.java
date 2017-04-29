@@ -81,19 +81,11 @@ public class WSHealthReportGeneratorUtils {
      * 
      * @param date
      *            for which the report file path is required.
-     * @return file path of report corresponding to given date.<br>
-     *         If the date is same as Today, then gives path of report file
-     *         corresponding to previous day.<br>
-     *         Since the report is still not generated for the day
      */
     public String getReportFileForDate(LocalDate date) {
 	log.debug("Getting Report file path for date {}", date);
 	Assert.notNull(date, "Date cannot be null");
-	LocalDate reportFileFor = date;
-	if (reportFileFor.equals(LocalDate.now()))
-	    reportFileFor = reportFileFor.minusDays(1);
-	log.debug("Report file path for {} shall be returned", reportFileFor);
-	return getReportFileNameFor(reportFileFor);
+	return getReportFileNameFor(date);
     }
 
     /**

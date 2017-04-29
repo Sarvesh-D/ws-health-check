@@ -85,10 +85,8 @@ public class WSHealthReportMailSender {
 	final String[] to = userDao.findAll().stream().map(user -> user.getEmail()).toArray(String[]::new);
 	final String subject = mailProperties.getProperty("report.mail.subject");
 
-	final LocalDate reportDate = LocalDate.now().minusDays(1);
-
 	Map<String, Object> templateParams = new HashMap<>();
-	templateParams.put("reportDate", reportDate);
+	templateParams.put("reportDate", LocalDate.now());
 	templateParams.put("dashboardLink", reportProperties.getProperty("report.footer.link"));
 	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
 	templateParams.put("attachment", true);
@@ -97,7 +95,7 @@ public class WSHealthReportMailSender {
 		templateParams);
 
 	mailServiceFactory.getInstance(MailServiceProvider.HTML_MAIL_SERVICE_PROVIDER).sendMimeMail(from, to, subject,
-		body, new String[] { reportUtils.getReportFileForDate(reportDate) });
+		body, new String[] { reportUtils.getReportFileForDate(LocalDate.now()) });
     }
 
 }

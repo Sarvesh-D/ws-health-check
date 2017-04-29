@@ -187,16 +187,6 @@ public class WSHealthUtils implements ApplicationContextAware {
 	return null;
     }
 
-    public Service getLoadedService(Service service) {
-	Assert.notNull(service, "Service cannot be null");
-	Optional<Service> loadedService = getAllServices().stream()
-		.filter(serviceFromLoadedServices -> serviceFromLoadedServices.equals(service)).findFirst();
-	if (loadedService.isPresent())
-	    return loadedService.get();
-	else
-	    throw new NoSuchElementException("Unable to find service " + service);
-    }
-
     /**
      * Gets the loaded Provider along with all the services loaded for this
      * Provider
@@ -205,7 +195,7 @@ public class WSHealthUtils implements ApplicationContextAware {
      * @return Provider with loaded services
      */
     @Cacheable("environments")
-    public Provider getProvider(Provider provider) {
+    public Provider getLoadedProvider(Provider provider) {
 	Assert.notNull(provider, "Provider cannot be null");
 	Assert.isTrue(getAllComponents().contains(provider),
 		"No Provider [" + provider + "] mapped to any environment");
@@ -214,6 +204,16 @@ public class WSHealthUtils implements ApplicationContextAware {
 		return component;
 	}
 	return null;
+    }
+
+    public Service getLoadedService(Service service) {
+	Assert.notNull(service, "Service cannot be null");
+	Optional<Service> loadedService = getAllServices().stream()
+		.filter(serviceFromLoadedServices -> serviceFromLoadedServices.equals(service)).findFirst();
+	if (loadedService.isPresent())
+	    return loadedService.get();
+	else
+	    throw new NoSuchElementException("Unable to find service " + service);
     }
 
     public Provider getProviderForService(Service service) {
