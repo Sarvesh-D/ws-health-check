@@ -27,14 +27,11 @@ public final class CoreConstants {
 
     public final int connectionTimeoutInMillis;
 
-    public final int pingIntervalInMins;
-
     @Autowired
-    private CoreConstants(Properties coreProperties, Properties schedulerProperties) {
+    private CoreConstants(Properties coreProperties) {
 	log.info("initialising core constants...");
 	serviceDetailsSeparatorKey = coreProperties.getProperty("service.details.separator.key");
 	connectionTimeoutInMillis = Integer.parseInt(coreProperties.getProperty("connection.timeout"));
-	pingIntervalInMins = Integer.valueOf(schedulerProperties.getProperty("ping.mins"));
 	log.info("initialising core constants completed");
 
 	if (log.isDebugEnabled())

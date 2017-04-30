@@ -28,7 +28,6 @@ public final class CoreConstantsTest extends BaseTest {
 	assertTrue("Service Details Separator Key Not Initialised",
 		StringUtils.isNotBlank(coreConstants.serviceDetailsSeparatorKey));
 	assertTrue("Invalid Connection Timeout", coreConstants.connectionTimeoutInMillis >= 0);
-	assertTrue("Invalid Ping Interval", coreConstants.pingIntervalInMins >= 0);
 	assertTrue("Report File Path Not Set", StringUtils.isNotBlank(reportConstants.reportFilePath));
 	assertTrue("Report File Name Not Set", StringUtils.isNotBlank(reportConstants.reportFileName));
 	assertTrue("Report Sheet Name Not Set", StringUtils.isNotBlank(reportConstants.reportFileSheetName));
