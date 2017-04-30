@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.ds.ws.health.BaseTest;
+import com.ds.ws.health.core.EnvironmentLoader;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.util.WSHealthUtils;
@@ -20,6 +21,7 @@ public final class WSHealthServiceTest extends BaseTest {
 
     private static WSHealthUtils wsHealthUtils = WSHealthUtils.instanceOf(WSHealthUtils.class);
     private WSHealthService wsHealthService;
+    private EnvironmentLoader environmentLoader;
 
     public static void testEnvHealthDetails(Set<Environment> environments) {
 	int componentCount = 0;
@@ -42,6 +44,7 @@ public final class WSHealthServiceTest extends BaseTest {
     @Before
     public void setUp() {
 	wsHealthService = WSHealthUtils.instanceOf(WSHealthService.class);
+	environmentLoader = WSHealthUtils.instanceOf(EnvironmentLoader.class);
     }
 
     @Test
@@ -59,6 +62,8 @@ public final class WSHealthServiceTest extends BaseTest {
 
     @Test
     public void testGetServiceHealthDetails() {
+	assertTrue(wsHealthService.getServiceHealthDetails().size() == wsHealthUtils.getAllServices().size());
+	environmentLoader.loadEnvironments();
 	assertTrue(wsHealthService.getServiceHealthDetails().size() == wsHealthUtils.getAllServices().size());
     }
 

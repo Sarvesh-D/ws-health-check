@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -49,7 +50,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
     @Autowired
     private WSHealthUtils wsHealthUtils;
 
-    private Set<Environment> environments = new HashSet<>();
+    private Set<Environment> environments;
 
     @Override
     public Set<Environment> getEnvironments() {
@@ -57,8 +58,10 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
     }
 
     @Override
+    @CacheEvict(cacheNames="environments", allEntries=true)
     public final void loadEnvironments() {
 	log.info("Loading environmets started...");
+	environments = new HashSet<>();
 	List<Service> serviceDetails = getServiceDetailsViaProperties();
 	serviceDetails.stream().map(service -> buildEnvHierarchyFromService(service)).forEach(environments::add);
 	log.info("Loading environmets completed.");
