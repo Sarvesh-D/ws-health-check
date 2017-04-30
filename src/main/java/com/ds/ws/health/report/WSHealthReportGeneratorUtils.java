@@ -105,6 +105,7 @@ public class WSHealthReportGeneratorUtils {
 	    workbookUtils.autoAdjustColumnWidth(0, reportHeaders.length - 1);
 	    insertFooter();
 	    report.write(out);
+	    log.debug("Report file saved...");
 	} catch (IOException e) {
 	    throw new HealthCheckException(String.format("Error occured while saving report : %s", e.getMessage()));
 	} finally {
