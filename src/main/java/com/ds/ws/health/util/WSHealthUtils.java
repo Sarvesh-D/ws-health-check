@@ -30,6 +30,7 @@ import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.model.Service.ServiceStatus;
+import com.ds.ws.health.model.ServiceTimeStatus;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -206,6 +207,13 @@ public class WSHealthUtils implements ApplicationContextAware {
 	return null;
     }
 
+    /**
+     * Returns the loaded {@link Service}. A <b>Loaded</b> {@link Service} means
+     * that the serviceTimeStatuses list of the service is initialised and contains
+     * {@link ServiceTimeStatus} for each ping made to the Service.
+     * @param service whose loaded Service is required
+     * @return <b>Loaded</b> Service
+     */
     public Service getLoadedService(Service service) {
 	Assert.notNull(service, "Service cannot be null");
 	Optional<Service> loadedService = getAllServices().stream()
@@ -216,6 +224,11 @@ public class WSHealthUtils implements ApplicationContextAware {
 	    throw new NoSuchElementException("Unable to find service " + service);
     }
 
+    /**
+     * Returns {@link Provider} corresponding to {@link Service}
+     * @param service
+     * @return Provider
+     */
     public Provider getProviderForService(Service service) {
 	Provider serviceProvider = new Provider(service.getProvider(), service.getEnvironment());
 	Optional<Provider> provider = getAllComponents().stream().filter(component -> component.equals(serviceProvider))
@@ -246,6 +259,11 @@ public class WSHealthUtils implements ApplicationContextAware {
 	return null;
     }
 
+    /**
+     * Returns the Status for the Service by calling {@link #pingURL(String, int)}
+     * @param service whose status is required
+     * @return {@link ServiceStatus}
+     */
     public ServiceStatus getStatusForService(Service service) {
 	log.trace("Getting status for service {}", service);
 	ServiceStatus status = pingURL(service.getUri(), coreConstants.connectionTimeoutInMillis) ? ServiceStatus.UP
