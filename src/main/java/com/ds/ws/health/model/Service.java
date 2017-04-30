@@ -19,9 +19,10 @@ import lombok.ToString;
 
 /**
  * A Service model.<br>
- * Service is supposed to have a uri, desc, the name of its {@link Provider},
- * {@link Environment}.<br>
- * Service also has a overallStatus which can be either one of {@link Status}
+ * Service is supposed to have a uri, desc, {@link Provider#getName()},
+ * {@link Environment#getName()}.<br>
+ * Service has a status which can be one of {@link ServiceStatus} Service also
+ * has a overallStatus which can be either one of {@link Status}
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
@@ -75,7 +76,7 @@ public class Service {
     private String description;
 
     @Setter
-    private ServiceTimeStatusResponse serviceTimeStatusResponse;
+    private List<ServiceTimeStatus> serviceTimeStatuses;
 
     @Getter
     private Status overallStatus;
@@ -88,9 +89,9 @@ public class Service {
     }
 
     public Service(String environment, String provider, String uri, String description,
-	    ServiceTimeStatusResponse serviceTimeStatusResponse) {
+	    List<ServiceTimeStatus> serviceTimeStatuses) {
 	this(environment, provider, uri, description);
-	this.serviceTimeStatusResponse = serviceTimeStatusResponse;
+	this.serviceTimeStatuses = serviceTimeStatuses;
     }
 
     /**
@@ -99,11 +100,11 @@ public class Service {
      * method should only be called when WSHealthReportGenerator pings the
      * service according to set ping.interval property. Also, since the overall
      * status of service affects the status of its enclosing provider, call to
-     * this method MUST trigger call to {@link Provider#setOverallStatus(List)}
-     * in the end.
+     * this method MUST trigger call to
+     * {@link Provider#calculateOverallStatus()} in the end.
      */
     public void calculateOverallStatus() {
-	List<Status> statuses = serviceTimeStatusResponse.getServiceTimes().stream().map(ServiceTimeStatus::getStatus)
+	List<Status> statuses = serviceTimeStatuses.stream().map(ServiceTimeStatus::getStatus)
 		.map(serviceStatus -> serviceStatus.getStatusForServiceStatus(serviceStatus))
 		.collect(Collectors.toList());
 	final int totalHits = statuses.size();

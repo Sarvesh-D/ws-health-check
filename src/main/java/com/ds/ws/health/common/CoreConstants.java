@@ -29,17 +29,19 @@ public final class CoreConstants {
 
     public final int pingIntervalInMins;
 
-    public final int componentStatusPingCount;
-
     @Autowired
     private CoreConstants(Properties coreProperties, Properties schedulerProperties) {
 	log.info("initialising core constants...");
 	serviceDetailsSeparatorKey = coreProperties.getProperty("service.details.separator.key");
 	connectionTimeoutInMillis = Integer.parseInt(coreProperties.getProperty("connection.timeout"));
 	pingIntervalInMins = Integer.valueOf(schedulerProperties.getProperty("ping.mins"));
-	componentStatusPingCount = Integer.valueOf(schedulerProperties.getProperty("component.status.ping.count"));
 	log.info("initialising core constants completed");
 
+	if (log.isDebugEnabled())
+	    logRegisteredConstants();
+    }
+
+    private void logRegisteredConstants() {
 	Arrays.stream(CoreConstants.class.getDeclaredFields()).forEach(field -> {
 	    try {
 		log.debug("Setting Core constant [{}] --> [{}]", field.getName(), field.get(this));

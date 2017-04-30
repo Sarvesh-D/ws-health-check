@@ -3,6 +3,8 @@ package com.ds.ws.health.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.ds.ws.health.model.EnvironmentDetailsViewResponse;
+import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.service.WSHealthServiceTest;
 import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 import com.ds.ws.health.spring.config.HealthCheckServletContext;
@@ -39,9 +41,10 @@ public class WSHealthControllerTest {
     @Test
     public void testGetEnvHealthDetails() throws Exception {
 	MvcResult response = mvc.perform(get("/env/health")).andExpect(status().isOk()).andReturn();
-	EnvironmentDetailsViewResponse jsonResponse = new ObjectMapper()
-		.readValue(response.getResponse().getContentAsString(), EnvironmentDetailsViewResponse.class);
-	WSHealthServiceTest.testEnvHealthDetails(jsonResponse.getEnvironments());
+	ObjectMapper mapper = new ObjectMapper();
+	Set<Environment> jsonResponse = mapper.readValue(response.getResponse().getContentAsString(),
+		mapper.getTypeFactory().constructCollectionType(Set.class, Environment.class));
+	WSHealthServiceTest.testEnvHealthDetails(jsonResponse);
 
     }
 

@@ -1,14 +1,17 @@
 package com.ds.ws.health.web;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ds.ws.health.model.EnvironmentDetailsViewResponse;
+import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Service;
-import com.ds.ws.health.model.ServiceTimeStatusResponse;
+import com.ds.ws.health.model.ServiceTimeStatus;
 import com.ds.ws.health.service.EnvDetailsFetchMode;
 import com.ds.ws.health.service.WSHealthService;
 
@@ -31,21 +34,17 @@ class WSHealthController {
     private WSHealthService wsHealthService;
 
     @RequestMapping("env/health")
-    public EnvironmentDetailsViewResponse getEnvHealthDetails() {
+    public Set<Environment> getEnvHealthDetails() {
 	log.info("getEnvHealthDetails Service requested");
-	EnvironmentDetailsViewResponse response = new EnvironmentDetailsViewResponse();
-	response.getEnvironments().addAll(wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
-	return response;
+	return wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME);
     }
 
     @RequestMapping("service/health")
-    public ServiceTimeStatusResponse getReportForService(@RequestParam String env, @RequestParam String provider,
+    public List<ServiceTimeStatus> getReportForService(@RequestParam String env, @RequestParam String provider,
 	    @RequestParam String uri) {
 	log.info("getServiceHealthDetails Service requested");
 	Service service = new Service(env, provider, uri);
-	ServiceTimeStatusResponse response = new ServiceTimeStatusResponse();
-	response.getServiceTimes().addAll(wsHealthService.getReportForService(service));
-	return response;
+	return wsHealthService.getReportForService(service);
     }
 
 }

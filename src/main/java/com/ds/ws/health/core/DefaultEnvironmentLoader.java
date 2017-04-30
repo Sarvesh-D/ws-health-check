@@ -1,5 +1,6 @@
 package com.ds.ws.health.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,7 +20,6 @@ import com.ds.ws.health.common.CoreConstants;
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
-import com.ds.ws.health.model.ServiceTimeStatusResponse;
 import com.ds.ws.health.util.WSHealthUtils;
 
 import lombok.NoArgsConstructor;
@@ -142,8 +142,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	final String desc = serviceDetail[2];
 	final String uri = serviceDetail[3];
 
-	Service service = new Service(envName, provider, wsHealthUtils.cleanUrl(uri), desc,
-		new ServiceTimeStatusResponse());
+	Service service = new Service(envName, provider, wsHealthUtils.cleanUrl(uri), desc, new ArrayList<>());
 	log.debug("Service created {}", service);
 	return service;
     }

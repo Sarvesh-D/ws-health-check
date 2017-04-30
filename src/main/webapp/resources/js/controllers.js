@@ -14,11 +14,11 @@ appModule.controller('envHealthDetailsController',
 	var page_refresh_interval = coreConstants.PAGE_REFRESH_INTERVAL;
 
 	$scope.getEnvHealthDetails = function() {
-		envDetailsFactory.get(function(data) {
-			if(data.environments.length == 0)
+		envDetailsFactory.query(function(data) {
+			if(data.length == 0)
 				$scope.noEnvs = true;
 			else {
-				$scope.envHealthDetailsView = utilityService.configEnvHealthDetailsView(data.environments);
+				$scope.envHealthDetailsView = utilityService.configEnvHealthDetailsView(data);
 				envHealthDetailsService.setEnvHealthDetails($scope.envHealthDetailsView);
 			}
 		}).$promise.then(function() {
@@ -78,12 +78,12 @@ appModule.controller('serviceHealthDetailsController',
 		
 		var serviceTimes = [];
 		
-		serviceDetailsFactory.get({
+		serviceDetailsFactory.query({
 			env : component.env,
 			provider : component.name,
 			uri : $routeParams.uri
 		}, function(data) {
-			angular.forEach(data.serviceTimes,function(serviceTime) {
+			angular.forEach(data,function(serviceTime) {
 				serviceTimes.push(serviceTime);
 			});
 		}).$promise.then(function() {

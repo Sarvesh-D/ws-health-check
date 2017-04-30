@@ -13,9 +13,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import com.ds.ws.health.common.CustomCacheKeyGenerator;
+import com.ds.ws.health.exception.HealthCheckException;
 
 import net.sf.ehcache.CacheException;
 
+/**
+ * Cache Configuration
+ * 
+ * @author <a href="mailto:sarvesh.dubey@cdk.com">Sarvesh Dubey</a>
+ *
+ * @since 30-04-2017
+ * @version 1.0
+ */
 @Configuration
 @EnableCaching
 public class CacheConfig extends CachingConfigurerSupport {
@@ -32,7 +41,7 @@ public class CacheConfig extends CachingConfigurerSupport {
 	try (InputStream iStream = new ClassPathResource("ehcache.xml").getInputStream()) {
 	    cacheManager = net.sf.ehcache.CacheManager.create();
 	} catch (CacheException | IOException e) {
-	    e.printStackTrace();
+	    throw new HealthCheckException("Exception occured while initialising cache manager : " + e.getMessage());
 	}
 	return cacheManager;
     }

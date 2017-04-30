@@ -1,6 +1,7 @@
 package com.ds.ws.health.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.ds.ws.health.model.Environment;
 import com.ds.ws.health.model.Provider;
@@ -23,9 +24,9 @@ public interface WSHealthService {
      * This is the realtime version of
      * {@link WSHealthService#getEnvHealthDetailsFromReport()}
      * 
-     * @return List of {@link Environment}
+     * @return Set of {@link Environment}
      */
-    List<Environment> getEnvHealthDetails(EnvDetailsFetchMode fetchMode);
+    Set<Environment> getEnvHealthDetails(EnvDetailsFetchMode fetchMode);
 
     /**
      * This method returns list of {@link ServiceTimeStatus} containing Time and
@@ -43,6 +44,6 @@ public interface WSHealthService {
      * 
      * @return List of {@link Service}
      */
-    List<Service> getServiceHealthDetails();
+    Set<Service> getServiceHealthDetails();
 
 }

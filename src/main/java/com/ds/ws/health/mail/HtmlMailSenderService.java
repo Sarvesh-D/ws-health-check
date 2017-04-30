@@ -12,6 +12,16 @@ import com.ds.ws.health.exception.HealthCheckException;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This is Html based mail sender service. Must be used to send HTML mails.
+ * 
+ * @author <a href="mailto:sarvesh.dubey@cdk.com">Sarvesh Dubey</a>
+ *
+ * @since 30-04-2017
+ * @version 1.0
+ * @see MailService
+ * @see DefaultMailSenderService
+ */
 @Service
 @Slf4j
 public class HtmlMailSenderService extends DefaultMailSenderService {

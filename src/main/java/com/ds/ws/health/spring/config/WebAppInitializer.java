@@ -13,6 +13,14 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
+/**
+ * WebApp Initializer for servlet 3.0+ containers
+ * 
+ * @author <a href="mailto:sarvesh.dubey@cdk.com">Sarvesh Dubey</a>
+ *
+ * @since 30-04-2017
+ * @version 1.0
+ */
 public class WebAppInitializer implements WebApplicationInitializer {
 
     @Override

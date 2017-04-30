@@ -247,10 +247,10 @@ public class WSHealthUtils implements ApplicationContextAware {
     }
 
     public ServiceStatus getStatusForService(Service service) {
-	log.debug("Getting status for service {}", service);
+	log.trace("Getting status for service {}", service);
 	ServiceStatus status = pingURL(service.getUri(), coreConstants.connectionTimeoutInMillis) ? ServiceStatus.UP
 		: ServiceStatus.DOWN;
-	log.debug("Service is {}", status);
+	log.trace("Service is {}", status);
 	return status;
     }
 
@@ -275,7 +275,6 @@ public class WSHealthUtils implements ApplicationContextAware {
 	    connection.setReadTimeout(timeout);
 	    connection.setRequestMethod("HEAD");
 	    int responseCode = connection.getResponseCode();
-	    log.debug("Response Code for URL {} is {}", url, responseCode);
 	    return (200 <= responseCode && responseCode <= 399);
 	} catch (IOException exception) {
 	    return false;

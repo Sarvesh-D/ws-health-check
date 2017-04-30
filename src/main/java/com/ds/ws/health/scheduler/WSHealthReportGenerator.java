@@ -1,6 +1,6 @@
 package com.ds.ws.health.scheduler;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -38,7 +38,7 @@ class WSHealthReportGenerator {
     @Scheduled(cron = "${ping.interval}")
     void buildWSHealthReport() {
 	log.debug("Building report file started on time {}", LocalDateTime.now());
-	List<Service> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
+	Set<Service> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
 	wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
     }
 
@@ -46,13 +46,6 @@ class WSHealthReportGenerator {
     void createReportFile() {
 	log.debug("Saving report file started on time {}", LocalDateTime.now());
 	wsHealthReportGeneratorUtils.saveReport();
-	/*
-	 * After creating report file, the new report file will be empty. To
-	 * support com.ds.ws.health.service.WSHealthService.
-	 * getEnvHealthDetailsFromReport() service, the report file must contain
-	 * some data, hence calling buildWSHealthReport() explicitly instead of
-	 * waiting till ping.interval
-	 */
 	buildWSHealthReport();
     }
 

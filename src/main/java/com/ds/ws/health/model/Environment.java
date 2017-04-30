@@ -12,8 +12,7 @@ import lombok.ToString;
 
 /**
  * Environment model.<br>
- * An Environment is considered to be have a name and zero or many
- * {@link Provider}
+ * An Environment is considered to have a name and one or more {@link Provider}
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016

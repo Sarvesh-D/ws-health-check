@@ -55,6 +55,26 @@ public class WSHealthReportMailSender {
     @Qualifier("userDao")
     private UserDao userDao;
 
+    @Scheduled(cron = "${mail.interval}")
+    private void sendWSHealthDailyReportMail() {
+	log.debug("Mail Triggered on time {}", LocalDateTime.now());
+	final String from = mailProperties.getProperty("report.mail.from");
+	final String[] to = userDao.findAll().stream().map(user -> user.getEmail()).toArray(String[]::new);
+	final String subject = mailProperties.getProperty("report.mail.subject");
+
+	Map<String, Object> templateParams = new HashMap<>();
+	templateParams.put("reportDate", LocalDate.now());
+	templateParams.put("dashboardLink", reportProperties.getProperty("report.footer.link"));
+	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
+	templateParams.put("attachment", true);
+
+	final String body = mailUtils.transformTemplateBody(mailProperties.getProperty("report.mail.body.template"),
+		templateParams);
+
+	mailServiceFactory.getInstance(MailServiceProvider.HTML_MAIL_SERVICE_PROVIDER).sendMimeMail(from, to, subject,
+		body, new String[] { reportUtils.getReportFileForDate(LocalDate.now()) });
+    }
+
     @Scheduled(cron = "${hourly.mail.interval}")
     private void sendWSHealthHourlyMail() {
 	log.debug("Mail Triggered on time {}", LocalDateTime.now());
@@ -76,26 +96,6 @@ public class WSHealthReportMailSender {
 	mailServiceFactory.getInstance(MailServiceProvider.HTML_MAIL_SERVICE_PROVIDER).sendMail(from, to, subject,
 		body);
 
-    }
-
-    @Scheduled(cron = "${mail.interval}")
-    private void sendWSHealthReportMail() {
-	log.debug("Mail Triggered on time {}", LocalDateTime.now());
-	final String from = mailProperties.getProperty("report.mail.from");
-	final String[] to = userDao.findAll().stream().map(user -> user.getEmail()).toArray(String[]::new);
-	final String subject = mailProperties.getProperty("report.mail.subject");
-
-	Map<String, Object> templateParams = new HashMap<>();
-	templateParams.put("reportDate", LocalDate.now());
-	templateParams.put("dashboardLink", reportProperties.getProperty("report.footer.link"));
-	templateParams.put("environments", wsHealthService.getEnvHealthDetails(EnvDetailsFetchMode.REAL_TIME));
-	templateParams.put("attachment", true);
-
-	final String body = mailUtils.transformTemplateBody(mailProperties.getProperty("report.mail.body.template"),
-		templateParams);
-
-	mailServiceFactory.getInstance(MailServiceProvider.HTML_MAIL_SERVICE_PROVIDER).sendMimeMail(from, to, subject,
-		body, new String[] { reportUtils.getReportFileForDate(LocalDate.now()) });
     }
 
 }

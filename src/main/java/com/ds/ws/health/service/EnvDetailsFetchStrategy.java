@@ -1,6 +1,6 @@
 package com.ds.ws.health.service;
 
-import java.util.List;
+import java.util.Set;
 
 import com.ds.ws.health.model.Environment;
 
@@ -20,6 +20,6 @@ public abstract class EnvDetailsFetchStrategy {
      * 
      * @return Fetched env health details
      */
-    abstract List<Environment> getEnvHealthDetails();
+    abstract Set<Environment> getEnvHealthDetails();
 
 }

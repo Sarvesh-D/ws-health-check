@@ -2,7 +2,7 @@ package com.ds.ws.health.service;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Before;
@@ -21,7 +21,7 @@ public final class WSHealthServiceTest extends BaseTest {
     private static WSHealthUtils wsHealthUtils = WSHealthUtils.instanceOf(WSHealthUtils.class);
     private WSHealthService wsHealthService;
 
-    public static void testEnvHealthDetails(List<Environment> environments) {
+    public static void testEnvHealthDetails(Set<Environment> environments) {
 	int componentCount = 0;
 	int serviceCount = 0;
 
@@ -53,7 +53,7 @@ public final class WSHealthServiceTest extends BaseTest {
     public void testGetReportForService() {
 	wsHealthUtils.getAllServices().stream().forEach(service -> {
 	    assertTrue("Service Status Times must not be empty",
-		    CollectionUtils.isNotEmpty(service.getServiceTimeStatusResponse().getServiceTimes()));
+		    CollectionUtils.isNotEmpty(service.getServiceTimeStatuses()));
 	});
     }
 

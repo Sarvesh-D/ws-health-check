@@ -20,14 +20,13 @@ import lombok.ToString;
 
 /**
  * Provider model.<br>
- * A Provider is supposed to have a name, version and name of
- * {@link Environment} to which it belongs.<br>
- * A Provider can have zero or more {@link Service}
+ * A Provider is supposed to have a name, {@link Environment#getName()} to which
+ * it belongs.<br>
+ * A Provider can have one or more {@link Service}
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
- *
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = { "name", "environment" })
@@ -63,7 +62,8 @@ public class Provider {
     private Set<Service> downServices;
 
     /**
-     * Calculates and sets the overallStatus of the provider.
+     * Calculates and sets the overallStatus of the provider. This is dependent
+     * on {@link Service#getOverallStatus()}
      */
     public void calculateOverallStatus() {
 	List<Status> statuses = this.services.stream().map(Service::getOverallStatus).collect(Collectors.toList());

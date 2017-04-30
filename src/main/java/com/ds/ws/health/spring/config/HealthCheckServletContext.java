@@ -8,6 +8,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+/**
+ * Web Context Configuration
+ * 
+ * @author <a href="mailto:sarvesh.dubey@cdk.com">Sarvesh Dubey</a>
+ *
+ * @since 30-04-2017
+ * @version 1.0
+ */
 @Configuration
 @EnableAspectJAutoProxy
 @EnableWebMvc
@@ -26,12 +34,5 @@ public class HealthCheckServletContext extends WebMvcConfigurerAdapter {
 	registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
 	registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
     }
-
-    /*
-     * @Override public void
-     * extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-     * converters.add(new StringHttpMessageConverter()); converters.add(new
-     * MappingJackson2HttpMessageConverter()); }
-     */
 
 }

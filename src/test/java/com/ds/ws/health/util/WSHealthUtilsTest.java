@@ -102,15 +102,14 @@ public final class WSHealthUtilsTest extends BaseTest {
 
 	// test after getAllServices call is cached.
 	Service service = wsHealthUtils.getAllServices().stream().findAny().get();
-	int pingCount = service.getServiceTimeStatusResponse().getServiceTimes().size();
-	service.getServiceTimeStatusResponse().getServiceTimes()
-		.add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP));
-	int latestPingCount = service.getServiceTimeStatusResponse().getServiceTimes().size();
+	int pingCount = service.getServiceTimeStatuses().size();
+	service.getServiceTimeStatuses().add(new ServiceTimeStatus(System.currentTimeMillis(), ServiceStatus.UP));
+	int latestPingCount = service.getServiceTimeStatuses().size();
 	assertTrue(pingCount < latestPingCount);
 	Service latestService = wsHealthUtils.getAllServices().stream().filter(s -> s.equals(service)).findFirst()
 		.get();
 	assertTrue("Cached Service Object returned. Ping count not incremented.",
-		latestPingCount == latestService.getServiceTimeStatusResponse().getServiceTimes().size());
+		latestPingCount == latestService.getServiceTimeStatuses().size());
 
     }
 
@@ -165,9 +164,9 @@ public final class WSHealthUtilsTest extends BaseTest {
     private void testLoadedService(Service service) {
 	assertNotNull("Loaded Service cannot be null", wsHealthUtils.getLoadedService(service));
 	assertNotNull("Service Time Status Object cannot be null for loaded service",
-		wsHealthUtils.getLoadedService(service).getServiceTimeStatusResponse());
+		wsHealthUtils.getLoadedService(service).getServiceTimeStatuses());
 	assertTrue("Service Times List Cannot be Null or Empty",
-		CollectionUtils.isNotEmpty(service.getServiceTimeStatusResponse().getServiceTimes()));
+		CollectionUtils.isNotEmpty(service.getServiceTimeStatuses()));
     }
 
     private void testLoadedServices(Set<Service> services) {

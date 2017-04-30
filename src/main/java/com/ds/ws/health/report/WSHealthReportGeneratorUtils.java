@@ -2,7 +2,7 @@ package com.ds.ws.health.report;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -17,7 +17,8 @@ import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -56,23 +57,25 @@ public class WSHealthReportGeneratorUtils {
     private String[] reportHeaders;
 
     /**
-     * Builds the report for given list {@link Service}.<br>
+     * Builds the report for given set of {@link Service}.<br>
      * Each Service in the list will correspond to a row in the report table.
      * 
      * @param serviceHealthDetails
      *            to be saved in the report
      */
-    public void buildReport(List<Service> serviceHealthDetails) {
+    public void buildReport(Set<Service> serviceHealthDetails) {
+	DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm");
 	for (Service serviceDetail : serviceHealthDetails) {
 	    Row row = sheet.createRow(rowNum++);
 	    int cellNum = 0;
-	    row.createCell(cellNum++).setCellValue(LocalTime.now().toString());
+	    String time = timeFormatter.print(serviceDetail.getServiceTimeStatuses().get(serviceDetail.getServiceTimeStatuses().size()-1).getTime());
+	    row.createCell(cellNum++).setCellValue(time);
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getEnvironment());
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getProvider());
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getDescription());
 	    workbookUtils.createHyperlinkCell(row.createCell(cellNum++), serviceDetail.getUri());
 	    row.createCell(cellNum).setCellValue(serviceDetail.getStatus().toString());
-	    log.debug("Row entered for Service {}", serviceDetail);
+	    log.trace("Row entered for Service {}", serviceDetail);
 	}
     }
 
@@ -83,8 +86,8 @@ public class WSHealthReportGeneratorUtils {
      *            for which the report file path is required.
      */
     public String getReportFileForDate(LocalDate date) {
-	log.debug("Getting Report file path for date {}", date);
 	Assert.notNull(date, "Date cannot be null");
+	log.debug("Getting Report file path for date {}", date);
 	return getReportFileNameFor(date);
     }
 

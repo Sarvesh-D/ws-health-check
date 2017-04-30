@@ -18,6 +18,14 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
+/**
+ * Root Configuration
+ * 
+ * @author <a href="mailto:sarvesh.dubey@cdk.com">Sarvesh Dubey</a>
+ *
+ * @since 30-04-2017
+ * @version 1.0
+ */
 @Configuration
 @EnableAspectJAutoProxy
 @EnableScheduling

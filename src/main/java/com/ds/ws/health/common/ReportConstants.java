@@ -46,6 +46,11 @@ public class ReportConstants {
 	reportFooterLink = reportProperties.getProperty("report.footer.link");
 	log.info("initialising report constants completed");
 
+	if (log.isDebugEnabled())
+	    logRegisteredConstants();
+    }
+
+    private void logRegisteredConstants() {
 	Arrays.stream(ReportConstants.class.getDeclaredFields()).forEach(field -> {
 	    try {
 		log.debug("Setting Report constant [{}] --> [{}]", field.getName(), field.get(this));
@@ -54,7 +59,6 @@ public class ReportConstants {
 			String.format("Exception occured while setting report constants : %s", e1.getMessage()));
 	    }
 	});
-
     }
 
 }

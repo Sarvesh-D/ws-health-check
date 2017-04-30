@@ -1,15 +1,18 @@
 package com.ds.ws.health.mail;
 
+import com.ds.ws.health.mail.MailServiceFactory.MailServiceProvider;
+
 /**
  * Root interface to be implemented by any Mail Service Provider. After writing
  * its implementation, register your implementation(Mail Service Provider) in
- * <code>MailServiceFactory.MailServiceProvider</code>
+ * {@link MailServiceProvider}
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
  * @see MailServiceFactory.MailServiceProvider
  * @see DefaultMailSenderService
+ * @see HtmlMailSenderService
  */
 public interface MailService {
 

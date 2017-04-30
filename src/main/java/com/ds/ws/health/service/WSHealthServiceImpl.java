@@ -1,8 +1,9 @@
 package com.ds.ws.health.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,31 +31,31 @@ public class WSHealthServiceImpl implements WSHealthService {
     private WSHealthUtils wsHealthUtils;
 
     @Override
-    public List<Environment> getEnvHealthDetails(EnvDetailsFetchMode fetchMode) {
+    public Set<Environment> getEnvHealthDetails(EnvDetailsFetchMode fetchMode) {
 	return WSHealthUtils.instanceOf(fetchMode.getStrategy()).getEnvHealthDetails();
     }
 
     @Override
     public List<ServiceTimeStatus> getReportForService(Service service) {
+	log.info("Getting service time status for service {}", service);
 	Service loadedService = wsHealthUtils.getLoadedService(service);
-	return loadedService.getServiceTimeStatusResponse().getServiceTimes();
+	return loadedService.getServiceTimeStatuses();
     }
 
     @Override
-    public List<Service> getServiceHealthDetails() {
+    public Set<Service> getServiceHealthDetails() {
 	log.info("Getting service health details started...");
-	List<Service> serviceDetails = new ArrayList<>(wsHealthUtils.getAllServices());
-	Collections.sort(serviceDetails, Service.SERVICE_DETAIL_COMPARATOR);
+	Set<Service> serviceDetails = new TreeSet<>(Service.SERVICE_DETAIL_COMPARATOR);
+	serviceDetails.addAll(wsHealthUtils.getAllServices());
 	for (Service serviceDetail : serviceDetails) {
 	    ServiceStatus status = wsHealthUtils.getStatusForService(serviceDetail);
 	    // set below entry when scheduler pings the service to test
-	    serviceDetail.getServiceTimeStatusResponse().getServiceTimes()
-		    .add(new ServiceTimeStatus(System.currentTimeMillis(), status));
+	    serviceDetail.getServiceTimeStatuses().add(new ServiceTimeStatus(System.currentTimeMillis(), status));
 	    // calculate overall status of service after each ping
 	    serviceDetail.setStatus(status).calculateOverallStatus();
 	}
 	log.info("Getting service health details completed");
-	return Collections.unmodifiableList(serviceDetails);
+	return Collections.unmodifiableSet(serviceDetails);
     }
 
 }

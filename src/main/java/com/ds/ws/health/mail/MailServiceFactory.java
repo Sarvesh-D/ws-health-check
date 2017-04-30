@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 29/08/2016
  * @version 1.0
  * @see MailServiceProvider
+ * @see MailService
  */
 @Service
 @Slf4j
