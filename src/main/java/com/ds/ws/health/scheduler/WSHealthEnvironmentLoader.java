@@ -25,11 +25,20 @@ public class WSHealthEnvironmentLoader {
     @Autowired
     @Qualifier("defaultEnvironmentLoader")
     private EnvironmentLoader environmentLoader;
+    
+    @Autowired
+    private WSHealthReportGenerator wsHealthReportGenerator;
 
     @Scheduled(cron = "${env.load.interval}")
     void loadEnvironments() {
-	log.debug("Refreshing environments");
+	log.debug("Refreshing environments Started");
 	environmentLoader.loadEnvironments();
+	log.debug("Refreshing environments Completed");
+	/*
+	 * ping and make entry in report, since post environments load/refresh
+	 * the environments cache won't have any data.
+	 */
+	wsHealthReportGenerator.buildWSHealthReport();
     }
 
     @PostConstruct

@@ -2,7 +2,6 @@ package com.ds.ws.health.scheduler;
 
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.joda.time.LocalDateTime;
@@ -37,21 +36,17 @@ class WSHealthReportGenerator {
 
     @Scheduled(cron = "${ping.interval}")
     void buildWSHealthReport() {
-	log.debug("Building report file started on time {}", LocalDateTime.now());
+	log.debug("Building report file Started on time {}", LocalDateTime.now());
 	Set<Service> serviceHealthDetails = wsHealthService.getServiceHealthDetails();
 	wsHealthReportGeneratorUtils.buildReport(serviceHealthDetails);
+	log.debug("Building report file Completed on time {}", LocalDateTime.now());
     }
 
     @Scheduled(cron = "${file.rollover.interval}")
     void createReportFile() {
 	log.debug("Saving report file started on time {}", LocalDateTime.now());
 	wsHealthReportGeneratorUtils.saveReport();
-	buildWSHealthReport();
-    }
-
-    @PostConstruct
-    private void buildReportOnStartup() {
-	log.debug("Building report file on startup");
+	log.debug("Saving report file completed on time {}", LocalDateTime.now());
 	buildWSHealthReport();
     }
 
