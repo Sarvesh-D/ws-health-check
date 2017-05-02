@@ -25,7 +25,7 @@ public class WSHealthEnvironmentLoader {
     @Autowired
     @Qualifier("defaultEnvironmentLoader")
     private EnvironmentLoader environmentLoader;
-    
+
     @Autowired
     private WSHealthReportGenerator wsHealthReportGenerator;
 

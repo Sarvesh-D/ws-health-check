@@ -68,10 +68,11 @@ public class WSHealthReportGeneratorUtils {
 	for (Service serviceDetail : serviceHealthDetails) {
 	    Row row = sheet.createRow(rowNum++);
 	    int cellNum = 0;
-	    String time = timeFormatter.print(serviceDetail.getServiceTimeStatuses().get(serviceDetail.getServiceTimeStatuses().size()-1).getTime());
+	    String time = timeFormatter.print(serviceDetail.getServiceTimeStatuses()
+		    .get(serviceDetail.getServiceTimeStatuses().size() - 1).getTime());
 	    row.createCell(cellNum++).setCellValue(time);
-	    row.createCell(cellNum++).setCellValue(serviceDetail.getEnvironment());
-	    row.createCell(cellNum++).setCellValue(serviceDetail.getProvider());
+	    row.createCell(cellNum++).setCellValue(serviceDetail.getProvider().getEnvironment().getName());
+	    row.createCell(cellNum++).setCellValue(serviceDetail.getProvider().getName());
 	    row.createCell(cellNum++).setCellValue(serviceDetail.getDescription());
 	    workbookUtils.createHyperlinkCell(row.createCell(cellNum++), serviceDetail.getUri());
 	    row.createCell(cellNum).setCellValue(serviceDetail.getStatus().toString());

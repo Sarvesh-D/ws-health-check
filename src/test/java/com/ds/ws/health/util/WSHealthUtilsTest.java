@@ -139,13 +139,14 @@ public final class WSHealthUtilsTest extends BaseTest {
 
     @Test
     public void testGetServicesByComponent() {
-	Provider component = new Provider("Google", "UAT");
+	Provider component = new Provider("Google", new Environment("UAT"));
 	assertTrue(wsHealthUtils.getServicesByComponent(component).size() == 1);
     }
 
     @Test
     public void testGetStatusForService() {
-	Service service = new Service("DEV", "Dummy", "abc123");
+	Provider provider = new Provider("Dummy", new Environment("DEV"));
+	Service service = new Service(provider, "abc123");
 	assertNotNull("Status must not be null", wsHealthUtils.getStatusForService(service));
 	assertTrue("Status must be DOWN", wsHealthUtils.getStatusForService(service).equals(ServiceStatus.DOWN));
     }

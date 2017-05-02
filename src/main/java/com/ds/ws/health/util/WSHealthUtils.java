@@ -108,8 +108,10 @@ public class WSHealthUtils implements ApplicationContextAware {
      */
     public Service convertRowToService(Row row) {
 	Assert.notNull(row, "Row cannot be null");
-	Service service = new Service(row.getCell(1).getStringCellValue(), row.getCell(2).getStringCellValue(),
-		row.getCell(4).getStringCellValue(), row.getCell(3).getStringCellValue());
+	Environment environment = new Environment(row.getCell(1).getStringCellValue());
+	Provider provider = new Provider(row.getCell(2).getStringCellValue(), environment);
+	Service service = new Service(provider, row.getCell(4).getStringCellValue(),
+		row.getCell(3).getStringCellValue());
 	service.setStatus(ServiceStatus.valueOf(row.getCell(5).toString()));
 	return getLoadedService(service);
     }
@@ -209,9 +211,11 @@ public class WSHealthUtils implements ApplicationContextAware {
 
     /**
      * Returns the loaded {@link Service}. A <b>Loaded</b> {@link Service} means
-     * that the serviceTimeStatuses list of the service is initialised and contains
-     * {@link ServiceTimeStatus} for each ping made to the Service.
-     * @param service whose loaded Service is required
+     * that the serviceTimeStatuses list of the service is initialised and
+     * contains {@link ServiceTimeStatus} for each ping made to the Service.
+     * 
+     * @param service
+     *            whose loaded Service is required
      * @return <b>Loaded</b> Service
      */
     public Service getLoadedService(Service service) {
@@ -226,11 +230,13 @@ public class WSHealthUtils implements ApplicationContextAware {
 
     /**
      * Returns {@link Provider} corresponding to {@link Service}
+     * 
      * @param service
      * @return Provider
      */
     public Provider getProviderForService(Service service) {
-	Provider serviceProvider = new Provider(service.getProvider(), service.getEnvironment());
+	Provider serviceProvider = new Provider(service.getProvider().getName(),
+		new Environment(service.getProvider().getEnvironment().getName()));
 	Optional<Provider> provider = getAllComponents().stream().filter(component -> component.equals(serviceProvider))
 		.findFirst();
 	if (provider.isPresent())
@@ -260,8 +266,11 @@ public class WSHealthUtils implements ApplicationContextAware {
     }
 
     /**
-     * Returns the Status for the Service by calling {@link #pingURL(String, int)}
-     * @param service whose status is required
+     * Returns the Status for the Service by calling
+     * {@link #pingURL(String, int)}
+     * 
+     * @param service
+     *            whose status is required
      * @return {@link ServiceStatus}
      */
     public ServiceStatus getStatusForService(Service service) {

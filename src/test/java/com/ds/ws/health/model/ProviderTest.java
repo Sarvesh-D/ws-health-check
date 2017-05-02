@@ -27,7 +27,7 @@ public final class ProviderTest extends BaseTest {
 
     @Test
     public void testGetStatus() {
-	Provider provider = wsHealthUtils.getLoadedProvider(new Provider("Google", "SIT"));
+	Provider provider = wsHealthUtils.getLoadedProvider(new Provider("Google", new Environment("SIT")));
 	Set<Service> services = provider.getServices(); // make shallow copy for
 							// testing
 	for (Service service : services) {

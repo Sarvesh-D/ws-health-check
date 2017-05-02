@@ -20,7 +20,7 @@ import lombok.ToString;
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = "name")
-@ToString
+@ToString(of = "name")
 public class Environment {
 
     private static class EnvirnomentDetailsNameComaparator implements Comparator<Environment> {

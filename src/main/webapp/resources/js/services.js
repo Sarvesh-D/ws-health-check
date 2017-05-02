@@ -43,8 +43,8 @@ appModule.service('utilityService', function(coreConstants,$filter) {
 
 	this.configRespServiceObj = function(service) {
 		var serviceDetailView = {
-				environment : service.environment,
-				provider : service.provider, 
+				environment : service.provider.environment.name,
+				provider : service.provider.name, 
 				description : service.description,
 				uri : service.uri,
 				overallStatus : ''
@@ -71,7 +71,7 @@ appModule.service('utilityService', function(coreConstants,$filter) {
 			angular.forEach(envHealthDetail.components,function(component) {
 				var componentDetailView = {
 						name : component.name,
-						env: component.environment,
+						env: component.environment.name,
 						services : [],
 						overallStatus : '',
 						downServices : component.downServices.length

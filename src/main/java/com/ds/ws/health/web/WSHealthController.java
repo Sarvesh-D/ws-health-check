@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ds.ws.health.model.Environment;
+import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.model.ServiceTimeStatus;
 import com.ds.ws.health.service.EnvDetailsFetchMode;
@@ -43,7 +44,7 @@ class WSHealthController {
     public List<ServiceTimeStatus> getReportForService(@RequestParam String env, @RequestParam String provider,
 	    @RequestParam String uri) {
 	log.info("getServiceHealthDetails Service requested");
-	Service service = new Service(env, provider, uri);
+	Service service = new Service(new Provider(provider, new Environment(env)), uri);
 	return wsHealthService.getReportForService(service);
     }
 

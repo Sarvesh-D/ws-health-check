@@ -2,6 +2,7 @@ package com.ds.ws.health.model;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -51,7 +52,7 @@ public class Provider {
     private final String name;
 
     @Getter
-    private final String environment;
+    private final Environment environment;
 
     @Setter
     private Set<Service> services;
@@ -59,7 +60,7 @@ public class Provider {
     @Getter
     private Status overallStatus;
 
-    private Set<Service> downServices;
+    private Set<Service> downServices = new HashSet<>();
 
     /**
      * Calculates and sets the overallStatus of the provider. This is dependent

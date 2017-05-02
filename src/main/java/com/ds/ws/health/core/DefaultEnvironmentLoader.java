@@ -58,7 +58,7 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
     }
 
     @Override
-    @CacheEvict(cacheNames="environments", allEntries=true)
+    @CacheEvict(cacheNames = "environments", allEntries = true)
     public final void loadEnvironments() {
 	log.info("Loading environmets started...");
 	environments = new HashSet<>();
@@ -77,9 +77,9 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
      */
     private Environment buildEnvHierarchyFromService(Service service) {
 	log.debug("Building Env Hierarchy from Service {}", service);
-	final String envName = service.getEnvironment();
-	final String providerName = service.getProvider();
-	Provider providerToCheck = new Provider(providerName, envName);
+	final String envName = service.getProvider().getEnvironment().getName();
+	final String providerName = service.getProvider().getName();
+	Provider providerToCheck = new Provider(providerName, new Environment(envName));
 
 	final Optional<Environment> environment = environments.stream()
 		.filter(env -> env.equals(new Environment(envName))).findFirst();
@@ -145,7 +145,8 @@ public class DefaultEnvironmentLoader implements EnvironmentLoader {
 	final String desc = serviceDetail[2];
 	final String uri = serviceDetail[3];
 
-	Service service = new Service(envName, provider, wsHealthUtils.cleanUrl(uri), desc, new ArrayList<>());
+	Service service = new Service(new Provider(provider, new Environment(envName)), wsHealthUtils.cleanUrl(uri),
+		desc, new ArrayList<>());
 	log.debug("Service created {}", service);
 	return service;
     }

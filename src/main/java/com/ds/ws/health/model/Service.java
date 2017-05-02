@@ -30,10 +30,10 @@ import lombok.ToString;
  *
  */
 @RequiredArgsConstructor
-@EqualsAndHashCode(of = { "uri", "environment", "provider" })
-@ToString(of = { "uri", "description", "provider", "environment", "status", "overallStatus" })
+@EqualsAndHashCode(of = { "uri", "provider" })
+@ToString(of = { "uri", "description", "provider", "status", "overallStatus" })
 @Getter
-@JsonIgnoreProperties(value = { "serviceTimeStatusResponse", "wsHealthUtils" })
+@JsonIgnoreProperties(value = { "serviceTimeStatuses", "wsHealthUtils" })
 public class Service {
 
     public enum ServiceStatus {
@@ -56,8 +56,10 @@ public class Service {
 
 	@Override
 	public int compare(Service o1, Service o2) {
-	    final String serviceDetailsLeft = o1.getEnvironment() + "#" + o1.getProvider() + "#" + o1.getUri();
-	    final String serviceDetailsRight = o2.getEnvironment() + "#" + o2.getProvider() + "#" + o2.getUri();
+	    final String serviceDetailsLeft = o1.getProvider().getEnvironment().getName() + "#"
+		    + o1.getProvider().getName() + "#" + o1.getUri();
+	    final String serviceDetailsRight = o2.getProvider().getEnvironment().getName() + "#"
+		    + o2.getProvider().getName() + "#" + o2.getUri();
 	    return serviceDetailsLeft.compareTo(serviceDetailsRight);
 	}
 
@@ -67,9 +69,7 @@ public class Service {
 
     private WSHealthUtils wsHealthUtils = WSHealthUtils.instanceOf(WSHealthUtils.class);
 
-    private final String environment;
-
-    private final String provider;
+    private final Provider provider;
 
     private final String uri;
 
@@ -83,14 +83,13 @@ public class Service {
 
     private ServiceStatus status;
 
-    public Service(String environment, String provider, String uri, String description) {
-	this(environment, provider, uri);
+    public Service(Provider provider, String uri, String description) {
+	this(provider, uri);
 	this.description = description;
     }
 
-    public Service(String environment, String provider, String uri, String description,
-	    List<ServiceTimeStatus> serviceTimeStatuses) {
-	this(environment, provider, uri, description);
+    public Service(Provider provider, String uri, String description, List<ServiceTimeStatus> serviceTimeStatuses) {
+	this(provider, uri, description);
 	this.serviceTimeStatuses = serviceTimeStatuses;
     }
 

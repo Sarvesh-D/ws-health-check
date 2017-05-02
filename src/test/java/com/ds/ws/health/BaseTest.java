@@ -15,7 +15,6 @@ public class BaseTest {
     @BeforeClass
     public static final void setUpBeforeClass() throws Exception {
 	rootContext = new AnnotationConfigApplicationContext(HealthCheckRootConfig.class);
-	System.setProperty("logs.dir", "/Users/dubeysa/logs/ws-health-check");
     }
 
     @AfterClass
