@@ -14,7 +14,7 @@ import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.model.ServiceTimeStatus;
 import com.ds.ws.health.service.EnvDetailsFetchMode;
-import com.ds.ws.health.service.WSHealthService;
+import com.ds.ws.health.service.MonitoringService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +32,7 @@ class WSHealthController {
 
     @Autowired
     @Qualifier("wSHealthServiceImpl")
-    private WSHealthService wsHealthService;
+    private MonitoringService wsHealthService;
 
     @RequestMapping("env/health")
     public Set<Environment> getEnvHealthDetails() {

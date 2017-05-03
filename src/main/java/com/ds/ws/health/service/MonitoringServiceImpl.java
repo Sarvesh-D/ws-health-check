@@ -16,7 +16,7 @@ import com.ds.ws.health.util.WSHealthUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Default implementation for {@link WSHealthService}
+ * Default implementation for {@link MonitoringService}
  * 
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @org.springframework.stereotype.Service("wSHealthServiceImpl")
 @Slf4j
-public class WSHealthServiceImpl implements WSHealthService {
+public class MonitoringServiceImpl implements MonitoringService {
 
     @Autowired
     private WSHealthUtils wsHealthUtils;

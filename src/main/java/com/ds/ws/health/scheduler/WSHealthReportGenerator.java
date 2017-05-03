@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.ds.ws.health.model.Service;
 import com.ds.ws.health.report.WSHealthReportGeneratorUtils;
-import com.ds.ws.health.service.WSHealthService;
+import com.ds.ws.health.service.MonitoringService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +29,7 @@ class WSHealthReportGenerator {
 
     @Autowired
     @Qualifier("wSHealthServiceImpl")
-    private WSHealthService wsHealthService;
+    private MonitoringService wsHealthService;
 
     @Autowired
     private WSHealthReportGeneratorUtils wsHealthReportGeneratorUtils;

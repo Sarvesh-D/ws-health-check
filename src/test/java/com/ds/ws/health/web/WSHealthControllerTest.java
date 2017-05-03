@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.ds.ws.health.model.Environment;
-import com.ds.ws.health.service.WSHealthServiceTest;
+import com.ds.ws.health.service.MonitoringServiceTest;
 import com.ds.ws.health.spring.config.HealthCheckRootConfig;
 import com.ds.ws.health.spring.config.HealthCheckServletContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +44,7 @@ public class WSHealthControllerTest {
 	ObjectMapper mapper = new ObjectMapper();
 	Set<Environment> jsonResponse = mapper.readValue(response.getResponse().getContentAsString(),
 		mapper.getTypeFactory().constructCollectionType(Set.class, Environment.class));
-	WSHealthServiceTest.testEnvHealthDetails(jsonResponse);
+	MonitoringServiceTest.testEnvHealthDetails(jsonResponse);
 
     }
 

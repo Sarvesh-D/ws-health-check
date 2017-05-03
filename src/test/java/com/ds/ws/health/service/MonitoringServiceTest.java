@@ -17,10 +17,10 @@ import com.ds.ws.health.model.Provider;
 import com.ds.ws.health.util.WSHealthUtils;
 
 @RunWith(JUnit4.class)
-public final class WSHealthServiceTest extends BaseTest {
+public final class MonitoringServiceTest extends BaseTest {
 
     private static WSHealthUtils wsHealthUtils = WSHealthUtils.instanceOf(WSHealthUtils.class);
-    private WSHealthService wsHealthService;
+    private MonitoringService wsHealthService;
     private EnvironmentLoader environmentLoader;
 
     public static void testEnvHealthDetails(Set<Environment> environments) {
@@ -43,7 +43,7 @@ public final class WSHealthServiceTest extends BaseTest {
 
     @Before
     public void setUp() {
-	wsHealthService = WSHealthUtils.instanceOf(WSHealthService.class);
+	wsHealthService = WSHealthUtils.instanceOf(MonitoringService.class);
 	environmentLoader = WSHealthUtils.instanceOf(EnvironmentLoader.class);
     }
 

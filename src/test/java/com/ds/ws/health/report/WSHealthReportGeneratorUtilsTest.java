@@ -12,7 +12,7 @@ import org.junit.runners.JUnit4;
 
 import com.ds.ws.health.BaseTest;
 import com.ds.ws.health.common.ReportConstants;
-import com.ds.ws.health.service.WSHealthService;
+import com.ds.ws.health.service.MonitoringService;
 import com.ds.ws.health.util.WSHealthUtils;
 
 @RunWith(JUnit4.class)
@@ -20,13 +20,13 @@ public final class WSHealthReportGeneratorUtilsTest extends BaseTest {
 
     private WSHealthReportGeneratorUtils reportUtils;
     private ReportConstants reportConstants;
-    private WSHealthService healthService;
+    private MonitoringService healthService;
 
     @Before
     public void setUp() {
 	reportUtils = WSHealthUtils.instanceOf(WSHealthReportGeneratorUtils.class);
 	reportConstants = WSHealthUtils.instanceOf(ReportConstants.class);
-	healthService = WSHealthUtils.instanceOf(WSHealthService.class);
+	healthService = WSHealthUtils.instanceOf(MonitoringService.class);
     }
 
     @Test

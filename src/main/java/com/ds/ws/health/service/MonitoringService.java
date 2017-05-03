@@ -14,15 +14,15 @@ import com.ds.ws.health.model.ServiceTimeStatus;
  * @author <a href="mailto:sarvesh.dubey@hotmail.com">Sarvesh Dubey</a>
  * @since 29/08/2016
  * @version 1.0
- * @see WSHealthServiceImpl
+ * @see MonitoringServiceImpl
  */
-public interface WSHealthService {
+public interface MonitoringService {
 
     /**
      * This method returns list of {@link Environment} after pinging each
      * {@link Service} of each {@link Provider}.<br>
      * This is the realtime version of
-     * {@link WSHealthService#getEnvHealthDetailsFromReport()}
+     * {@link MonitoringService#getEnvHealthDetailsFromReport()}
      * 
      * @return Set of {@link Environment}
      */
