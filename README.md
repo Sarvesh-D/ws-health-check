@@ -34,5 +34,5 @@ Checks health of Web Services and creates reports
  - Log/Store in DB, the reason why a particular API failed
  - Provide UI to view Audit logs of reasons of failed APIs
 ### MileStone 5
- - Make the application Product as a Service app. Provide UI for clients to register themselves to the application. Only registered user will have access to all application features.
+ - Make the application Software as a Service (SaaS). Provide UI for clients to register themselves to the application. Only registered user will have access to all application features.
  - Use OAUTH 2.0 for authentication.
